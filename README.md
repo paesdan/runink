@@ -1,0 +1,280 @@
+# Runink: Cloud Native Distributed Data Environment
+
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://example.com/build/status)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Go Report Card](https://goreportcard.com/badge/github.com/your_org/runink)](https://goreportcard.com/report/github.com/your_org/runink)
+
+---
+
+## Overview
+
+Runink is an ambitious project aiming to define a **self-sufficient, distributed environment** specifically designed for orchestrating and executing data pipelines. Built natively in **Go** and leveraging core **Linux primitives** (cgroups, namespaces, `exec`), Runink acts as its own cluster resource manager and scheduler, providing a vertically integrated platform that replaces the need for separate systems like Slurm or complex Kubernetes setups for data workloads.
+
+Our goal is to provide a highly efficient, secure, and governance-aware platform with a **serverless execution model** for data engineers and scientists. Define your pipelines declaratively, and let Runink handle the distributed execution, isolation, resource management, security, lineage, and observability.
+
+## Core Principles
+
+* **Go Native & Linux Primitives:** Maximize performance and minimize overhead by using Go and direct Linux kernel features (cgroups, namespaces, pipes, sockets, `exec`).
+* **Self-Contained Cluster Management:** Manages a pool of nodes, schedules workloads (`Runi Slices`), and handles node lifecycles.
+* **Serverless Execution Model:** Users define pipelines; Runink manages resource allocation (within quotas), execution isolation (`Herds`/`Runi Slices`), and scaling.
+* **Security First:** Integrated identity (OIDC), Role-Based Access Control (RBAC) scoped by `Herd`, secrets management, network policies via namespaces, and end-to-end encryption (TLS for gRPC).
+* **Data Governance Aware:** Built-in metadata catalog, automatic data lineage tracking, data quality framework, and support for rich annotations (including LLM-generated metadata).
+* **Rich Observability:** Native support for metrics (Prometheus format) and structured logs (for Fluentd aggregation).
+
+## Key Features
+
+* **Feature DSL:** Define complex pipelines using a human-readable, Gherkin-inspired `.feature` file format.
+* **Integrated Orchestration:** A built-in Control Plane parses DSLs into DAGs and schedules distributed execution across managed nodes.
+* **Runi/Herd Execution Model:** Lightweight, isolated pipeline steps (`Runi Slices`) execute within resource-constrained cgroups and logically separated `Herd` namespaces for multi-tenancy and domain isolation.
+* **Data Governance & Lineage:** Automatic lineage tracking, integrated data catalog, quality rule management, and rich annotation support (incl. LLM outputs) via a central `Data Governance Service`.
+* **Built-in Security:** Native RBAC, OIDC integration, secrets management, mTLS for internal communication, and namespace-based isolation.
+* **Native Observability:** Components are instrumented for Prometheus metrics and structured logging out-of-the-box.
+* **Schema Contracts:** Define and enforce data structure guarantees throughout the pipeline lifecycle.
+
+## High-Level Architecture
+
+Runink operates with a Control Plane managing multiple Worker Nodes, each running a Runi Agent.
+
+```plaintext
++-----------------------------------------------------------------------------+
+|                    Runink Platform (User Interaction & Definition)          |
+|-----------------------------------------------------------------------------|
+|                [User via CLI/API -> Defines Pipeline]                       |
+|                         │ using Schema & Feature DSL                        |
+|                         ▼                                                   |
+|  [Control Plane: API Server, Identity/RBAC] <----(OIDC/Auth)                |
+|   - Handles User Requests, AuthN/Z, Validation                              |
+|   - Entrypoint to Orchestration                                             |
++---------------------------│-------------------------------------------------+
+                            │ (Validated Pipeline Definition)
+                            ▼
++-----------------------------------------------------------------------------+
+|           Pipeline Code Generation & Orchestration Planning                 |
+|-----------------------------------------------------------------------------|
+|   [Control Plane: Scheduler + Cluster State Store + API Server]             |
+|    - Parses DSL/DAG                                                         |
+|    - Plans Execution based on Resources, Quotas, Herd Policies              |
+|    - Manages Pipeline State & Lifecycle                                     |
++---------------------------│-------------------------------------------------+
+                            │ (Scheduling Commands: Launch Slice in Herd)
+                            ▼
++-----------------------------------------------------------------------------+
+|        Distributed Execution (gRPC & Go/Linux Primitives)                   |
+|-----------------------------------------------------------------------------|
+|   [Runi Agent (Node Daemon) -> Launches Worker Slice Process]               |
+|    - Agent receives commands, manages local resources (cgroups/namespaces)  |
+|    - Worker Slice executes step logic                                       |
+|    - Inter-Slice Communication via authenticated/encrypted gRPC             |
+|    - Isolation via Namespaces, Resource limits via Cgroups                  |
++---------------------------│-------------------------------------------------+
+                            │ (Metadata/Lineage Reporting via gRPC)
+                            ▼
++-----------------------------------------------------------------------------+
+|             Data Quality, Lineage, and Metadata                             |
+|-----------------------------------------------------------------------------|
+|   [Control Plane: Data Governance Service]                                  |
+|    - Receives & Stores Lineage Graph                                        |
+|    - Manages Data Catalog, Quality Rules/Results                            |
+|    - Stores & Serves Annotations (including LLM-generated)                  |
++---------------------------│-------------------------------------------------+
+                            │ (Log/Metrics Stream, Security Context)
+                            ▼
++-----------------------------------------------------------------------------+
+|             Observability, Security, & Compliance                           |
+|-----------------------------------------------------------------------------|
+|   [Runi Agent (Collection) -> Fluentd / Prometheus]                         |
+|   [Control Plane: Secrets Mgr, Identity/RBAC Mgr, API Server (AuthZ)]       |
+|   [Core Implementation: TLS, Namespaces, Cgroups, Service Accounts]         |
++-----------------------------------------------------------------------------+
+
+````
+
+*(For more details, see ARCHITECTURE.md)*
+
+## Key Concepts
+
+  * **Herd:** A logical grouping construct, similar to a Kubernetes Namespace, enforced via RBAC policies and resource quotas. Provides multi-tenancy and domain isolation.
+  * **Runi Slice:** A single instance of a pipeline step running as an isolated `Worker Slice Process` managed by a `Runi Agent` within the constraints of a specific `Herd`.
+
+-----
+
+# Runink Component Reference
+
+This section provides a brief overview of the main Runink components. For detailed descriptions, please refer to `COMPONENTS.md` *(Note: Assumed filename)*.
+
+-----
+
+### ⚙️ Runink CLI (`runi`)
+
+> Role: Developer interface for scaffolding, testing, and running pipelines.
+
+The primary command-line tool for interacting with the Runink platform, managing contracts, features, tests, and deployments.
+
+-----
+
+### 🤖 Runi Agent
+
+> Role: Node daemon managing local slice execution and reporting.
+
+Runs on each compute node, manages `Worker Slice Process` lifecycle within cgroups/namespaces, fetches secrets, and forwards logs/metrics to the observability stack.
+
+-----
+
+### 🐑 Herd Namespace
+
+> Role: Logical isolation boundary for multi-tenancy and domain separation.
+
+A logical grouping (similar to K8s namespaces) enforced via RBAC and resource quotas, providing isolation for `Runi Slices` using Linux namespaces.
+
+-----
+
+### 🖥️ Herd Control Plane
+
+> Role: Central orchestration and management brain of the Runink cluster.
+
+The distributed set of services (API Server, Scheduler, State Store, etc.) managing cluster state, scheduling workloads, enforcing policies, and providing APIs.
+
+-----
+
+### 💾 Barn (Cluster State Store)
+
+> Role: Distributed, consistent storage for all cluster state.
+
+The authoritative, HA key-value store (backed by Raft) holding configurations, pipeline state, RBAC policies, secrets metadata, and core governance info.
+
+-----
+
+### 🔐 Secrets Manager
+
+> Role: Secure vault for managing and delivering sensitive credentials.
+
+Stores encrypted secrets (scoped by Herd/RBAC) and securely delivers them to `Runi Agents` for use by `Worker Slices`.
+
+-----
+
+### 🔑 Identity & RBAC Manager
+
+> Role: Manages authentication and authorization policies.
+
+Handles user/service identities (OIDC), defines and enforces fine-grained, Herd-scoped RBAC policies via the API Server.
+
+-----
+
+### 🖥️ API Server
+
+> Role: Main gateway for all interactions with the Runink platform.
+
+Exposes gRPC/REST APIs, handles AuthN/AuthZ, validates requests, and routes commands to other control plane services.
+
+-----
+
+### 📑 Schema Contracts
+
+> Role: Defines authoritative data structures, versions, and validations.
+
+Versioned definitions of data structure used for validation within pipelines and tracked via the governance service.
+
+-----
+
+### 🧱 Feature DSL (Domain-Specific Language)
+
+> Role: Human-readable language for defining pipeline logic.
+
+A Gherkin-inspired format (`.feature` files) used to declare pipeline steps and scenarios, parsed by the Control Plane.
+
+-----
+
+### 🧪 Testing Engine
+
+> Role: Ensures pipeline correctness and prevents regressions.
+
+Supports golden file testing, synthetic data generation, and integration tests, driven via the `Runink CLI`.
+
+-----
+
+### 🔍 Interactive REPL
+
+> Role: Interface for live data exploration, debugging, and prototyping.
+
+A command-line shell combining DataFrame API, JSON navigation, and SQL-like querying for interactive work.
+
+-----
+
+### 🚧 Pipeline Generator
+
+> Role: Translates Feature DSL into an executable DAG plan.
+
+Conceptually, the Control Plane component (Scheduler) that interprets the DSL and plans the execution DAG for `Worker Slices`.
+
+-----
+
+### 🔄 Feature Orchestration
+
+> Role: Handles pipeline dependency resolution and execution scheduling.
+
+The core scheduling and execution logic managed by the `Control Plane Scheduler` and `Runi Agents`, executing steps as `Runi Slices` within `Herd` boundaries.
+
+-----
+
+### 🧭 Data Lineage & Metadata
+
+> Role: Central service for tracking data flow, context, and annotations.
+
+Managed by the `Data Governance Service`, providing APIs to record and query lineage graphs, catalog info, annotations (incl. LLM), and quality results.
+
+-----
+
+### ✅ Data Quality & Validation
+
+> Role: Maintains data integrity and compliance throughout the pipeline.
+
+Enforces rules defined in `Schema Contracts` and `Feature DSL` within `Worker Slices`, with results tracked by the `Data Governance Service`.
+
+-----
+
+### 🔒 Data Governance & Compliance
+
+> Role: Ensures adherence to regulatory and internal data governance standards.
+
+Encompasses RBAC (scoped by `Herd`), lineage tracking, audit trails, and security controls managed across the Control Plane and Agents.
+
+-----
+
+### 🛡️ Security & Enterprise DataOps
+
+> Role: Integrates security practices into the pipeline lifecycle.
+
+Combines platform security features (RBAC, secrets, encryption, isolation via namespaces/cgroups) with recommended CI/CD practices for the platform code itself.
+
+-----
+
+### 🌐 Observability & Monitoring
+
+> Role: Enables comprehensive visibility into pipeline health and performance.
+
+Provides metrics (Prometheus) and logs (Fluentd) collected by `Runi Agents` from `Worker Slices` and Agents themselves.
+
+-----
+
+## Getting Started
+
+*(TODO: Add instructions for installing the Runink CLI, setting up a minimal cluster (Control Plane + Agents), and running a basic example pipeline using the Feature DSL.)*
+
+```bash
+# Example (Conceptual)
+runi herd create my-data-herd
+runi apply -f ./pipelines/my_pipeline.feature --herd my-data-herd
+runi pipeline status my_pipeline --herd my-data-herd
+```
+
+## Development Status
+
+**Alpha / Conceptual:** Runink is currently under active development and should be considered experimental. The architecture and features described represent the target state.
+
+## Contributing
+
+Contributions are welcome\! Please read our `CONTRIBUTING.md` guide (TODO: Create CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
