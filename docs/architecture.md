@@ -4,108 +4,123 @@ Goal: Define a self-sufficient, distributed environment for orchestrating and ex
 
 
 ```plaintext
-+-----------------------------------------------------------------------------+
-|                             External User / Client                          |
-|               (Runink CLI, UI, API Client via OIDC/API Key Auth)            |
-|                (Requests scoped to specific 'Herds'/Namespaces)             |
-+------------------------------------^----------------------------------------+
++───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+|                             External User / Client                                                        |
+|               (Runink CLI, UI, API Client via OIDC/API Key Auth)                                          |
+|                (Requests scoped to specific 'Herds'/Namespaces)                                           |
++───────────────────────────────────────────────────────────────────────────────────────────────────────────+
                                      | (gRPC/REST API Calls - TLS Encrypted)
                                      | (Pipeline Definitions, Queries within Herd context)
                                      v
-+-----------------------------------------------------------------------------+
-|                        HERD CONTROL PLANE (HA Replicas)                     |
-|-----------------------------------------------------------------------------|
-|                                                                             |
-|  [1. API Server] <----------------------╮ (Internal gRPC - TLS)             |
-|   - Entry Point                         │                                   |
-|   - AuthN/AuthZ (OIDC, RBAC) <----------│----[4. Identity & RBAC Mgr]       |
-|     *Enforces RBAC per Herd* │      - Manages Service Accounts   |
-|   - Validation (inc. Herd scope)        │      - OIDC Federation            |
-|   - Gateway                             │      - Issues/Validates Tokens    |
-|                                         │      *RBAC Policies link Users/   |
-|   --------------------------------------╯       Service Accounts to Herds* |
-|   │ ▲ │                                                                     |
-|   │ │ └───────────────────────────────────────────────────┐                 |
-|   │ │ (State Reads/Writes, Policy Checks)                 │                 |
-|   │ │                                                     │                 |
-|   │ ▼ (Read/Write via Raft)                               │                 |
-|  [2. Cluster State Store (Raft)]                          │                 |
-|   - Stores: Nodes, Pipelines, Slices,                     │                 |
-|             *Logical Herds (Definition, Quotas)*,         │                 |
-|             RBAC Policies, Secrets, Core Metadata Refs    │                 |
-|   - HA Consensus                                          │                 |
-|   │ ▲                                                     │                 |
-|   │ │ (Watches Pending Tasks, Updates State)              │                 |
-|   │ │                                                     │                 |
-|   │ ▼                                                     │                 |
-|  [3. Scheduler]------------------------------------------->┤ (Placement Cmds via API Server) |
-|   - Matches Tasks to Nodes                                │                 |
-|   - Reads Node Resources/State                            │                 |
-|   - Considers Task Requirements, *Herd Quotas*, Affinity  │                 |
-|                                                           │                 |
-|   --------------------------------------------------------┘                 |
-|   │ ▲ │                                                                     |
-|   │ │ └───────────────────────────────────────────────────┐                 |
-|   │ │ (Secrets Read/Write via Raft)                       │                 |
-|   │ │                                                     │                 |
-|   │ ▼                                                     │                 |
-|  [5. Secrets Manager]------------------------------------->┤ (Secrets Delivery via Runi Agent) |
-|   - Encrypted Secrets Storage                             │                 |
-|   - RBAC for Secrets Access (*potentially Herd-scoped*)   │                 |
-|                                                           │                 |
-|   --------------------------------------------------------┘                 |
-|   │ ▲ │                                                                     |
-|   │ │ (Metadata/Lineage/Annotation Read/Write)                              |
-|   │ │ (*Metadata may be tagged by Herd*)                    |                 |
-|   │ ▼                                                     │                 |
-|  [6. Data Governance Service]---------------------------->│ (Queries via API Server) |
-|   - Manages Catalog, Lineage, Quality, Annotations        │                 |
-|   - Own Storage Strategy (Raft + Optional Backend)        │                 |
-|   - Provides Metadata gRPC API                            │                 |
-|                                                           │                 |
-+------------------------------------^----------------------^-----------------+
-                                     │                      │ (Internal gRPC/TLS)
-(Agent Registration, Health,        │                      │ (Cmds: Launch Slice *in Herd Namespaces*,
- Metrics Reporting, Log Forwarding) │                      │  Secrets Req, Status)
-                                     │                      │ (Metadata Reporting via Worker)
-+------------------------------------v----------------------v-----------------+
-|                      RUNI AGENT (Daemon on each Worker Node)              |
-|-----------------------------------------------------------------------------|
-|  - Registers with Control Plane                                             |
-|  - Reports Node Resources & Health                                          |
-|  - Receives Commands (incl. target *Herd* context for slice)                |
-|  - Manages Local `Slice Manager`:                                           |
-|    - Creates cgroups (respecting *Herd quotas*)                            |
-|    - Creates namespaces (*potentially configured based on Herd*)            |
-|    - Launches worker processes (`exec`)                                     |
-|  - Manages Local Worker Lifecycle                                           |
-|  - Securely Fetches Secrets for Workers                                     |
-|  - Sets up Network & Storage for Workers (*potentially Herd-specific*)      |
-|  - Collects Worker Observability (Logs to Fluentd, Metrics to Prometheus)   |
-|  - Exposes Own & Aggregated Metrics                                         |
-|                                                                             |
-|  ------------------------------┬------------------------------------------- |
-|  (Launch Cmd *within Herd namespace context*, │   (Log/Metrics Collection)  |
-|   Config, Secrets)             │ ▲                                           |
-|                                ▼ │                                           |
-+-----------------------------------------------------------------------------+
-|                  WORKER SLICE PROCESS (Isolated Go Process)                 |
-|                    *Runs within the context of a specific Herd Namespace*   |
-|-----------------------------------------------------------------------------|
-|  - Executes User Pipeline Step Code                                         |
-|  - Isolated via Namespaces (User, PID, Net, Mount, etc.)                    |
-|  - Constrained by Cgroups (*reflecting Herd quotas*)                        |
-|  - Runs as Ephemeral User (mapped from Service Account, authorized for Herd)|
-|  - Receives Config/Secrets                                                  |
-|                                                                             |
-|  **Interactions:** |
-|  - Communicates with Other Slices (gRPC, TLS, AuthN)                        |
-|  - Accesses External Services (DBs, MinIO, OpenAI)                          |
-|  - Reports Lineage/Annotations to `Data Governance Service` (*tagged by Herd*)|
-|  - Exposes */metrics* endpoint (scraped by Runi Agent)                      |
-|  - Writes Structured Logs to stdout/stderr (collected by Runi Agent)        |
-|                                                                             |
-+-----------------------------------------------------------------------------+
++───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+|                HERD CONTROL PLANE (HA Replicas using Raft)                                                |
++───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+|                                                                                                           |
+|  [1. API Server (Replica 1..N)] <───────╮ (Internal gRPC - TLS)                                           |
+|  |- Entry Point                         │                                                                 |
+|  |- AuthN/AuthZ (OIDC, RBAC) <──────────+──────[4. Identity & RBAC Mgr]                                   |
+|  |  *Enforces RBAC per Herd*            │      (Runs Co-located or Standalone)                            |
+|  |- Validation (inc. Herd scope)        │                                                                 |
+|  |- Gateway                             │                                                                 |
+|  |                                      │                                                                 |
+|  |──────────────────────────────────────╯                                                                 |
+|  │ ▲ │                                                                                                    |
+|  │ │ └────────────────────────────────────────────────────────────────────────────────┐                   |
+|  │ │ (State Read/Write Requests to Raft Leader)                                       |                   |
+|  │ │ (*Read* Request potentially served by Leader/Follower)                           |                   |
+|  │ ▼                                                                                  |                   |
+|  [2. Cluster State Store / "Barn" (Nodes 1..N)] <──────────> [Raft Consensus Protocol]|                   |
+|  - *Achieves State Machine Replication via Raft                                       |                   |
+|  |       Consensus for HA & Consistency*                                              |                   |
+|  |       (Leader Election, Log Replication)                                           |                   |
+|  - Stores: Nodes, Pipelines, Slices,                                                  |                   |                 
+|  |         Logical Herds (Definition, Quotas),                                        |                   |
+|  |         RBAC Policies, Secrets, Core Metadata Refs                                 |                   |
+|  │                                                                                    |                   |
+|  │  [ Raft Leader ] <------(Write Op)-- Clients (API Srv, Scheduler, etc.)            |                   |
+|  │   |                                                                                |                   |
+|  │   | 1. Append Op to *Own* Log                                                      |                   |
+|  │   v                                                                                |                   |
+|  │  [ Replicated Log ] ----(Replicate Entry)--> [ Raft Followers (N-1) ]              |                   |
+|  │   |                     <--(Acknowledge)------                                     |                   |
+|  │   | 2. Wait for Quorum                                                             |                   |
+|  │   v                                                                                |                   |
+|  │  [ Commit Point ] -----(Notify Apply)-----> [ Leader & Followers ]                 |                   |
+|  │   |                                                                                |                   |
+|  │   v 3. Apply Committed Op to *Local* State Machine                                 |                   |
+|  │  [ State Machine (KV Store) @ Leader ]                                             |                   |
+|  │                                                                                    |                   |
+|  └───────── // Same process applies committed Ops on Followers // ────────────────────┘                   |
+|  │ ▲          [ State Machine (KV Store) @ Follower 1..N-1 ]                                              |
+|  │ │                                                                                                      |
+|  │ │ (Consistent Reads, Watches on Committed State)                                                       |
+|  │ │                                                                                                      |
+|  │ ▼                                                                                                      |
+|  [3. Scheduler (Active Leader or Replicas)] ────────→┤ (Placement Cmds via API Server)                    |
+|  | - Reads Consistent State from Raft Store          │                                                    |
+|  | - Considers Task Reqs, Herd Quotas, Affinity      │                                                    |
+|  |                                                   │                                                    |
+|   ───────────────────────────────────────────────────┘                                                    |
+|   │ ▲ │                                                                                                   |
+|   │ │ └───────────────────────────────────────────────────┐                                               |
+|   │ │ (Secrets Read/Write Requests to Raft Leader)        │                                               |
+|   │ │                                                     │                                               |
+|   │ ▼                                                     │                                               |
+|  [5. Secrets Manager]────────────────────────────────────>┤ (Secrets Delivery via Runi Agent)             |
+|  |- Reads/Writes Encrypted Secrets via Raft Store         │                                               |
+|  |- RBAC for Secrets Access (Enforced via API Server)     │                                               |
+|  |- Interact with State Store via API Server/Directly     |                                               |
+|  |- Read consistent state, submit changes via Leader      |                                               |                                                        
+|  +────────────────────────────────────────────────────────┘                                               |
+|   │ ▲                                                                                                     |
+|   │ │ (Metadata Read/Write Requests to Raft Leader/Service)                                               |
+|   │ │                                                                                                     |
+|   │ ▼                                                                                                     |
+|  [6. Data Governance Service]───────────────────────+─> (Queries via API Server)                          |
+|  |- Stores Core Metadata/Refs via Raft Store        │                                                     |
+|  |- May use separate backend for Annotations        │                                                     |
+|  |- Provides Metadata gRPC API                      │                                                     |
+|  |                                                  │                                                     |
++────────────────────────────────────^────────────────^─────────────────────────────────────────────────────+
+|                                    │                │ (Internal gRPC/TLS)                                 |
+| (Agent Registration, Health,       │                │ (Cmds to Agent from Control Plane Leader/API)       |
+|  Metrics Reporting, Log Forwarding)│                │ (Cmds: Launch Slice *in Herd*, Secrets Req, Status) | 
+|                                    │                │ (Metadata Reporting via Worker to Gov Service)      |
++────────────────────────────────────v────────────────v─────────────────────────────────────────────────────+
+|                      RUNI AGENT (Daemon on each Worker Node)                                              |
++───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+|  - Registers with Control Plane (via API Server to Raft Store)                                            |
+|  - Reports Node Resources & Health (via API Server to Raft Store)                                         |
+|  - Receives Commands (from Scheduler via API Server)                                                      |
+|  - Manages Local `Slice Manager` (cgroups, namespaces, exec)                                              |
+|  - Manages Local Worker Lifecycle                                                                         |
+|  - Securely Fetches Secrets (from Secrets Mgr via API Server)                                             |
+|  - Sets up Network & Storage for Workers                                                                  |
+|  - Collects/Forwards Worker Observability (Logs to Fluentd, Metrics Scrape)                               |
+|  - Exposes Own & Aggregated Metrics                                                                       |
+|                                                                                                           |
++───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+|           (Launch Cmd *within Herd context*,    │ ▲    (Log/Metrics Collection)                           |
+|            Config, Secrets)                     │ |                                                       |
+|                                                 ▼ │                                                       |
++───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+|                  RUNI SLICE (Isolated Go Process)                                                         |
+|                    *Runs within the context of a specific Herd*                                           |
++───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+|  - Executes User Pipeline Step Code                                                                       |
+|  - Isolated via Namespaces (User, PID, Net, Mount, etc.)                                                  |
+|  - Constrained by Cgroups (*reflecting Herd quotas*)                                                      |
+|  - Runs as Ephemeral User (mapped from Service Account, authorized for Herd)                              |
+|  - Receives Config/Secrets                                                                                |
+|                                                                                                           |
+|  **Interactions:**                                                                                        |
+|  - Communicates with Other Slices (gRPC, TLS, AuthN)                                                      |
+|  - Accesses External Services (DBs, MinIO, OpenAI)                                                        |
+|  - Reports Lineage/Annotations to `Data Governance Service` (*tagged by Herd*)                            |
+|  - Exposes */metrics* endpoint (scraped by Runi Agent)                                                    |
+|  - Writes Structured Logs to stdout/stderr (collected by Runi Agent)                                      |
+|                                                                                                           |
++───────────────────────────────────────────────────────────────────────────────────────────────────────────+
 ```
 
 ## Core Principles
