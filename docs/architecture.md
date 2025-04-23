@@ -142,6 +142,45 @@ Goal: Define a self-sufficient, distributed environment for orchestrating and ex
 * **Data Governance Aware:** Built-in metadata tracking, lineage capture, and support for quality checks. With extension for storage/management of rich data annotations (e.g., from LLMs).
 * **Rich Observability:** Native support for metrics (Prometheus) and logs (Fluentd).
 
+🧠 Raft-Backed Architecture
+
+At the heart of Runink's distributed control plane is Raft consensus, which ensures strong consistency and availability across multiple replicas in a multi-tenant setup. Here’s how Raft plays a crucial role:
+
+Cluster State Store (Barn):
+
+Raft ensures consistency between multiple replicas of the state store, preventing conflicts and enabling data to be synchronized across different services.
+
+Critical data, such as pipeline definitions, herd configurations, secrets, and RBAC policies, is replicated and stored in the Barn, which is under Raft consensus.
+
+Writes and Reads: All writes (e.g., task assignments, secrets, RBAC policies) go through the Raft leader to ensure consistency. If the leader fails, Raft elects a new leader to ensure continuous operation without data loss.
+
+
+Scheduler:
+
+Uses Raft's consensus for task scheduling to ensure that nodes in the cluster agree on which worker slices should be assigned the next task.
+
+Task assignments are synchronized across the cluster to avoid conflicts and duplications.
+
+Secrets Manager:
+
+Managed via Raft to ensure that secrets are consistently available across all nodes, with encrypted storage and strict RBAC.
+
+Guarantees that secrets are securely injected into Runi agents and worker slices at runtime, with access scoped per Herd.
+
+Data Governance & Lineage:
+
+Lineage and metadata are tagged and tracked consistently across the cluster, with Raft-backed guarantees to prevent discrepancies in historical records.
+
+Resilience & High Availability:
+
+Raft consensus enables Runink to maintain availability and consistency in the face of node failures by synchronizing state across multiple replicas.
+
+The API Server, Scheduler, Secrets Manager, and other components benefit from Raft to ensure high availability, disaster recovery, and distributed state consistency.
+
+---
+
+With Raft integrated into Runink, the system can operate fault-tolerantly, ensuring that data across the entire platform remains consistent, even when network partitions or node failures occur. This guarantees that your data pipelines, metadata, secrets, and workload scheduling are managed reliably in any cloud-native or distributed environment
+
 ## Architecture Components 
 
 ```plaintext
