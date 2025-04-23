@@ -24,7 +24,7 @@ In Runink, every pipeline run captures:
 
 ## 📈 Generate a Lineage Graph
 ```bash
-runi lineage --scenario features/orders.feature --out lineage/orders.svg
+runi lineage --scenario features/orders.dsl --out lineage/orders.svg
 ```
 
 The graph shows:

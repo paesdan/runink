@@ -9,13 +9,13 @@ This document describes each component of the Runink architecture, providing cle
 
 **The Runink CLI (`runi`)** is the developer-first control surface for the entire data lifecycle — from contracts and pipelines to tests, observability, and deployment. It acts as the **orchestration layer for humans**, offering a simple, scriptable, and powerful interface for everything Runink can do.
 
-Whether you're scaffolding a new project, compiling `.feature` files into Go pipelines, validating schema contracts, testing with golden files, or pushing artifacts to a metadata registry — `runi` gives you the tools to do it fast and reliably, right from your terminal.
+Whether you're scaffolding a new project, compiling `.dsl` files into Go pipelines, validating schema contracts, testing with golden files, or pushing artifacts to a metadata registry — `runi` gives you the tools to do it fast and reliably, right from your terminal.
 
 *Functions:*
 
 - **Project Scaffolding** for quickly bootstrapping new repositories with features, contracts, tests, and CI configs  
 - **Contract Management** including generation from Go structs, diffing, rollback, and drift tracking  
-- **Pipeline Compilation** from `.feature` scenarios into DAG-aware Go code with batch and streaming support  
+- **Pipeline Compilation** from `.dsl` scenarios into DAG-aware Go code with batch and streaming support  
 - **Golden Testing & Synthetic Data** using built-in Faker-based generation and contract-backed verification  
 - **Metadata Publishing** to push lineage, changelogs, and SBOMs to registries or dashboards  
 - **Interactive REPL & Exploration** for debugging, jq-style filtering, DataFrame operations, and live SQL queries  
@@ -183,7 +183,7 @@ With Schema Contracts, Runink gives your team **confidence, control, and complia
 
 ### 🧱 Feature DSL (Domain-Specific Language)
 
-The **Feature DSL** is Runink’s powerful, readable interface for defining pipelines — purpose-built to align data logic with domain language. Inspired by Gherkin, this DSL uses `.feature` files to declare **what should happen to the data**, using a structured, declarative flow based on real business scenarios.
+The **Feature DSL** is Runink’s powerful, readable interface for defining pipelines — purpose-built to align data logic with domain language. Inspired by Gherkin, this DSL uses `.dsl` files to declare **what should happen to the data**, using a structured, declarative flow based on real business scenarios.
 
 Every scenario is composed of modular `@step` blocks, organized using `@when`, `@then`, and `@do` to clearly express conditions, expected outcomes, and the logic to apply. These steps can be reused across domains — for example, `@step(name=NormalizeEmails)` may appear in both ecommerce and finance pipelines, while more specific validations (like salary ranges or KYC checks) are scoped to their respective domain modules.
 
@@ -215,7 +215,7 @@ Combined with contracts, scenarios, and metadata tracking, this engine ensures t
 
 - Golden file testing with structured diff reporting  
 - Synthetic data generation for repeatable, contract-aligned tests  
-- CLI-driven integration testing with `.feature` scenarios  
+- CLI-driven integration testing with `.dsl` scenarios  
 - Catch schema drift, logic changes, or data regressions early  
 - All tests are human-readable and Git-friendly for review  
 
@@ -235,7 +235,7 @@ Runink’s REPL combines a **DataFrame-inspired API**, **jq-style JSON navigatio
 - JSON exploration with jq-style dot access and filtering  
 - Interactive DataFrame operations (`Filter`, `Join`, `GroupBy`, etc.)  
 - SQL-like query parsing for quick insights and structured filters  
-- Preview and export queries into `.feature` pipeline DSL code  
+- Preview and export queries into `.dsl` pipeline DSL code  
 
 Whether you’re writing tests, preparing contracts, or validating the latest stream of events — the REPL keeps you **curious**, **confident**, and **connected** to your data.
 
@@ -243,7 +243,7 @@ Whether you’re writing tests, preparing contracts, or validating the latest st
 
 ### 🚧 Pipeline Generator
 
-The **Pipeline Generator** is the core of Runink’s automation engine — turning human-readable `.feature` files into optimized, production-ready Go pipelines. It analyzes each scenario and compiles it into a **Directed Acyclic Graph (DAG)** of transformations, ensuring that all steps are executed in the correct order while honoring their data dependencies.
+The **Pipeline Generator** is the core of Runink’s automation engine — turning human-readable `.dsl` files into optimized, production-ready Go pipelines. It analyzes each scenario and compiles it into a **Directed Acyclic Graph (DAG)** of transformations, ensuring that all steps are executed in the correct order while honoring their data dependencies.
 
 Each tag (`@source`, `@step`, `@sink`) in the DSL is parsed with context-aware parameters, allowing you to reuse logic across platforms and domains. Whether you're sourcing from Snowflake, applying a standard validation like `@step(name=ValidateSIN)`, or writing to a streaming sink, Runink generates tailored Go code behind the scenes to handle the orchestration.
 
@@ -251,7 +251,7 @@ The generator intelligently creates **temporary views** for intermediate pipelin
 
 **Functions:**
 
-- Compiles `.feature` DSL into fully executable Go code  
+- Compiles `.dsl` DSL into fully executable Go code  
 - Builds DAGs (Directed Acyclic Graphs) from ordered step dependencies  
 - Supports parameterized tags like:  
   - `@source(type=snowflake|kafka, schema|topic=…, table|format=…)`  
@@ -270,7 +270,7 @@ With the Pipeline Generator, you go from **business intent to running code** in 
 
 > Role: Handles pipeline dependency resolution and execution scheduling.
 
-The **Feature Orchestration** engine is the backbone of Runink’s intelligent pipeline execution. It transforms `.feature` files into **distributed DAGs (Directed Acyclic Graphs)** that honor data dependencies, execution order, and domain boundaries. Each step — tagged in your DSL — is independently executable and can be scheduled as a microservice or serverless job, enabling true modular execution at scale.
+The **Feature Orchestration** engine is the backbone of Runink’s intelligent pipeline execution. It transforms `.dsl` files into **distributed DAGs (Directed Acyclic Graphs)** that honor data dependencies, execution order, and domain boundaries. Each step — tagged in your DSL — is independently executable and can be scheduled as a microservice or serverless job, enabling true modular execution at scale.
 
 Orchestration works seamlessly across **batch** and **streaming** modes, supporting windowed ingestion and real-time event slices with equal efficiency. It leverages Go-native primitives (like `bigmachine`) and Linux cgroups to spin up lightweight, isolated **Runi** compute slices. These slices execute in logical groupings — called **Herds** — using Linux namespaces to separate domain-specific logic, making the entire system cloud-native and data-domain aware by design.
 
@@ -319,7 +319,7 @@ With lineage and metadata as a first-class feature, Runink ensures your data is 
 
 The **Data Quality & Validation** layer in Runink ensures that your pipelines don’t just run — they run with **integrity, accuracy, and trust**. It allows you to define validations as part of your pipeline logic, using both schema-driven rules and domain-specific assertions. From pre-ingestion *contract validation* checks to mid-pipeline *schema enforcement* validations and final output guarantees, Runink makes quality a first-class citizen.
 
-Non-technical users can define business rules using `.feature` files — asserting required fields, value ranges, regex patterns, or even cross-field relationships. Invalid records can be logged, routed to a **Dead Letter Queue (DLQ)**, or flagged for review, without halting the entire pipeline.
+Non-technical users can define business rules using `.dsl` files — asserting required fields, value ranges, regex patterns, or even cross-field relationships. Invalid records can be logged, routed to a **Dead Letter Queue (DLQ)**, or flagged for review, without halting the entire pipeline.
 
 Built-in quality metrics and thresholds provide insight into pipeline health, and integrate seamlessly with observability tools for alerting and monitoring.
 
@@ -329,7 +329,7 @@ Built-in quality metrics and thresholds provide insight into pipeline health, an
 - Enforce field-level, type-level, and domain-specific constraints  
 - Route invalid records to DLQs with full metadata for debugging  
 - Monitor and alert on data quality thresholds  
-- Allow business and data teams to codify validation rules in `.feature` files  
+- Allow business and data teams to codify validation rules in `.dsl` files  
 
 With Runink, data quality becomes proactive, testable, and deeply integrated — not an afterthought.
 

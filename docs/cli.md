@@ -1,6 +1,6 @@
 # 🧰 Runink CLI Reference (`runi`)
 
-The `runi` CLI is the command-line interface to everything in the **Runink** data platform. It’s your developer-first companion for defining, testing, running, securing, and publishing data pipelines — all from declarative `.feature` files and Go-native contracts.
+The `runi` CLI is the command-line interface to everything in the **Runink** data platform. It’s your developer-first companion for defining, testing, running, securing, and publishing data pipelines — all from declarative `.dsl` files and Go-native contracts.
 
 This reference describes all available commands, grouped by capability.
 
@@ -11,7 +11,7 @@ This reference describes all available commands, grouped by capability.
 | Command | Description |
 |--------|-------------|
 | `runi init [project-name]` | Scaffold a new workspace with starter contracts, features, CI config |
-| `runi compile --scenario <file>` | Generate Go pipeline code from `.feature` files |
+| `runi compile --scenario <file>` | Generate Go pipeline code from `.dsl` files |
 | `runi run --scenario <file> --contract <contract.json>` | Run pipelines locally or remotely |
 | `runi watch --scenario <file>` | Auto-compile & re-run scenario on save |
 
@@ -78,7 +78,7 @@ This reference describes all available commands, grouped by capability.
 |--------|-------------|
 | `runi explain --scenario <file>` | Describe DAG and step resolution logic |
 | `runi graphviz --scenario <file>` | Render DAG as a .png, .svg, or .dot |
-| `runi diff --feature old.feature --feature new.feature` | Compare feature files and show logic drift |
+| `runi diff --feature old.dsl --feature new.dsl` | Compare feature files and show logic drift |
 
 ---
 
@@ -97,7 +97,7 @@ This reference describes all available commands, grouped by capability.
 | Command | Description |
 |--------|-------------|
 | `runi gen --dsl input.json` | Generate feature from sample input |
-| `runi contract from-feature <file>` | Extract contract from `.feature` spec |
+| `runi contract from-feature <file>` | Extract contract from `.dsl` spec |
 | `runi schema hash` | Generate contract fingerprint |
 | `runi bump` | Auto-increment contract version with changelog |
 
@@ -131,12 +131,12 @@ runi init finance-platform
 cd finance-platform
 
 runi contract gen --struct contracts.Customer --out contracts/customer.json
-runi synth --contract contracts/customer.json --scenario features/onboard.feature
+runi synth --contract contracts/customer.json --scenario features/onboard.dsl
 
-runi compile --scenario features/onboard.feature
-runi test --scenario features/onboard.feature
+runi compile --scenario features/onboard.dsl
+runi test --scenario features/onboard.dsl
 
-runi run --scenario features/onboard.feature --contract contracts/customer.json
+runi run --scenario features/onboard.dsl --contract contracts/customer.json
 runi lineage --run-id 5ab2...
 runi publish
 ```
@@ -145,4 +145,4 @@ runi publish
 
 > 💬 Use `runi <command> --help` for flags, options, and examples.
 >  
-> Runink's CLI gives you a full stack data engine in your terminal — from contracts to clusters, from `.feature` to full observability.
+> Runink's CLI gives you a full stack data engine in your terminal — from contracts to clusters, from `.dsl` to full observability.

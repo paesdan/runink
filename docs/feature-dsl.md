@@ -1,12 +1,12 @@
 # Advanced Feature DSL Syntax – Runink
 
-Runink uses `.feature` files with a human-friendly DSL (Domain-Specific Language) inspired by BDD and Gherkin. These files define declarative data pipelines using structured steps, annotations, and contract references.
+Runink uses `.dsl` files with a human-friendly DSL (Domain-Specific Language) inspired by BDD and Gherkin. These files define declarative data pipelines using structured steps, annotations, and contract references.
 
 This guide explores advanced syntax available for real-world data use cases including streaming, branching, conditionals, role enforcement, and metadata tagging.
 
 ---
 
-## 📌 Anatomy of a `.feature` File
+## 📌 Anatomy of a `.dsl` File
 
 ```gherkin
 Feature: High-value customer segmentation
@@ -157,7 +157,7 @@ Runink can then generate or recommend pipeline stages for the task.
 ---
 
 ## Summary
-Runink’s `.feature` DSL lets you:
+Runink’s `.dsl` DSL lets you:
 - Describe pipelines in natural, reusable syntax
 - Build complex branching and streaming workflows
 - Embed contracts, policies, and roles into your ETL

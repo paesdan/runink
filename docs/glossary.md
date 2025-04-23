@@ -4,7 +4,7 @@ This glossary defines key terms, acronyms, and concepts used throughout the Runi
 
 ---
 
-### .feature File
+### .dsl File
 
 A human-readable file written in Gherkin syntax used to describe a data pipeline scenario using Given/When/Then structure and tags like @source, @step, and @sink.
 
@@ -12,7 +12,7 @@ A human-readable file written in Gherkin syntax used to describe a data pipeline
 
 ### BDD (Behavior-Driven Development)
 
-A software development approach that describes application behavior in plain language, often used with .feature files.
+A software development approach that describes application behavior in plain language, often used with .dsl files.
 
 ---
 

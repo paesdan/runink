@@ -28,7 +28,7 @@ cd myproject
 This command generates:
 - Initial Go module
 - Sample contracts
-- Example `.feature` files
+- Example `.dsl` files
 - Golden file tests
 - Dockerfile and CI/CD configs
 
@@ -40,25 +40,21 @@ Your project includes:
 
 ```
 myproject/
-├── wranglers/
-├── contracts/
-├── contracts/golden/
-├── features
-├── deploy
-├── config
-├── docs/
+├── bin/                  -> CLI
+├── api/                  -> gRPC API layer (authn/z, herd context)
+├── contracts/            -> Schema contracts and transformation logic on go struts. 
+├── contracts/golden/     -> Golden files used on regression testing with examples and synthetic data.
+├── features              -> Scenarios definitions for each feature from the `.dsl` files.
+├── rendered              -> Generated DAG code from the contracts and features to be executed by runi.
+├── herd/                 -> Domain Service Control Policies Herd context isolation
+├── docs/                 -> Markdown docs, examples, use cases, and playbooks.
+├── config/runi/          -> Agent: runner, cgroup manager, metrics, logs
+├── config/raftstore/     -> State sync using Raft
+├── config/scheduler/     -> DAG-aware scheduler logic
+├── config/parser/        -> DSL parser, scenario runner
+├── config/observability/ -> Tracing, logging, Prometheus exporters
 └── .github/workflows/
 ```
-
-📁 Explore the monorepo to find:
-
-- `wranglers/` — ? (ETL Code to transform the data.)
-- `features/` — Gherkin scenarios definitions for each feature use case. (`.feature` files).
-- `config/` — ? (Maybe extra configs such connection and rbac rules).
-- `deploy/` — ? (Maybe the generated code to be deployed. With all commands and its DAG orchestestration using go or github?).
-- `contracts/` — ? (Contracts definitions as go struts)
-- `contracts/golden` — Golden test files for regression testing. Holds golden test examples, snapshots, synthetic data.
-- `docs/` — markdown docs, examples, use cases, and playbooks.
 
 ---
 
@@ -67,13 +63,13 @@ myproject/
 Compile your first pipeline:
 
 ```bash
-runink compile --scenario features/example.feature --out pipeline/example.go
+runink compile --scenario features/example.dsl --out pipeline/example.go --herd my-data-herd
 ```
 
 Execute a scenario:
 
 ```bash
-runink run --scenario features/example.feature
+runink run --scenario features/example.dsl --herd my-data-herd
 ```
 
 ---
@@ -83,13 +79,13 @@ runink run --scenario features/example.feature
 Use built-in testing and golden files to ensure correctness:
 
 ```bash
-runink test
+runink test --scenario features/example.dsl --herd my-data-herd
 ```
 
 If the pipeline logic changes and the test is intentionally updated, regenerate golden files:
 
 ```bash
-runink test --update
+runink test --scenario features/example.dsl --update --herd my-data-herd
 ```
 
 ---
@@ -99,7 +95,7 @@ runink test --update
 Interactively explore data and debug transformations:
 
 ```bash
-runink repl
+runink repl --scenario features/example.dsl --herd my-data-herd
 ```
 
 Example REPL commands:

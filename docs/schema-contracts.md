@@ -86,7 +86,7 @@ runi snapshot --contract contracts/order.json --out snapshots/order_v1.json
 ## 🧪 Contract Testing
 Use golden tests to assert schema correctness:
 ```bash
-runi test --scenario features/orders.feature
+runi test --scenario features/orders.dsl
 ```
 And diff output against expected:
 ```bash

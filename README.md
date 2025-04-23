@@ -26,7 +26,7 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 
 ## Key Features
 
-* **Feature DSL:** Define complex pipelines using a human-readable, Gherkin-inspired `.feature` file format.
+* **Feature DSL:** Define complex pipelines using a human-readable, Gherkin-inspired `.dsl` file format.
 * **Integrated Orchestration:** A built-in Control Plane parses DSLs into DAGs and schedules distributed execution across managed nodes.
 * **Runi/Herd Execution Model:** Lightweight, isolated pipeline steps (`Runi Slices`) execute within resource-constrained cgroups and logically separated `Herd` namespaces for multi-tenancy and domain isolation.
 * **Data Governance & Lineage:** Automatic lineage tracking, integrated data catalog, quality rule management, and rich annotation support (incl. LLM outputs) via a central `Data Governance Service`.
@@ -214,7 +214,7 @@ Versioned definitions of data structure used for validation within pipelines and
 
 > Role: Human-readable language for defining pipeline logic.
 
-A Gherkin-inspired format (`.feature` files) used to declare pipeline steps and scenarios, parsed by the Control Plane.
+A Gherkin-inspired format (`.dsl` files) used to declare pipeline steps and scenarios, parsed by the Control Plane.
 
 -----
 
@@ -297,7 +297,7 @@ Provides metrics (Prometheus) and logs (Fluentd) collected by `Runi Agents` from
 ```bash
 # Example (Conceptual)
 runi herd create my-data-herd
-runi apply -f ./pipelines/my_pipeline.feature --herd my-data-herd
+runi apply -f ./pipelines/my_pipeline.dsl --herd my-data-herd
 runi pipeline status my_pipeline --herd my-data-herd
 ```
 

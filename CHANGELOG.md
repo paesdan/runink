@@ -34,7 +34,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 - gRPC support for real-time feature orchestration
 - Barn-backed Secrets Manager with scoped delivery
-- SQL mode in REPL with `.feature` export preview
+- SQL mode in REPL with `.dsl` export preview
 - Token-scoped RBAC policies with CLI support
 - New `runink publish` command for pushing lineage + SBOM
 

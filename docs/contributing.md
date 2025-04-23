@@ -42,7 +42,7 @@ Here's where to plug in:
 | Folder | Purpose |
 |--------|---------|
 | `internal/` | Core Go logic — CLI, pipeline engine, agents |
-| `features/` | DSL scenarios (`.feature` files) |
+| `features/` | DSL scenarios (`.dsl` files) |
 | `contracts/` | Data contracts & golden files |
 | `docs/` | Documentation and guides |
 | `deploy/` | Generated orchestration artifacts |
