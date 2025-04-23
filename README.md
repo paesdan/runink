@@ -92,7 +92,7 @@ Runink operates with a Control Plane managing multiple Worker Nodes, each runnin
 
 ````
 
-*(For more details, see [`docs/architecture.md`](./architecture.md))*
+*(For more details, see [`docs/architecture.md`](./docs/architecture.md))*
 
 ## Key Concepts
 
@@ -134,7 +134,7 @@ Runink operates with a Control Plane managing multiple Worker Nodes, each runnin
 
 # Runink Component Reference
 
-This section provides a brief overview of the main Runink components. For detailed descriptions, please refer to [`docs/components.md`](./components.md).
+This section provides a brief overview of the main Runink components. For detailed descriptions, please refer to [`docs/components.md`](./docs/components.md).
 
 -----
 
@@ -305,11 +305,11 @@ runi pipeline status my_pipeline --herd my-data-herd
 
 **Alpha / Conceptual:** Runink is currently under active development and should be considered experimental. The architecture and features described represent the target state. 
 
-Please read [`docs/benchmark.md`](./benchmark.md) for more details when compared to other common open-source projects.
+Please read [`docs/benchmark.md`](./docs/benchmark.md) for more details when compared to other common open-source projects.
 
 ## Contributing
 
-Contributions are welcome\! Please read our [`docs/contributing.md`](./contributing.md) guide for details on our code of conduct, and the process for submitting pull requests.
+Contributions are welcome\! Please read our [`docs/contributing.md`](./docs/contributing.md) guide for details on our code of conduct, and the process for submitting pull requests.
 
 ## License
 
