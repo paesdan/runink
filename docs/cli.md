@@ -124,22 +124,74 @@ This reference describes all available commands, grouped by capability.
 
 ---
 
-## 💡 Example Flow
+## 🔄 Runtime Lifecycle
 
-```bash
-runi init finance-platform
-cd finance-platform
+| Command | Description |
+|--------|-------------|
+| `runi restart --run-id <uuid>` | Restart a pipeline from last successful checkpoint |
+| `runi resume --run-id <uuid>` | Resume paused pipeline without reprocessing |
+| `runi checkpoint --scenario <file>` | Create a persistent step-based checkpoint marker |
 
-runi contract gen --struct contracts.Customer --out contracts/customer.json
-runi synth --contract contracts/customer.json --scenario features/onboard.dsl
+---
 
-runi compile --scenario features/onboard.dsl
-runi test --scenario features/onboard.dsl
+## 💬 Collaboration & Governance
 
-runi run --scenario features/onboard.dsl --contract contracts/customer.json
-runi lineage --run-id 5ab2...
-runi publish
-```
+| Command | Description |
+|--------|-------------|
+| `runi comment --contract <file>` | Leave inline comments for review (contract-level QA) |
+| `runi request-approval --contract <file>` | Submit contract for governance approval |
+| `runi feedback --scenario <file>` | Attach review notes to a scenario |
+
+---
+
+## 🛡️ Privacy, Redaction & Data Escrow
+
+| Command | Description |
+|--------|-------------|
+| `runi redact --contract <file>` | Automatically redact PII based on tags |
+| `runi escrow --run-id <uuid>` | Encrypt pipeline outputs for future unsealing |
+| `runi anonymize --input <file>` | Generate synthetic version of a sensitive input file |
+
+---
+
+## 📅 Event-Based Execution
+
+| Command | Description |
+|--------|-------------|
+| `runi trigger --on <webhook|s3|pubsub>` | Set up trigger-based pipeline starts |
+| `runi listen --event <type>` | Listen for external event to start scenario |
+| `runi subscribe --stream <source>` | Subscribe to stream source with offset recovery |
+
+---
+
+## 🔃 Pipeline & Contract Lifecycle
+
+| Command | Description |
+|--------|-------------|
+| `runi freeze --scenario <file>` | Lock DAG hash and contract state as immutable |
+| `runi archive --herd <name> --keep <N>` | Archive old scenarios/runs beyond retention policy |
+| `runi retire --contract <file>` | Deprecate contract from active use |
+
+---
+
+## 🧠 Metadata Graph & Semantic Search
+
+| Command | Description |
+|--------|-------------|
+| `runi lineage graph --out file.dot` | Export lineage graph in DOT format |
+| `runi knowledge export --format turtle` | Export contract and DAG metadata as RDF |
+| `runi query lineage` | Run SQL-style queries across lineage metadata |
+
+---
+
+## 🧪 Experimental / LLM-integrated
+
+| Command | Description |
+|--------|-------------|
+| `runi openai audit --contract <file>` | Use LLM to summarize or describe schema changes |
+| `runi sandbox --scenario <file>` | Run pipeline in ephemeral namespace sandbox |
+| `runi simulate --input <file> --window 5m` | Replay stream input over a time window |
+| `runi mint-token --role <name>` | Mint temporary JWT token scoped to herd/contract |
 
 ---
 

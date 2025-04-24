@@ -1,0 +1,9 @@
+[
+    {
+      "raw_payload": "{\"trade_id\": \"T1001\", \"product\": \"Swap\", \"event_type\": \"NewTrade\"}"
+    },
+    {
+      "raw_payload": "{\"trade_id\": \"T1002\", \"product\": \"InvalidProduct\", \"event_type\": \"\"}"
+    }
+  ]
+  

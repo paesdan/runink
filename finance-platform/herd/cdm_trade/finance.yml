@@ -1,0 +1,57 @@
+herd: finance
+description: |
+  Secure domain for financial product pipelines.
+  Enforces RBAC, PII masking, and quota limits for finance-specific contracts.
+
+access:
+  roles:
+  - name: trader
+    allow:
+    - read:contracts/*
+    - write:contracts/trade_*.json
+    - run:scenarios/*
+    - publish
+    deny:
+    - write:contracts/hr_*.json
+
+  - name: analyst
+    allow:
+    - read:contracts/*
+    - run:scenarios/*
+    deny:
+    - write:contracts/*
+    - publish
+
+  - name: governance
+    allow:
+    - read:contracts/*
+    - write:contracts/*
+    - approve:contracts/*
+    - audit
+    - retire
+
+security:
+  pii:
+    default_mask: "[REDACTED]"
+    allowed_mask_roles:
+    - governance
+    - trader
+  rbac:
+    default_role: analyst
+    enforce_at_runtime: true
+  secrets:
+    provider: vault
+    keys:
+    - DB_PASS
+    - KAFKA_TOKEN
+
+quotas:
+  max_runs_per_day: 100
+  max_cpu_per_run: "4"
+  max_mem_per_run: "8Gi"
+  ttl_seconds: 14400
+
+lineage:
+  enable: true
+  retention_days: 30
+  emit_contract_hash: true

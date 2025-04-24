@@ -43,9 +43,9 @@ myproject/
 ├── bin/                  -> CLI
 ├── api/                  -> gRPC API layer (authn/z, herd context)
 ├── contracts/            -> Schema contracts and transformation logic on go struts. 
-├── contracts/golden/     -> Golden files used on regression testing with examples and synthetic data.
-├── features              -> Scenarios definitions for each feature from the `.dsl` files.
-├── rendered              -> Generated DAG code from the contracts and features to be executed by runi.
+├── features/             -> Scenarios definitions for each feature from the `.dsl` files.
+├── golden/     -> Golden files used on regression testing with examples and synthetic data.
+├── dags/                 -> Generated DAG code from the contracts and features to be executed by runi.
 ├── herd/                 -> Domain Service Control Policies Herd context isolation
 ├── docs/                 -> Markdown docs, examples, use cases, and playbooks.
 ├── config/runi/          -> Agent: runner, cgroup manager, metrics, logs

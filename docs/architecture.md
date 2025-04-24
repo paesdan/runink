@@ -2,7 +2,6 @@
 
 Goal: Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives. This system acts as the cluster resource manager and scheduler (replacing Slurm), provides Kubernetes-like logical isolation and RBAC, integrates data governance features, and ensures robust security and observability. It aims for high efficiency by avoiding traditional virtualization or container runtimes like Docker. Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives, with enhanced metadata capabilities designed to support standard data governance (lineage, catalog) AND future integration of LLM-generated annotations.
 
-
 ```plaintext
 +───────────────────────────────────────────────────────────────────────────────────────────────────────────+
 |                             External User / Client                                                        |
@@ -33,7 +32,7 @@ Goal: Define a self-sufficient, distributed environment for orchestrating and ex
 |  - *Achieves State Machine Replication via Raft                                       |                   |
 |  |       Consensus for HA & Consistency*                                              |                   |
 |  |       (Leader Election, Log Replication)                                           |                   |
-|  - Stores: Nodes, Pipelines, Slices,                                                  |                   |                 
+|  - Stores: Nodes, Pipelines, Slices,                                                  |                   |               
 |  |         Logical Herds (Definition, Quotas),                                        |                   |
 |  |         RBAC Policies, Secrets, Core Metadata Refs                                 |                   |
 |  │                                                                                    |                   |
@@ -70,7 +69,7 @@ Goal: Define a self-sufficient, distributed environment for orchestrating and ex
 |  |- Reads/Writes Encrypted Secrets via Raft Store         │                                               |
 |  |- RBAC for Secrets Access (Enforced via API Server)     │                                               |
 |  |- Interact with State Store via API Server/Directly     |                                               |
-|  |- Read consistent state, submit changes via Leader      |                                               |                                                        
+|  |- Read consistent state, submit changes via Leader      |                                               |                                                      
 |  +────────────────────────────────────────────────────────┘                                               |
 |   │ ▲                                                                                                     |
 |   │ │ (Metadata Read/Write Requests to Raft Leader/Service)                                               |
@@ -125,14 +124,14 @@ Goal: Define a self-sufficient, distributed environment for orchestrating and ex
 
 ## Core Principles
 
-*  **User Interaction:** Client requests are often scoped to a specific Herd.
-*  **API Server / RBAC:** Enforces RBAC policies based on user/service account permissions within a target Herd.
-*  **Cluster State Store:** Explicitly stores Herd definitions and their associated resource quotas.
-*  **Scheduler:** Considers Herd-level quotas when making placement decisions.
-*  **Secrets Manager:** Access to secrets might be scoped by Herd.
-*  **Data Governance:** Metadata (lineage, annotations) can be tagged by or associated with the Herd it belongs to.
-*  **Runi Agent:** Receives the target Herd context when launching a slice and uses this information to potentially configure namespaces and apply appropriate cgroup limits based on Herd quotas.
-*  **Runi Slice:** A single instance of a pipeline step running as an isolated Worker Slice Process. Executes entirely within the logical boundary and resource constraints defined by its assigned Herd.
+* **User Interaction:** Client requests are often scoped to a specific Herd.
+* **API Server / RBAC:** Enforces RBAC policies based on user/service account permissions within a target Herd.
+* **Cluster State Store:** Explicitly stores Herd definitions and their associated resource quotas.
+* **Scheduler:** Considers Herd-level quotas when making placement decisions.
+* **Secrets Manager:** Access to secrets might be scoped by Herd.
+* **Data Governance:** Metadata (lineage, annotations) can be tagged by or associated with the Herd it belongs to.
+* **Runi Agent:** Receives the target Herd context when launching a slice and uses this information to potentially configure namespaces and apply appropriate cgroup limits based on Herd quotas.
+* **Runi Slice:** A single instance of a pipeline step running as an isolated Worker Slice Process. Executes entirely within the logical boundary and resource constraints defined by its assigned Herd.
 * **Runi Pipes:** Primarily used now for internal communication within the `Runi Agent` to capture logs/stdio from the `Runi Slice` it `exec`s, rather than for primary data transfer between steps.
 * **Herd:** A logical grouping construct, similar to a Kubernetes Namespace, enforced via RBAC policies and potentially mapped to specific sets of Linux namespaces managed by Agents. Provides multi-tenancy and team isolation. Quotas can be applied per Herd.
 * **Go Native & Linux Primitives:** Core components written in Go, directly leveraging cgroups, namespaces (user, pid, net, mount, uts, ipc), pipes, sockets, and `exec` for execution and isolation.
@@ -142,45 +141,32 @@ Goal: Define a self-sufficient, distributed environment for orchestrating and ex
 * **Data Governance Aware:** Built-in metadata tracking, lineage capture, and support for quality checks. With extension for storage/management of rich data annotations (e.g., from LLMs).
 * **Rich Observability:** Native support for metrics (Prometheus) and logs (Fluentd).
 
-
----
-
-Below is a **technology-focused benchmark** you can embed into your `architecture.md` (or a dedicated benchmarking section) to highlight the **architectural gains** Runink achieves by choosing Go, functional pipelines, Linux primitives, and Raft—rather than simply comparing tools:
-
 ---
 
 ## 📈 Technology Benchmark: Go + Raft + Linux Primitives vs. JVM + Containerized Stacks
 
-| **Dimension**                          | **Traditional (JVM / Container / DataFrame)**                   | **Runink (Go / FP Pipelines / Raft)**                                                   | **Gains**                                                                                                  |
-|----------------------------------------|-----------------------------------------------------------------|-----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------|
-| **Language Runtime**                   | Java Virtual Machine                                            | Go runtime                                                                                | • **Lower startup latency** (milliseconds vs. seconds) • **Smaller memory footprint** per process (tens of MBs vs. hundreds of MBs)       |
-| **Programming Paradigm**               | OOP (classes, inheritance, heavy type hierarchies)             | Functional-ish pipelines in Go (pure functions, composable stages)                      | • **Simpler abstractions** (no deep inheritance)  • **Easier reasoning** about data flow  • **Higher testability** via pure stage functions      |
-| **Data Processing Model**              | Row-based DataFrames             | Channel-based streams of structs (Go channels → functional transforms)                   | • **Constant memory** for streaming (no full in-memory tables)  • **Back-pressure** and windowing naturally via channels  • **Composable, step-by-step transforms**                 |
-| **Isolation & Sandboxing**             | Containers + VM overhead                     | cgroups + namespaces + Go processes                                                      | • **0.5–1 ms** slice startup vs. **100 ms+** container spin-up  • **Fine-grained resource limits** per slice  • **No dockerd overhead**                              |
-| **Inter-Stage Communication**          | Shuffle via network storage or distributed file systems        | In-memory pipes, UNIX sockets, or gRPC streams within Go                                | • **<1 ms** handoff latency  • **Zero-copy** possible with `io.Pipe`  • **Strong type safety** end-to-end                      |
-| **Distributed Consensus**               | External etcd or no coordination    | Built-in Raft                                                    | • **Linearizable consistency** for control plane  • **Leader election** and automatic recovery  • **Atomic updates** across scheduler, secrets, and metadata |
-| **Multi-Tenancy & Security**           | K8s namespaces + complex RBAC, network policies               | Herd namespaces + cgroup quotas + OIDC/JWT + mTLS                                       | • **Single-layer isolation**  • **Per-slice ephemeral UIDs** for zero-trust  • **Simpler, declarative Herd-scoped policies**               |
-| **Observability & Lineage**            | External stacks                  | Native agents + Raft-consistent metadata store                                          | • **Always-consistent** lineage  • **Unified telemetry** (metrics, logs, traces)  • **Real-time auditability** without manual integration       |
-| **Deployment & Ops**                   | Helm charts, CRDs, multi-tool CI/CD                           | Single Go binary + Raft cluster bootstrap                                              | • **One artifact** for all services  • **Simpler upgrades** via rolling Raft restarts  • **Built-in health & leader dashboards**                  |
-| **Functional Extensibility**           | Plugins in Java/Python with JNI or UDFs (heavy)               | Go plugins or simple function registration                                              | • **No cross-language bridges**  • **First-class Go codegen** from DSL  • **Easier on-the-fly step injection**                         |
+| **Dimension**                 | **Traditional (JVM / Container / DataFrame)**     | **Runink (Go / FP Pipelines / Raft)**                             | **Gains**                                                                                                                                                                         |
+| ----------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Language Runtime**          | Java Virtual Machine                                    | Go runtime                                                              | •**Lower startup latency** (milliseconds vs. seconds) • **Smaller memory footprint** per process (tens of MBs vs. hundreds of MBs)                                        |
+| **Programming Paradigm**      | OOP (classes, inheritance, heavy type hierarchies)      | Functional-ish pipelines in Go (pure functions, composable stages)      | •**Simpler abstractions** (no deep inheritance)  • **Easier reasoning** about data flow  • **Higher testability** via pure stage functions                         |
+| **Data Processing Model**     | Row-based DataFrames                                    | Channel-based streams of structs (Go channels → functional transforms) | •**Constant memory** for streaming (no full in-memory tables)  • **Back-pressure** and windowing naturally via channels  • **Composable, step-by-step transforms** |
+| **Isolation & Sandboxing**    | Containers + VM overhead                                | cgroups + namespaces + Go processes                                     | •**0.5–1 ms** slice startup vs. **100 ms+** container spin-up  • **Fine-grained resource limits** per slice  • **No dockerd overhead**                      |
+| **Inter-Stage Communication** | Shuffle via network storage or distributed file systems | In-memory pipes, UNIX sockets, or gRPC streams within Go                | •**<1 ms** handoff latency  • **Zero-copy** possible with `io.Pipe`  • **Strong type safety** end-to-end                                                         |
+| **Distributed Consensus**     | External etcd or no coordination                        | Built-in Raft                                                           | •**Linearizable consistency** for control plane  • **Leader election** and automatic recovery  • **Atomic updates** across scheduler, secrets, and metadata        |
+| **Multi-Tenancy & Security**  | K8s namespaces + complex RBAC, network policies         | Herd namespaces + cgroup quotas + OIDC/JWT + mTLS                       | •**Single-layer isolation**  • **Per-slice ephemeral UIDs** for zero-trust  • **Simpler, declarative Herd-scoped policies**                                        |
+| **Observability & Lineage**   | External stacks                                         | Native agents + Raft-consistent metadata store                          | •**Always-consistent** lineage  • **Unified telemetry** (metrics, logs, traces)  • **Real-time auditability** without manual integration                           |
+| **Deployment & Ops**          | Helm charts, CRDs, multi-tool CI/CD                     | Single Go binary + Raft cluster bootstrap                               | •**One artifact** for all services  • **Simpler upgrades** via rolling Raft restarts  • **Built-in health & leader dashboards**                                    |
+| **Functional Extensibility**  | Plugins in Java/Python with JNI or UDFs (heavy)         | Go plugins or simple function registration                              | •**No cross-language bridges**  • **First-class Go codegen** from DSL  • **Easier on-the-fly step injection**                                                      |
 
 ---
 
 ### Key Takeaways
 
-1. **Speed & Efficiency**  
-   Go’s minimal runtime and direct use of Linux primitives deliver sub-millisecond task launches and minimal per-slice overhead—vs. multi-second container or JVM startups.
-
-2. **Deterministic, Fault-Tolerant Control**  
-   Raft gives Runink a single, consistent source of truth across all core services—eliminating split-brain and eventual-consistency pitfalls that plague layered stacks.
-
-3. **Composable, Functional Pipelines**  
-   Channel-based, stage-oriented transforms allow lean, testable, streaming-first ETL—rather than bulk-loading entire tables in memory.
-
-4. **Unified, Secure Multi-Tenancy**  
-   Herds + namespaces + cgroups + OIDC/JWT yield strong isolation and a simpler security model than stitching together K8s, Vault, and side-cars.
-
-5. **Built-In Governance & Observability**  
+1. **Speed & Efficiency**Go’s minimal runtime and direct use of Linux primitives deliver sub-millisecond task launches and minimal per-slice overhead—vs. multi-second container or JVM startups.
+2. **Deterministic, Fault-Tolerant Control**Raft gives Runink a single, consistent source of truth across all core services—eliminating split-brain and eventual-consistency pitfalls that plague layered stacks.
+3. **Composable, Functional Pipelines**Channel-based, stage-oriented transforms allow lean, testable, streaming-first ETL—rather than bulk-loading entire tables in memory.
+4. **Unified, Secure Multi-Tenancy**Herds + namespaces + cgroups + OIDC/JWT yield strong isolation and a simpler security model than stitching together K8s, Vault, and side-cars.
+5. **Built-In Governance & Observability**
    Raft-backed metadata ensures lineage and schema contracts are always in sync—no external governance platform required.
 
 By grounding Runink’s design in **Go**, **functional pipelines**, **Linux primitives**, and **Raft consensus**, you get a single, vertically integrated platform that outperforms and out-operates the conventional “JVM + containers + orchestration + governance” stack—delivering **predictable**, **low-overhead**, and **secure** data pipelines at scale.
@@ -218,7 +204,7 @@ With Raft integrated into Runink, the system can operate fault-tolerantly, ensur
 
 ---
 
-## Architecture Components 
+## Architecture Components
 
 ```plaintext
 I. Runink Control Plane (Distributed & Persistent)
@@ -350,7 +336,6 @@ III. Runi Slice (Isolated Go Process)
      └─ Data I/O & Security: Requires appropriate RBAC permissions and Secrets (API keys, internal service URLs) to access data sources (MinIO) and LLM endpoints. Network policies may be needed to allow egress to external APIs or internal LLM services.
 ```
 
-
 ## Benefits & Tradeoffs
 
 * **Potential Performance:** By avoiding full container runtimes and using direct `exec` with namespaces/cgroups, startup times and per-slice overhead *could* be lower than Kubernetes pods. Go's efficiency helps.
@@ -359,7 +344,7 @@ III. Runi Slice (Isolated Go Process)
 * **Ecosystem:** Lacks the vast ecosystem, tooling, and community support of Kubernetes or HPC schedulers.
 * **Security Burden:** All security aspects (RBAC, secrets, TLS, identity, namespace config) must be implemented correctly and securely from scratch.
 
-## Future LLM Integration 
+## Future LLM Integration
 
 1. **Pipeline Definition:** A user defines a pipeline step specifically for LLM annotation. This step specifies the input data source (e.g., path on shared FS/MinIO), the target LLM (e.g., OpenAI model name or internal service endpoint), the prompt, and potentially the output format.
 2. **Scheduling:** The `Scheduler` assigns this step to a `Runi Agent`. If targeting an internal LLM requiring specific hardware (GPU), the scheduler uses node resource information (reported by Agents) for placement.

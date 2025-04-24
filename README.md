@@ -10,7 +10,6 @@
 
 <img src="./docs/images/logo.png" width="150"/>
 
-
 ***Runink*** is an ambitious project aiming to define a **self-sufficient, distributed environment** specifically designed for orchestrating and executing data pipelines. Built natively in **Go** and leveraging core **Linux primitives** (cgroups, namespaces, `exec`), Runink acts as its own cluster resource manager and scheduler, providing a vertically integrated platform that replaces the need for separate systems like Slurm or complex Kubernetes setups for data workloads.
 
 Our goal is to provide a highly efficient, secure, and governance-aware platform with a **serverless execution model** for data engineers and scientists. Define your pipelines declaratively, and let Runink handle the distributed execution, isolation, resource management, security, lineage, and observability.
@@ -90,7 +89,7 @@ Runink operates with a Control Plane managing multiple Worker Nodes, each runnin
 |   [Core Implementation: TLS, Namespaces, Cgroups, Service Accounts]         |
 +-----------------------------------------------------------------------------+
 
-````
+```
 
 *(For more details, see [`docs/architecture.md`](./docs/architecture.md))*
 
@@ -130,13 +129,13 @@ Runink operates with a Control Plane managing multiple Worker Nodes, each runnin
 
 <br>
 
------
+---
 
 # Runink Component Reference
 
 This section provides a brief overview of the main Runink components. For detailed descriptions, please refer to [`docs/components.md`](./docs/components.md).
 
------
+---
 
 ### ⚙️ Runink CLI (`runi`)
 
@@ -144,7 +143,7 @@ This section provides a brief overview of the main Runink components. For detail
 
 The primary command-line tool for interacting with the Runink platform, managing contracts, features, tests, and deployments.
 
------
+---
 
 ### 🤖 Runi Agent
 
@@ -152,7 +151,7 @@ The primary command-line tool for interacting with the Runink platform, managing
 
 Runs on each compute node, manages `Runi Slice Process` lifecycle within cgroups/namespaces, fetches secrets, and forwards logs/metrics to the observability stack.
 
------
+---
 
 ### 🐑 Herd Namespace
 
@@ -160,7 +159,7 @@ Runs on each compute node, manages `Runi Slice Process` lifecycle within cgroups
 
 A logical grouping (similar to K8s namespaces) enforced via RBAC and resource quotas, providing isolation for `Runi Slices` using Linux namespaces.
 
------
+---
 
 ### 🖥️ Herd Control Plane
 
@@ -168,7 +167,7 @@ A logical grouping (similar to K8s namespaces) enforced via RBAC and resource qu
 
 The distributed set of services (API Server, Scheduler, State Store, etc.) managing cluster state, scheduling workloads, enforcing policies, and providing APIs.
 
------
+---
 
 ### 💾 Barn (Cluster State Store)
 
@@ -176,7 +175,7 @@ The distributed set of services (API Server, Scheduler, State Store, etc.) manag
 
 The authoritative, HA key-value store (backed by Raft) holding configurations, pipeline state, RBAC policies, secrets metadata, and core governance info.
 
------
+---
 
 ### 🔐 Secrets Manager
 
@@ -184,7 +183,7 @@ The authoritative, HA key-value store (backed by Raft) holding configurations, p
 
 Stores encrypted secrets (scoped by Herd/RBAC) and securely delivers them to `Runi Agents` for use by `Runi Slices`.
 
------
+---
 
 ### 🔑 Identity & RBAC Manager
 
@@ -192,7 +191,7 @@ Stores encrypted secrets (scoped by Herd/RBAC) and securely delivers them to `Ru
 
 Handles user/service identities (OIDC), defines and enforces fine-grained, Herd-scoped RBAC policies via the API Server.
 
------
+---
 
 ### 🖥️ API Server
 
@@ -200,7 +199,7 @@ Handles user/service identities (OIDC), defines and enforces fine-grained, Herd-
 
 Exposes gRPC/REST APIs, handles AuthN/AuthZ, validates requests, and routes commands to other control plane services.
 
------
+---
 
 ### 📑 Schema Contracts
 
@@ -208,7 +207,7 @@ Exposes gRPC/REST APIs, handles AuthN/AuthZ, validates requests, and routes comm
 
 Versioned definitions of data structure used for validation within pipelines and tracked via the governance service.
 
------
+---
 
 ### 🧱 Feature DSL (Domain-Specific Language)
 
@@ -216,7 +215,7 @@ Versioned definitions of data structure used for validation within pipelines and
 
 A Gherkin-inspired format (`.dsl` files) used to declare pipeline steps and scenarios, parsed by the Control Plane.
 
------
+---
 
 ### 🧪 Testing Engine
 
@@ -224,7 +223,7 @@ A Gherkin-inspired format (`.dsl` files) used to declare pipeline steps and scen
 
 Supports golden file testing, synthetic data generation, and integration tests, driven via the `Runink CLI`.
 
------
+---
 
 ### 🔍 Interactive REPL
 
@@ -232,7 +231,7 @@ Supports golden file testing, synthetic data generation, and integration tests, 
 
 A command-line shell combining DataFrame API, JSON navigation, and SQL-like querying for interactive work.
 
------
+---
 
 ### 🚧 Pipeline Generator
 
@@ -240,7 +239,7 @@ A command-line shell combining DataFrame API, JSON navigation, and SQL-like quer
 
 Conceptually, the Control Plane component (Scheduler) that interprets the DSL and plans the execution DAG for `Runi Slices`.
 
------
+---
 
 ### 🔄 Feature Orchestration
 
@@ -248,7 +247,7 @@ Conceptually, the Control Plane component (Scheduler) that interprets the DSL an
 
 The core scheduling and execution logic managed by the `Herd Control Plane Scheduler` and `Runi Agents`, executing steps as `Runi Slices` within `Herd` boundaries.
 
------
+---
 
 ### 🧭 Data Lineage & Metadata
 
@@ -256,7 +255,7 @@ The core scheduling and execution logic managed by the `Herd Control Plane Sched
 
 Managed by the `Data Governance Service`, providing APIs to record and query lineage graphs, catalog info, annotations (incl. LLM), and quality results.
 
------
+---
 
 ### ✅ Data Quality & Validation
 
@@ -264,7 +263,7 @@ Managed by the `Data Governance Service`, providing APIs to record and query lin
 
 Enforces rules defined in `Schema Contracts` and `Feature Domain Structured Language` within `Worker Slices`, with results tracked by the `Data Governance Service`.
 
------
+---
 
 ### 🔒 Data Governance & Compliance
 
@@ -272,7 +271,7 @@ Enforces rules defined in `Schema Contracts` and `Feature Domain Structured Lang
 
 Encompasses RBAC (scoped by `Herd`), lineage tracking, audit trails, and security controls managed across the Control Plane and Agents.
 
------
+---
 
 ### 🛡️ Security & Enterprise DataOps
 
@@ -280,7 +279,7 @@ Encompasses RBAC (scoped by `Herd`), lineage tracking, audit trails, and securit
 
 Combines platform security features (RBAC, secrets, encryption, isolation via namespaces/cgroups) with recommended CI/CD practices for the platform code itself.
 
------
+---
 
 ### 🌐 Observability & Monitoring
 
@@ -288,7 +287,7 @@ Combines platform security features (RBAC, secrets, encryption, isolation via na
 
 Provides metrics (Prometheus) and logs (Fluentd) collected by `Runi Agents` from `Runi Slices` and Agents themselves.
 
------
+---
 
 ## Getting Started
 
@@ -297,13 +296,25 @@ Provides metrics (Prometheus) and logs (Fluentd) collected by `Runi Agents` from
 ```bash
 # Example (Conceptual)
 runi herd create my-data-herd
-runi apply -f ./pipelines/my_pipeline.dsl --herd my-data-herd
-runi pipeline status my_pipeline --herd my-data-herd
+runi test \
+  --scenario features/trade_cdm.dsl \
+  --golden golden/stream_and_enrich \
+  --herd finance
+runi apply \
+  --scenario features/trade_cdm.dsl \
+  --contract contracts/trade_cdm_multi.go \
+  --herd finance \
+  --out rendered/trade_cdm_dag.go
+runi run \
+  --scenario features/trade_cdm.dsl \
+  --herd finance \
+  --input testdata/stream_and_enrich/input.json
+runi status --runid RUN-20240424-XYZ --herd finance
 ```
 
 ## Development Status
 
-**Alpha / Conceptual:** Runink is currently under active development and should be considered experimental. The architecture and features described represent the target state. 
+**Alpha / Conceptual:** Runink is currently under active development and should be considered experimental. The architecture and features described represent the target state.
 
 Please read [`docs/benchmark.md`](./docs/benchmark.md) for more details when compared to other common open-source projects.
 

@@ -1,0 +1,13 @@
+[
+    {
+      "trade_id": "T1001",
+      "is_valid": true,
+      "validation_error": ""
+    },
+    {
+      "trade_id": "T1002",
+      "is_valid": false,
+      "validation_error": "Missing type or invalid product"
+    }
+  ]
+  

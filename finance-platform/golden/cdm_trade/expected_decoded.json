@@ -1,0 +1,15 @@
+[
+    {
+      "trade_id": "T1001",
+      "product": "Swap",
+      "event_type": "NewTrade",
+      "is_decoded": true
+    },
+    {
+      "trade_id": "T1002",
+      "product": "InvalidProduct",
+      "event_type": "",
+      "is_decoded": true
+    }
+  ]
+  
