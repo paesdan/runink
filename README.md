@@ -38,56 +38,71 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 Runink operates with a Control Plane managing multiple Worker Nodes, each running a Runi Agent.
 
 ```plaintext
-+-----------------------------------------------------------------------------+
-|                    Runink Platform (User Interaction & Definition)          |
-|-----------------------------------------------------------------------------|
-|                [User via Runink CLI/API -> Defines Pipeline]                |
-|                         │ using Schema & Feature DSL                        |
-|                         ▼                                                   |
-|  [Herd Control Plane: API Server, Identity/RBAC] <----(OIDC/Auth)           |
-|   - Handles User Requests, AuthN/Z, Validation                              |
-|   - Entrypoint to Orchestration                                             |
-+---------------------------│-------------------------------------------------+
-                            │ (Validated Pipeline Definition)
-                            ▼
-+-----------------------------------------------------------------------------+
-|           Pipeline Code Generation & Orchestration Planning                 |
-|-----------------------------------------------------------------------------|
-|   [Herd Control Plane: Scheduler + Barn + API Server]                       |
-|    - Parses DSL/DAG                                                         |
-|    - Plans Execution based on Resources, Quotas, Herd Policies              |
-|    - Manages Pipeline State & Lifecycle                                     |
-+---------------------------│-------------------------------------------------+
-                            │ (Scheduling Commands: Launch Slice in Herd)
-                            ▼
-+-----------------------------------------------------------------------------+
-|        Distributed Execution (gRPC & Go/Linux Primitives)                   |
-|-----------------------------------------------------------------------------|
-|   [Runi Agent (Node Daemon) -> Launches Worker Slice Process]               |
-|    - Agent receives commands, manages local resources (cgroups/namespaces)  |
-|    - Worker Slice executes step logic                                       |
-|    - Inter-Slice Communication via authenticated/encrypted gRPC             |
-|    - Isolation via Namespaces, Resource limits via Cgroups                  |
-+---------------------------│-------------------------------------------------+
-                            │ (Metadata/Lineage Reporting via gRPC)
-                            ▼
-+-----------------------------------------------------------------------------+
-|             Data Quality, Lineage, and Metadata                             |
-|-----------------------------------------------------------------------------|
-|   [Herd Control Plane: Data Governance Service]                                  |
-|    - Receives & Stores Lineage Graph                                        |
-|    - Manages Data Catalog, Quality Rules/Results                            |
-|    - Stores & Serves Annotations (including LLM-generated)                  |
-+---------------------------│-------------------------------------------------+
-                            │ (Log/Metrics Stream, Security Context)
-                            ▼
-+-----------------------------------------------------------------------------+
-|             Observability, Security, & Compliance                           |
-|-----------------------------------------------------------------------------|
-|   [Runi Agent (Collection) -> Fluentd / Prometheus]                         |
-|   [Control Plane: Secrets Mgr, Identity/RBAC Mgr, API Server (AuthZ)]       |
-|   [Core Implementation: TLS, Namespaces, Cgroups, Service Accounts]         |
-+-----------------------------------------------------------------------------+
++---------------------------------------------------------------+
+|                      Developer / Authoring Layer              |
+|---------------------------------------------------------------|
+|  - CLI (runi)                                                 |
+|  - REPL (DataFrame-style, step-by-step)                       |
+|  - DSL Authoring (`features/`)                                |
+|  - Contract Definitions (`contracts/`)                        |
+|  - Test Engine (Golden tests, synthetic fixtures)             |
++---------------------------------------------------------------+
+                              ↓
++---------------------------------------------------------------+
+|                   Control Plane (Domain + Orchestration)      |
+|---------------------------------------------------------------|
+|  - API Server (REST/gRPC, OIDC auth, herd scoping)            |
+|  - Scheduler (declarative constraint solver, DAG generator)   |
+|  - Metadata Catalog (contracts, lineage, tags, scenarios)     |
+|  - Secrets Manager (Herd-scoped secrets over Raft)            |
+|  - Compliance & RBAC Enforcer (contract-level access control) |
+|  - Checkpoint Coordinator (tracks partial run status + resume)|
++---------------------------------------------------------------+
+                              ↓
++---------------------------------------------------------------+
+|                 Distributed State Layer (Consensus + Storage) |
+|---------------------------------------------------------------|
+|  - Raft Consensus Group (Herd + Scheduler + State sync)       |
+|  - BadgerDB-backed volumes for:                               |
+|      • Pipeline run metadata                                  |
+|      • Slice-local state volumes                              |
+|      • Checkpointed outputs (resume-able DAG stages)          |
+|  - Herd Definitions, Contract Versions, RBAC, Secrets         |
++---------------------------------------------------------------+
+                              ↓
++---------------------------------------------------------------+
+|                   Execution Plane (Slices + Agents)           |
+|---------------------------------------------------------------|
+|  - Runi Agent (on every node, manages slices + volumes)       |
+|  - Slice Group Supervisor (windowed runs, state volumes)      |
+|  - Slice Process:                                             |
+|      • Mounts ephemeral namespace, PID net, user, cgroup      |
+|      • Loads step function (from contract)                    |
+|      • Streams data with io.Pipe (zero-copy)                  |
+|      • Accesses read/write state volume via volume proxy      |
+|      • Writes to sink, emits lineage                          |
+|  - Windowed Join Runner:                                      |
+|      • Centralized lineage rehydration across slice groups    |
+|      • Co-group on keys across parallel slice outputs         |
++---------------------------------------------------------------+
+                              ↓
++---------------------------------------------------------------+
+|              Governance, Observability, and Quality Plane     |
+|---------------------------------------------------------------|
+|  - Data Quality Rules (contract tags + field checks)          |
+|  - Lineage Engine (runID, contract hash, input/output edges)  |
+|  - Metrics Exporter (Prometheus, Fluentd, OpenTelemetry)      |
+|  - DLQ + Routing Controller (based on step & validation tags) |
+|  - Audit Log Engine (per slice, signed logs)                  |
++---------------------------------------------------------------+
+                              ↓
++---------------------------------------------------------------+
+|             External Sources / Sinks / State APIs             |
+|---------------------------------------------------------------|
+|  - Kafka, S3, Snowflake, GCS, Postgres, Redshift              |
+|  - APIs (FDC3, CDM, internal REST sources)                    |
+|  - Optional backing state for key joins (Redis, RocksDB)      |
++---------------------------------------------------------------+
 
 ```
 

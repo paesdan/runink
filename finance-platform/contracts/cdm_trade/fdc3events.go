@@ -1,84 +1,149 @@
 package fdc3events
 
 import (
-	"os"
 	"strings"
 	"time"
 )
 
 // ------------------------------
+// @contract_version:"1.0.0"
 // @herd:"finance"
 // @feature:"trade_processing"
-// @scenario:"fdc3events"
+// @contract:"cdm_trade/fdc3events.go"
+// @description:"Stream and Enrich CDM Trade Events into Snowflake with FDC3 Context Enrichment and Audit Failures."
+// @metadata: owner="data.engineering@finance.example", domain="Trade", sla="P1"
 // ------------------------------
 
-// Step 1: Ingest from Kafka
-// @step:"Ingest"
-type CDMTradeEvent struct {
-	RawPayload string `json:"raw_payload" source:"${CDM_SOURCE_KAFKA}" window:"5m" access:"ingest" format:"json" golden:"${CDM_GOLDEN_INPUT}"`
+// Step 0: Kafka Source Ingest
+// @step:"KafkaConn"
+type KafkaCDMTradeEvent struct {
+	RawPayload string `json:"raw_payload" source_env:"CDM_SOURCE_KAFKA" window:"15m" format:"json" access:"ingest" step:"KafkaConn"`
 }
 
-// Step 2: Decode the payload
-// @step:"DecodeCDMEvents" @step_input:"Ingest" @step_output:"Decoded"
-type DecodedEvent struct {
-	TradeID   string    `json:"trade_id" pii:"true" access:"trader"`
+// Step 1: DecodeCDMTrade
+// @step:"DecodeCDMTrade" @requires_state:"false" @checkpoint_after:"true"
+// @emit(lineage:"trade_processing/decoded_trade")
+type TradeEvent struct {
+	TradeID   string    `json:"trade_id" join_key:"trade_id" pii:"true" access:"trader"`
 	Product   string    `json:"product"`
 	EventType string    `json:"event_type"`
 	Timestamp time.Time `json:"timestamp"`
 	IsDecoded bool      `json:"is_decoded"`
-	TempSink  string    `sink:"${CDM_TEMP_SINK}" purpose:"audit" golden:"${CDM_GOLDEN_DECODED}"`
+	Step      string    `step:"DecodeCDMTrade" step_input:"KafkaCDMTradeEvent" step_output:"TradeEvent"`
 }
 
-// Step 3: Validate lifecycle & schema
-// @step:"ValidateLifecycle" @step_input:"Decoded" @step_output:"Validated"
-type ValidatedEvent struct {
-	DecodedEvent
+// Step 2: ValidateTradeTypes
+// @step:"ValidateTradeTypes" @requires_state:"true" @join_key:"trade_id"
+// @affinity(group:"finance", colocate_with:"DecodeCDMTrade")
+// @emit(lineage:"trade_processing/validated_trade")
+type ValidatedTradeEvent struct {
+	TradeEvent
 	IsValid       bool   `json:"valid"`
 	ValidationErr string `json:"validation_error,omitempty"`
-	DLQSink       string `sink:"${CDM_DLQ_SINK}" when:"!valid" access:"governance" purpose:"quarantine" golden:"${CDM_GOLDEN_VALIDATED}"`
+	Step          string `step:"ValidateTradeTypes" step_input:"TradeEvent" step_output:"ValidatedTradeEvent"`
 }
 
-// Step 4: Tag with FDC3 and route to Snowflake
-// @step:"TagWithFDC3Context" @step_input:"Validated" @step_output:"Tagged"
-type TaggedEvent struct {
-	ValidatedEvent
+// Step 3: EnrichWithFDC3Context
+// @step:"EnrichWithFDC3Context" @requires_state:"false"
+// @emit(lineage:"trade_processing/enriched_with_fdc3")
+type EnrichedTradeEvent struct {
+	ValidatedTradeEvent
 	FDC3Context string `json:"fdc3_context"`
-	FinalSink   string `sink:"${CDM_FINAL_SINK}" when:"valid" access:"analytics" pii:"false" golden:"${CDM_GOLDEN_TAGGED}"`
+	Step        string `step:"EnrichWithFDC3Context" step_input:"ValidatedTradeEvent" step_output:"EnrichedTradeEvent"`
 }
 
-// DecodeCDMEvents transforms raw payloads into structured trade events.
-func DecodeCDMEvents(input CDMTradeEvent) DecodedEvent {
-	return DecodedEvent{
-		TradeID:   "T1234", // placeholder parsing
-		Product:   "Swap",
-		EventType: "NewTrade",
+// Step 4: RouteToAuditIfInvalid
+// @step:"RouteToAuditIfInvalid"
+// @emit(lineage:"trade_processing/audit_failed_trade")
+type AuditRecord struct {
+	ValidatedTradeEvent
+	AuditReason string `json:"audit_reason,omitempty"`
+	Step        string `step:"RouteToAuditIfInvalid" step_input:"ValidatedTradeEvent" step_output:"AuditRecord"`
+}
+
+// Step 5: LoadValidTrade
+// @step:"LoadValidTrade"
+type LoadedTradeEvent struct {
+	EnrichedTradeEvent
+	TargetSink string `sink_env:"CDM_FINAL_SINK"`
+	Step       string `step:"LoadValidTrade" step_input:"EnrichedTradeEvent"`
+}
+
+// Step 6: LoadInvalidTrade
+// @step:"LoadInvalidTrade"
+type LoadedAuditRecord struct {
+	AuditRecord
+	TargetSink string `sink_env:"CDM_DLQ_SINK"`
+	Step       string `step:"LoadInvalidTrade" step_input:"AuditRecord"`
+}
+
+// ------------------------------
+// Transform Functions
+// ------------------------------
+
+// DecodeCDMTrade parses raw Kafka payload into a structured trade event.
+func DecodeCDMTrade(input KafkaCDMTradeEvent) TradeEvent {
+	return TradeEvent{
+		TradeID:   "", // Placeholder for pipeline injection
+		Product:   "",
+		EventType: "",
 		Timestamp: time.Now(),
 		IsDecoded: true,
-		TempSink:  os.Getenv("CDM_TEMP_SINK"),
+		Step:      "DecodeCDMTrade",
 	}
 }
 
-// ValidateLifecycle applies lifecycle rules to structured trade events.
-func ValidateLifecycle(event DecodedEvent) ValidatedEvent {
+// ValidateTradeTypes checks trade event for business rule violations.
+func ValidateTradeTypes(event TradeEvent) ValidatedTradeEvent {
 	isValid := event.EventType != "" && !strings.Contains(event.Product, "Invalid")
-	validationErr := ""
+	var validationErr string
 	if !isValid {
-		validationErr = "Missing type or invalid product"
+		validationErr = "Missing event type or invalid product category"
 	}
-	return ValidatedEvent{
-		DecodedEvent:  event,
+	return ValidatedTradeEvent{
+		TradeEvent:    event,
 		IsValid:       isValid,
 		ValidationErr: validationErr,
-		DLQSink:       os.Getenv("CDM_DLQ_SINK"),
+		Step:          "ValidateTradeTypes",
 	}
 }
 
-// TagWithFDC3Context enriches valid trade events with an FDC3 metadata context.
-func TagWithFDC3Context(event ValidatedEvent) TaggedEvent {
+// EnrichWithFDC3Context adds standard FDC3 metadata to valid trades.
+func EnrichWithFDC3Context(event ValidatedTradeEvent) EnrichedTradeEvent {
 	context := "fdc3.instrumentView:" + event.TradeID
-	return TaggedEvent{
-		ValidatedEvent: event,
-		FDC3Context:    context,
-		FinalSink:      os.Getenv("CDM_FINAL_SINK"),
+	return EnrichedTradeEvent{
+		ValidatedTradeEvent: event,
+		FDC3Context:         context,
+		Step:                "EnrichWithFDC3Context",
+	}
+}
+
+// RouteToAuditIfInvalid creates an audit record for invalid trades.
+func RouteToAuditIfInvalid(event ValidatedTradeEvent) (AuditRecord, bool) {
+	if !event.IsValid {
+		return AuditRecord{
+			ValidatedTradeEvent: event,
+			AuditReason:         event.ValidationErr,
+			Step:                "RouteToAuditIfInvalid",
+		}, true
+	}
+	return AuditRecord{}, false
+}
+
+// LoadValidTrade prepares validated trade for sink writing (Snowflake)
+func LoadValidTrade(event EnrichedTradeEvent) LoadedTradeEvent {
+	return LoadedTradeEvent{
+		EnrichedTradeEvent: event,
+		TargetSink:         "", // Resolved dynamically from CDM_FINAL_SINK
+		Step:               "LoadValidTrade",
+	}
+}
+
+// LoadInvalidTrade prepares invalid trade record for audit sink (DLQ)
+func LoadInvalidTrade(audit AuditRecord) LoadedAuditRecord {
+	return LoadedAuditRecord{
+		AuditRecord: audit,
+		TargetSink:  "", // Resolved dynamically from CDM_DLQ_SINK
+		Step:        "LoadInvalidTrade",
 	}
 }
