@@ -8,7 +8,7 @@
 
 ## Overview
 
-<img src="./docs/images/logo.png" width="150"/>
+<img src="./runink-site/content/docs/images/logo.png" width="150"/>
 
 ***Runink*** is an ambitious project aiming to define a **self-sufficient, distributed environment** specifically designed for orchestrating and executing data pipelines. Built natively in **Go** and leveraging core **Linux primitives** (cgroups, namespaces, `exec`), Runink acts as its own cluster resource manager and scheduler, providing a vertically integrated platform that replaces the need for separate systems like Slurm or complex Kubernetes setups for data workloads.
 
@@ -148,7 +148,7 @@ Runink operates with a Control Plane managing multiple Worker Nodes, each runnin
 
 # Runink Component Reference
 
-This section provides a brief overview of the main Runink components. For detailed descriptions, please refer to [`docs/components.md`](./docs/components.md).
+This section provides a brief overview of the main Runink components. For detailed descriptions, please refer to [`components`](/docs/components/) page.
 
 ---
 
@@ -331,12 +331,7 @@ runi status --runid RUN-20240424-XYZ --herd finance
 
 **Alpha / Conceptual:** Runink is currently under active development and should be considered experimental. The architecture and features described represent the target state.
 
-Please read [`docs/benchmark.md`](./docs/benchmark.md) for more details when compared to other common open-source projects.
-
-## Contributing
-
-Contributions are welcome\! Please read our [`docs/contributing.md`](./docs/contributing.md) guide for details on our code of conduct, and the process for submitting pull requests.
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICENSE) file for details.
