@@ -1,0 +1,524 @@
+<!doctype html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en" class="no-js">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Runink</title>
+<meta name="description" content="Runink Component Reference This document describes each component of the Runink architecture, providing clear definitions, roles, and interactions within the overall system.
+⚙️ Runink CLI Role: Developer interface for scaffolding, testing, and running pipelines.
+The Runink CLI (runi) is the developer-first control surface for the entire data lifecycle — from contracts and pipelines to tests, observability, and deployment. It acts as the orchestration layer for humans, offering a simple, scriptable, and powerful interface for everything Runink can do.">
+<meta property="og:url" content="http://localhost:1313/docs/components/">
+  <meta property="og:site_name" content="Runink">
+  <meta property="og:title" content="Runink">
+  <meta property="og:description" content="Runink Component Reference This document describes each component of the Runink architecture, providing clear definitions, roles, and interactions within the overall system.
+⚙️ Runink CLI Role: Developer interface for scaffolding, testing, and running pipelines.
+The Runink CLI (runi) is the developer-first control surface for the entire data lifecycle — from contracts and pipelines to tests, observability, and deployment. It acts as the orchestration layer for humans, offering a simple, scriptable, and powerful interface for everything Runink can do.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+
+  <meta itemprop="name" content="Runink">
+  <meta itemprop="description" content="Runink Component Reference This document describes each component of the Runink architecture, providing clear definitions, roles, and interactions within the overall system.
+⚙️ Runink CLI Role: Developer interface for scaffolding, testing, and running pipelines.
+The Runink CLI (runi) is the developer-first control surface for the entire data lifecycle — from contracts and pipelines to tests, observability, and deployment. It acts as the orchestration layer for humans, offering a simple, scriptable, and powerful interface for everything Runink can do.">
+  <meta itemprop="wordCount" content="3955">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Runink">
+  <meta name="twitter:description" content="Runink Component Reference This document describes each component of the Runink architecture, providing clear definitions, roles, and interactions within the overall system.
+⚙️ Runink CLI Role: Developer interface for scaffolding, testing, and running pipelines.
+The Runink CLI (runi) is the developer-first control surface for the entire data lifecycle — from contracts and pipelines to tests, observability, and deployment. It acts as the orchestration layer for humans, offering a simple, scriptable, and powerful interface for everything Runink can do.">
+<link href="/scss/main.css" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous"></script>
+
+  </head>
+  <body class="td-page">
+    <header>
+      <nav class="td-navbar js-navbar-scroll" data-bs-theme="dark">
+<div class="container-fluid flex-column flex-md-row">
+  <a class="navbar-brand" href="/"><span class="navbar-brand__logo navbar-logo"><svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500" style="enable-background:new 0 0 500 500"><g><path style="fill:#fff" d="M116.8525 421.9722c-5.7041.0-10.3442-4.3127-10.3442-9.6129V88.183c0-5.3002 4.6401-9.6117 10.3442-9.6117H320.858c3.0347.0 9.3959.5498 11.7506 2.6302l.3545.3442 58.905 63.2912c2.3101 2.491 2.9202 8.4928 2.9202 11.3184v256.2039c0 5.3002-4.6407 9.6129-10.3436 9.6129H116.8525z"/><g><g><g><path style="fill:#767676" d="M384.4445 423.2066H116.852c-6.3839.0-11.5786-4.8658-11.5786-10.8474V88.1831c0-5.9804 5.1947-10.8461 11.5786-10.8461h204.0062c.377.0 9.2786.0329 12.568 2.9389l.3947.3833 58.9508 63.337c3.2135 3.4652 3.2514 11.7924 3.2514 12.1593v256.2036C396.0231 418.3408 390.8284 423.2066 384.4445 423.2066zM116.5079 411.9189c.0848.0278.1999.0531.3441.0531h267.5925c.1442.0.2581-.0253.3441-.0531V156.1556c-.0076-.9033-.3593-3.7347-.7034-5.0037l-57.6527-61.9416c-1.4651-.3176-4.4533-.6389-5.5742-.6389H116.852c-.143.0-.2594.024-.3441.0531V411.9189zm267.4533-261.149zM327.0321 89.371v.0013V89.371z"/></g></g></g><g><g><path style="fill:#5b7fc0" d="M189.0874 210.1754l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.025 2.454-11.4897 6.4116-15.4473C177.5953 212.627 183.0601 210.1742 189.0874 210.1754zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403S197.0816 234.1722 197.0804 232.033z"/><path style="opacity:.3;fill:#fff" d="M189.0898 210.176c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 212.6276 183.0612 210.176 189.0898 210.176zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 236.239 197.0839 234.2399 197.0839 232.0372z"/><g><defs><path id="SVGID_1_" d="M194.7376 237.6875c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.999 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 234.2399 196.1861 236.239 194.7376 237.6875z"/></defs><clipPath id="SVGID_2_"><use xlink:href="#SVGID_1_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_2_);fill:#fff" d="M190.0704 225.0237c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 225.7247 191.9774 225.0237 190.0704 225.0237z"/><path style="opacity:.13;clip-path:url(#SVGID_2_);fill:#020202" d="M190.0704 225.0237c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 225.7247 191.9774 225.0237 190.0704 225.0237z"/></g><g><defs><path id="SVGID_3_" d="M189.0898 210.176c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 212.6276 183.0612 210.176 189.0898 210.176zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 236.239 197.0839 234.2399 197.0839 232.0372z"/></defs><clipPath id="SVGID_4_"><use xlink:href="#SVGID_3_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_4_);fill:#5b7fc0" d="M172.6595 215.6045c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8612 12.0547.0024 21.8636-9.797 21.8613-21.8612.0024-3.8475-1.0151-7.6326-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 209.1953 176.6171 211.647 172.6595 215.6045z"/></g></g><rect x="198.8952" y="225.1043" style="fill:#5b7fc0" width="122.6266" height="13.8671"/></g><g><path style="fill:#d95140" d="M189.0874 155.7611l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.0249 2.454-11.4897 6.4116-15.4473C177.5953 158.2128 183.0601 155.7599 189.0874 155.7611zm7.993 21.8577c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403C196.2508 181.7667 197.0816 179.758 197.0804 177.6188z"/><path style="opacity:.3;fill:#fff" d="M189.0898 155.7617c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 158.2134 183.0612 155.7617 189.0898 155.7617zm7.9941 21.8613c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 181.8248 197.0839 179.8256 197.0839 177.623z"/><g><defs><path id="SVGID_5_" d="M194.7376 183.2733c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.9989 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 179.8256 196.1861 181.8248 194.7376 183.2733z"/></defs><clipPath id="SVGID_6_"><use xlink:href="#SVGID_5_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_6_);fill:#fff" d="M190.0704 170.6095c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 171.3104 191.9774 170.6095 190.0704 170.6095z"/><path style="opacity:.13;clip-path:url(#SVGID_6_);fill:#020202" d="M190.0704 170.6095c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 171.3104 191.9774 170.6095 190.0704 170.6095z"/></g><g><defs><path id="SVGID_7_" d="M189.0898 155.7617c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 158.2134 183.0612 155.7617 189.0898 155.7617zm7.9941 21.8613c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 181.8248 197.0839 179.8256 197.0839 177.623z"/></defs><clipPath id="SVGID_8_"><use xlink:href="#SVGID_7_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_8_);fill:#d95140" d="M172.6595 161.1903c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8613 12.0547.0024 21.8636-9.797 21.8613-21.8613.0024-3.8474-1.0151-7.6326-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 154.7811 176.6171 157.2327 172.6595 161.1903z"/></g><rect x="198.8952" y="170.69" style="fill:#d95140" width="122.6266" height="13.8671"/></g><g><g><path style="fill:#56a55c" d="M189.5379 264.6147l.0012-.0012c7.7751.0012 15.0294 4.1862 18.932 10.9235 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032-5.8394.0-11.3281-2.2733-15.458-6.4032-4.13-4.13-6.4032-9.6186-6.4056-15.4628.0012-6.0249 2.454-11.4897 6.4116-15.4472C178.0458 267.0663 183.5105 264.6135 189.5379 264.6147zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6538 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403C196.7013 290.6202 197.5321 288.6115 197.5309 286.4723z"/><path style="opacity:.3;fill:#fff" d="M189.5403 264.6153c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8065-21.8612-21.8613.0-6.0285 2.4516-11.492 6.4116-15.452C178.0482 267.0669 183.5117 264.6153 189.5403 264.6153zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.6366 290.6783 197.5344 288.6792 197.5344 286.4765z"/><g><defs><path id="SVGID_9_" d="M195.1881 292.1268c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.9989 7.9942-7.9941 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.5344 288.6792 196.6366 290.6783 195.1881 292.1268z"/></defs><clipPath id="SVGID_10_"><use xlink:href="#SVGID_9_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_10_);fill:#fff" d="M190.5209 279.463c-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7446-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9941 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C194.239 280.164 192.4279 279.463 190.5209 279.463z"/><path style="opacity:.13;clip-path:url(#SVGID_10_);fill:#020202" d="M190.5209 279.463c-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7446-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9941 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C194.239 280.164 192.4279 279.463 190.5209 279.463z"/></g><g><defs><path id="SVGID_11_" d="M189.5403 264.6153c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8065-21.8612-21.8613.0-6.0285 2.4516-11.492 6.4116-15.452C178.0482 267.0669 183.5117 264.6153 189.5403 264.6153zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.6366 290.6783 197.5344 288.6792 197.5344 286.4765z"/></defs><clipPath id="SVGID_12_"><use xlink:href="#SVGID_11_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_12_);fill:#56a55c" d="M173.11 270.0439c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8613 12.0547.0024 21.8636-9.797 21.8613-21.8613.0024-3.8474-1.0151-7.6326-2.9353-10.9462-3.8977-6.7325-11.1497-10.9151-18.926-10.9151C182.5311 263.6346 177.0676 266.0863 173.11 270.0439z"/></g></g><rect x="199.3456" y="279.5436" style="fill:#56a55c" width="122.6266" height="13.8671"/></g><g><g><path style="fill:#f1bc42" d="M189.0874 318.7208l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3305-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.025 2.454-11.4897 6.4116-15.4472C177.5953 321.1724 183.0601 318.7196 189.0874 318.7208zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403S197.0816 342.7176 197.0804 340.5784z"/><path style="opacity:.3;fill:#fff" d="M189.0898 318.7214c7.7763.0 15.0283 4.1826 18.926 10.915 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8612-12.0547.0024-21.8636-9.8065-21.8612-21.8612.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 321.173 183.0612 318.7214 189.0898 318.7214zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 344.7844 197.0839 342.7853 197.0839 340.5826z"/><g><defs><path id="SVGID_13_" d="M194.7376 346.2329c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.999 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 342.7853 196.1861 344.7844 194.7376 346.2329z"/></defs><clipPath id="SVGID_14_"><use xlink:href="#SVGID_13_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_14_);fill:#fff" d="M190.0704 333.5691c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0834 6.1218 2.8788C193.7885 334.2701 191.9774 333.5691 190.0704 333.5691z"/><path style="opacity:.13;clip-path:url(#SVGID_14_);fill:#020202" d="M190.0704 333.5691c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0834 6.1218 2.8788C193.7885 334.2701 191.9774 333.5691 190.0704 333.5691z"/></g><g><defs><path id="SVGID_15_" d="M189.0898 318.7214c7.7763.0 15.0283 4.1826 18.926 10.915 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8612-12.0547.0024-21.8636-9.8065-21.8612-21.8612.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 321.173 183.0612 318.7214 189.0898 318.7214zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 344.7844 197.0839 342.7853 197.0839 340.5826z"/></defs><clipPath id="SVGID_16_"><use xlink:href="#SVGID_15_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_16_);fill:#f1bc42" d="M172.6595 324.15c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8612 12.0547.0024 21.8636-9.797 21.8613-21.8612.0024-3.8474-1.0151-7.6327-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 317.7407 176.6171 320.1924 172.6595 324.15z"/></g></g><rect x="198.8952" y="333.6497" style="fill:#f1bc42" width="122.6266" height="13.8671"/></g></g></svg></span><span class="navbar-brand__name">Runink</span></a>
+  <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/docs/"><span>Docs</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/forum/"><span>Forum</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/blog/"><span>Blog</span></a>
+      </li>
+      </ul>
+  </div>
+  <div class="d-none d-lg-block">
+    
+  </div>
+</div>
+</nav>
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            <div id="td-sidebar-menu" class="td-sidebar__inner">
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ms-3 fas fa-bars" type="button" data-bs-toggle="collapse" data-bs-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  <nav class="td-sidebar-nav collapse" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pe-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docs-li">
+  <a href="/docs/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-docs"><span class="">Documentation</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsarchitecture-li">
+  <a href="/docs/architecture/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecture"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsbenchmark-li">
+  <a href="/docs/benchmark/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsbenchmark"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscli-li">
+  <a href="/docs/cli/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscli"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsclihelp-li">
+  <a href="/docs/clihelp/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsclihelp"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-docscomponents-li">
+  <a href="/docs/components/" class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id="m-docscomponents"><span class="td-sidebar-nav-active-item"></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontributing-li">
+  <a href="/docs/contributing/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontributing"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsdata-lineage-li">
+  <a href="/docs/data-lineage/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsdata-lineage"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsfeature-dsl-li">
+  <a href="/docs/feature-dsl/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsfeature-dsl"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsgetting_started-li">
+  <a href="/docs/getting_started/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsgetting_started"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsglossary-li">
+  <a href="/docs/glossary/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsglossary"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsroadmap-li">
+  <a href="/docs/roadmap/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsroadmap"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsrunink_quickstart-li">
+  <a href="/docs/runink_quickstart/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsrunink_quickstart"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsschema-contracts-li">
+  <a href="/docs/schema-contracts/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsschema-contracts"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docssecurity-li">
+  <a href="/docs/security/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docssecurity"><span class=""></span></a>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            <div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/paesdan/runink/tree/main/content/docs/components.md" class="td-page-meta--view td-page-meta__view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+  <a href="https://github.com/paesdan/runink/edit/main/content/docs/components.md" class="td-page-meta--edit td-page-meta__edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/paesdan/runink/new/main/content/docs?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child td-page-meta__child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+  <a href="https://github.com/paesdan/runink/issues/new?title=" class="td-page-meta--issue td-page-meta__issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create documentation issue</a>
+  
+</div>
+
+            <div class="td-toc">
+        <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#-runink-cli">⚙️ Runink CLI</a></li>
+        <li><a href="#-runi-agent">🤖 Runi Agent</a></li>
+        <li><a href="#-herd-namespace">🐑 Herd Namespace</a></li>
+        <li><a href="#-herd-control-plane">🖥️ Herd Control Plane</a></li>
+        <li><a href="#-barn-cluster-state-store">💾 Barn (Cluster State Store)</a></li>
+        <li><a href="#-secrets-manager">🔐 Secrets Manager</a></li>
+        <li><a href="#-identity--rbac-manager">🔑 Identity &amp; RBAC Manager</a></li>
+        <li><a href="#-api-server">🖥️ API Server</a></li>
+        <li><a href="#-schema-contracts">📑 Schema Contracts</a></li>
+        <li><a href="#-feature-dsl-domain-specific-language">🧱 Feature DSL (Domain-Specific Language)</a></li>
+        <li><a href="#-testing-engine">🧪 Testing Engine</a></li>
+        <li><a href="#-interactive-repl-dataframe--sql-interface--json-explorer">🔍 Interactive REPL: DataFrame / SQL Interface / JSON Explorer</a></li>
+        <li><a href="#-pipeline-generator">🚧 Pipeline Generator</a></li>
+        <li><a href="#-feature-orchestration">🔄 Feature Orchestration</a></li>
+        <li><a href="#-data-lineage--metadata">🧭 Data Lineage &amp; Metadata</a></li>
+        <li><a href="#-data-quality--validation">✅ Data Quality &amp; Validation</a></li>
+        <li><a href="#-data-governance--compliance">🔒 Data Governance &amp; Compliance</a></li>
+        <li><a href="#-security--enterprise-dataops">🛡️ Security &amp; Enterprise DataOps</a></li>
+        <li><a href="#-observability--monitoring">🌐 Observability &amp; Monitoring</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </div>
+    
+            
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 ps-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="td-breadcrumbs">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="/docs/">Documentation</a></li>
+  <li class="breadcrumb-item active" aria-current="page">
+    </li>
+  </ol>
+</nav>
+<div class="td-content">
+	<h1></h1>
+	
+	<header class="article-meta">
+		
+</header>
+	<h1 id="runink-component-reference">Runink Component Reference</h1>
+<p>This document describes each component of the Runink architecture, providing clear definitions, roles, and interactions within the overall system.</p>
+<img src="./images/components.png" width="680"/>
+<hr>
+<h3 id="-runink-cli">⚙️ Runink CLI</h3>
+<blockquote>
+<p>Role: Developer interface for scaffolding, testing, and running pipelines.</p></blockquote>
+<p><strong>The Runink CLI (<code>runi</code>)</strong> is the developer-first control surface for the entire data lifecycle — from contracts and pipelines to tests, observability, and deployment. It acts as the <strong>orchestration layer for humans</strong>, offering a simple, scriptable, and powerful interface for everything Runink can do.</p>
+<p>Whether you&rsquo;re scaffolding a new project, compiling <code>.dsl</code> files into Go pipelines, validating schema contracts, testing with golden files, or pushing artifacts to a metadata registry — <code>runi</code> gives you the tools to do it fast and reliably, right from your terminal.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li><strong>Project Scaffolding</strong> for quickly bootstrapping new repositories with features, contracts, tests, and CI configs</li>
+<li><strong>Contract Management</strong> including generation from Go structs, diffing, rollback, and drift tracking</li>
+<li><strong>Pipeline Compilation</strong> from <code>.dsl</code> scenarios into DAG-aware Go code with batch and streaming support</li>
+<li><strong>Golden Testing &amp; Synthetic Data</strong> using built-in Faker-based generation and contract-backed verification</li>
+<li><strong>Metadata Publishing</strong> to push lineage, changelogs, and SBOMs to registries or dashboards</li>
+<li><strong>Interactive REPL &amp; Exploration</strong> for debugging, jq-style filtering, DataFrame operations, and live SQL queries</li>
+<li><strong>Security &amp; DevOps</strong> integrations for SBOM, artifact signing, and secure publishing pipelines</li>
+</ul>
+<p>For a full list of commands and examples, see <a href="/docs/cli"><code>cli</code></a>.</p>
+<p>The CLI embeds core functionality like the <strong>Pipeline Generator</strong>, <strong>Execution Engine</strong>, and <strong>Governance Layer</strong>, turning complex distributed operations into single, declarative, CLI-driven workflows.</p>
+<p>With <code>runi</code>, developers get a <strong>portable, scriptable, and audit-friendly control plane</strong> — no YAML, no drag-and-drop UIs, just pipelines that flow from contract to cluster with confidence.</p>
+<hr>
+<h3 id="-runi-agent">🤖 Runi Agent</h3>
+<p><strong>Runi</strong> (the Runink Agent) runs on every compute node, bridging the Control Plane and the isolated worker slices. It registers node resources and health, fetches secrets, and manages the lifecycle of pipeline steps within lightweight, cgroup‑isolated “slices.” Runi ensures that each step executes in the proper Herd context, collects observability data, and enforces resource quotas.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li><strong>Node Registration</strong> with Runink Control Plane (health, capacity, labels)</li>
+<li><strong>Slice Manager</strong> that creates cgroups and namespaces per Herd, launches worker processes, and applies resource limits</li>
+<li><strong>Secrets Fetching</strong> via secure Raft‑backed Secrets Manager</li>
+<li><strong>Observability Forwarding</strong> metrics to Prometheus, logs to Fluentd, traces to OpenTelemetry</li>
+<li><strong>Lifecycle Management</strong> handles retries, restarts, graceful shutdowns, and cleanup</li>
+</ul>
+<p>Runi turns each compute node into a <strong>secure</strong>, <strong>observed</strong>, and <strong>policy‑enforced</strong> worker — ready to run any pipeline slice on demand.</p>
+<hr>
+<h3 id="-herd-namespace">🐑 Herd Namespace</h3>
+<p><strong>Herd Namespaces</strong> is Runink’s lightweight domain isolation layer, leveraging Linux namespaces to enforce <strong>shared‑nothing</strong> principles. Each “herd” represents a logical group of related pipeline steps or data slices, isolated in its own namespace to guarantee resource control, security boundaries, and reproducibility.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li><strong>Domain Isolation:</strong> Creates per‑herd namespaces so pipelines for different domains (e.g., finance, ecommerce) cannot interfere</li>
+<li><strong>Resource Control:</strong> Assigns cgroups for CPU, memory, and I/O limits on each herd’s worker slices</li>
+<li><strong>Secure Multi‑Tenancy:</strong> Ensures data and processes are confined to their designated namespaces</li>
+<li><strong>Dynamic Scaling</strong> Spins up and tears down herds on demand, coordinating with bigmachine for serverless‑style compute</li>
+<li><strong>Observability Hooks</strong> Exposes namespace‑scoped metrics and logs, tagged by herd ID and domain</li>
+<li><strong>Multi‑Tenant Governance</strong> separate catalogs, DLQs, and audit trails per Herd</li>
+</ul>
+<p>With Herd, Runink achieves fine‑grained isolation for domain-driven workloads — combining security, performance, and multi‑tenant governance in a single, native Linux construct. Empowering teams to collaborate on a shared platform without stepping on each other’s toes.</p>
+<hr>
+<h3 id="-herd-control-plane">🖥️ Herd Control Plane</h3>
+<p><strong>Herd Control Plane</strong> is the high‑availability control plane that glues together pipelines, policies, and metadata. It serves as the central orchestrator and gateway for all user and agent interactions, enforcing authentication, authorization, and multi‑tenant (Herd) scoping. Runink stores and manages the cluster state, schedules work, and provides metadata and governance APIs — all over secure, TLS‑encrypted gRPC/REST endpoints.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li><strong>API Server</strong> for CLI/UI/SDK requests (authN/authZ via OIDC, RBAC checks per Herd)</li>
+<li><strong>Barn</strong> (Cluster State Store under Raft consensus) for pipelines, Herd definitions, RBAC policies, and secrets</li>
+<li><strong>Scheduler</strong> that matches pipeline tasks to available nodes, respecting resource quotas and Herd affinity</li>
+<li><strong>Secrets Manager</strong> that securely stores and delivers credentials scoped to services and Herds</li>
+<li><strong>Data Governance Service</strong> for lineage, quality, and annotation APIs</li>
+<li><strong>High‑Availability</strong> via stateless replicas and consensus‑backed state</li>
+<li><strong>CLI Hub:</strong> Exposes commands (<code>runi init</code>, <code>runi contract …</code>, <code>runi compile</code>, <code>runi test</code>, <code>runi run</code>, <code>runi publish</code>) for end‑to‑end pipeline management</li>
+<li><strong>Project Scaffolding:</strong> Bootstraps new repositories with templates, configs, contracts, and CI/CD pipelines</li>
+<li><strong>Feature &amp; Contract Integration:</strong> Parses Feature DSL and schema contracts to drive code generation, testing, and execution</li>
+<li><strong>Metadata Registry:</strong> Manages lineage, versioned contracts, run histories, and observability endpoints</li>
+<li><strong>Plugin &amp; Extension Manager:</strong> Loads and invokes user‑provided plugins, adapters, and custom steps</li>
+</ul>
+<p>With Herd at the helm, your platform is <strong>secure</strong>, <strong>consistent</strong>, and <strong>multi‑tenant ready</strong> — enforcing policies and providing a single source of truth for all pipelines and metadata. Every aspect of your data platform—from initial spec to production rollout—is <strong>standardized, traceable, and automatable</strong>, so teams can focus on delivering insight rather than wiring infrastructure.</p>
+<hr>
+<h3 id="-barn-cluster-state-store">💾 Barn (Cluster State Store)</h3>
+<p><strong>The Barn</strong> is the authoritative, highly available backbone of Runink’s control plane — a <strong>distributed key-value store backed by Raft consensus</strong>. It provides a consistent, fault-tolerant source of truth for all runtime metadata, configurations, and orchestration logic across the platform.</p>
+<p>This includes pipeline definitions, Herd boundaries, secrets metadata, RBAC policies, and scheduler state. Every component of the Runink platform — from the API Server to the Scheduler and Governance Layer — relies on this store to read, write, and replicate configuration and execution state. With strong consistency guarantees and built-in fault tolerance, the state store ensures that decisions made by the platform are <strong>safe, synchronized, and auditable</strong>.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Persist Herd definitions, RBAC policies, pipeline graphs, and secrets metadata</li>
+<li>Provide read/write access to the API Server, Scheduler, and Runi Agents</li>
+<li>Synchronize cluster-wide state using Raft-based consensus</li>
+<li>Support high-availability deployments with leader election and quorum</li>
+<li>Enable fault-tolerant execution of distributed pipelines and governance policies</li>
+</ul>
+<p>With the Barn, Runink gains a <strong>single source of truth</strong> that’s distributed by design — making orchestration consistent, secure, and always in sync.</p>
+<hr>
+<h3 id="-secrets-manager">🔐 Secrets Manager</h3>
+<p><strong>The Secrets Manager</strong> is Runink’s secure vault for managing sensitive credentials, tokens, keys, and configuration values across environments and Herds. It ensures that secrets are <strong>stored safely, accessed securely, and delivered precisely when and where they&rsquo;re needed</strong> — with no manual handling required by pipeline authors.</p>
+<p>Backed by encrypted storage within the <strong>Barn</strong>, the Secrets Manager enforces strict <strong>per-Herd access controls</strong>, ensuring that only authorized agents and services can retrieve secrets for a given pipeline or slice. Secrets are injected just-in-time into ephemeral slice environments, avoiding persistence or leakage risks.</p>
+<p>Whether you’re integrating with databases, APIs, or cloud services, the Secrets Manager ensures that sensitive data stays <strong>encrypted, auditable, and access-controlled</strong> by default.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Securely store secrets in an encrypted, Raft-backed data store</li>
+<li>Scope secret access using RBAC policies and Herd-level permissions</li>
+<li>Deliver secrets to Runi Agents on demand for authorized slices only</li>
+<li>Support dynamic secret injection into pipeline execution environments</li>
+<li>Ensure secrets are never written to disk or logs during runtime</li>
+</ul>
+<p>With the Secrets Manager, Runink provides <strong>seamless and secure secret management</strong> — enabling safe access to credentials without compromising auditability or isolation.</p>
+<hr>
+<h3 id="-identity--rbac-manager">🔑 Identity &amp; RBAC Manager</h3>
+<p><strong>The Identity &amp; RBAC Manager</strong> is the guardian of <strong>who can do what, where, and when</strong> across the Runink platform. It provides secure authentication and fine-grained, role-based authorization by linking users, service accounts, and slices to their permitted actions within specific <strong>Herds</strong>.</p>
+<p>Integrated with <strong>OIDC providers</strong> (like Google, Okta, or GitHub), it supports Single Sign-On (SSO) and token-based identity. At the API layer, every request is checked against <strong>RBAC policies</strong>, ensuring only authorized users or agents can create pipelines, access secrets, or run code in a given domain.</p>
+<p>Each issued token (JWT) is short-lived, scoped to specific actions and Herds, and cryptographically verifiable — enabling secure, auditable access across distributed components.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Authenticate users and services via OIDC and JWT tokens</li>
+<li>Enforce fine-grained, Herd-scoped RBAC policies on all API and CLI actions</li>
+<li>Bind identities to service accounts, groups, or workload slices</li>
+<li>Issue, refresh, and revoke secure tokens with scoped permissions</li>
+<li>Audit access and permission changes across time and space</li>
+</ul>
+<p>With the Identity &amp; RBAC Manager, Runink ensures <strong>secure, auditable, and granular access control</strong> — empowering collaboration without compromising control.</p>
+<hr>
+<h3 id="-api-server">🖥️ API Server</h3>
+<p><strong>The API Server</strong> is the main gateway to the Runink platform — acting as the <strong>front door for developers, services, and tools</strong>. It exposes both <strong>REST</strong> and <strong>gRPC</strong> interfaces to support CLI commands (<code>runink</code>), SDKs, and any web-based UI clients, ensuring seamless access from local scripts to enterprise control planes.</p>
+<p>All incoming requests pass through a robust authentication and authorization layer, powered by <strong>OIDC</strong> and <strong>RBAC policies</strong>, and are validated against the current cluster state. The API Server routes tasks, triggers executions, resolves Herd permissions, and coordinates interactions with internal services like the Scheduler, Governance layer, and Secrets Manager.</p>
+<p>Whether you&rsquo;re registering a pipeline, validating a contract, or executing a scenario — it all begins here.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Accept and route requests from CLI (<code>runink</code>), UI, SDKs, and APIs</li>
+<li>Authenticate and authorize users and agents based on OIDC and RBAC</li>
+<li>Validate inputs, resolve Herd scoping, and check quota policies</li>
+<li>Proxy commands to internal services (Scheduler, Governance, etc.)</li>
+<li>Serve both REST and gRPC endpoints for extensibility and automation</li>
+</ul>
+<p>With the API Server, Runink delivers a <strong>secure, scalable, and consistent interface</strong> for interacting with the entire data platform — keeping pipelines and teams in sync.</p>
+<hr>
+<h3 id="-schema-contracts">📑 Schema Contracts</h3>
+<p><strong>Schema Contracts</strong> are the cornerstone of Runink&rsquo;s commitment to data integrity, trust, and evolution. They define the <strong>authoritative structure</strong> of your data — including fields, types, formats, constraints, and relationships — serving as a shared language between data producers, consumers, and pipeline logic.</p>
+<p>Generated directly from Go structs, contracts are versioned, validated, and tracked through every stage of a pipeline. When upstream systems change, Runink detects <strong>schema drift</strong>, highlights diffs, and optionally blocks execution or routes data for quarantine — ensuring nothing breaks silently. Contracts also tie directly into your tests, golden files, and metadata lineage, making them the connective tissue between your code, your data, and your governance. Runink treats contracts not just as schemas, but as <strong>data responsibility guarantees</strong> — machine-verifiable, human-readable, and Git-versioned.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Auto-generate contracts from Go structs (<code>runi contract gen</code>)</li>
+<li>Detect and diff schema changes with drift alerts</li>
+<li>Enforce structural and semantic validation at ingest or transform</li>
+<li>Integrate with golden testing, feature execution, and lineage tracking</li>
+<li>Embed contract versions in audit logs, metadata, and observability signals</li>
+</ul>
+<p>With Schema Contracts, Runink gives your team <strong>confidence, control, and compliance</strong> — by design.</p>
+<hr>
+<h3 id="-feature-dsl-domain-specific-language">🧱 Feature DSL (Domain-Specific Language)</h3>
+<p>The <strong>Feature DSL</strong> is Runink’s powerful, readable interface for defining pipelines — purpose-built to align data logic with domain language. Inspired by Gherkin, this DSL uses <code>.dsl</code> files to declare <strong>what should happen to the data</strong>, using a structured, declarative flow based on real business scenarios.</p>
+<p>Every scenario is composed of modular <code>@step</code> blocks, organized using <code>@when</code>, <code>@then</code>, and <code>@do</code> to clearly express conditions, expected outcomes, and the logic to apply. These steps can be reused across domains — for example, <code>@step(name=NormalizeEmails)</code> may appear in both ecommerce and finance pipelines, while more specific validations (like salary ranges or KYC checks) are scoped to their respective domain modules.</p>
+<p>This structure makes it easy to translate business rules into t.mdestable pipelines, enabling close collaboration between technical and non-technical users — with each scenario acting as both documentation and executable logic.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Scenarios are composed of reusable, composable steps across domain contexts</li>
+<li>Each step uses <code>@when → @then → @do</code> semantics for clarity and modularity</li>
+<li>Supports tag-based step handlers (<code>@source</code>, <code>@step(name=…)</code>, <code>@sink</code>)</li>
+<li>Domain-specific constraints and logic are cleanly isolated in modules</li>
+<li>DSL scenarios are fully testable, traceable, and convertible to pipeline code</li>
+</ul>
+<p>With the Feature DSL, Runink turns business scenarios into living, executable specifications — bringing pipelines and domain intent closer together than ever before.</p>
+<hr>
+<h3 id="-testing-engine">🧪 Testing Engine</h3>
+<blockquote>
+<p>Role: Ensures pipeline correctness and prevents regressions.</p></blockquote>
+<p>The <strong>Testing Engine</strong> is Runink’s built-in safety net — ensuring that every pipeline transformation is <strong>correct, traceable, and regression-proof</strong>. At its heart is the <strong>golden file system</strong>, where each scenario’s expected output is saved and used for future comparisons. If anything changes during a test run, Runink shows a clear and structured diff, making it easy to spot regressions or confirm intentional updates.</p>
+<p>Tests can be auto-generated using <strong>synthetic data</strong>, and pipelines can be validated in full using <strong>integration test suites</strong>. Whether you’re writing fine-grained unit tests or verifying complete feature flows, Runink leverages Go’s standard testing ecosystem alongside its own CLI to make pipeline testing reliable and repeatable.</p>
+<p>Combined with contracts, scenarios, and metadata tracking, this engine ensures that changes are safe, intentional, and observable — without sacrificing developer speed.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Golden file testing with structured diff reporting</li>
+<li>Synthetic data generation for repeatable, contract-aligned tests</li>
+<li>CLI-driven integration testing with <code>.dsl</code> scenarios</li>
+<li>Catch schema drift, logic changes, or data regressions early</li>
+<li>All tests are human-readable and Git-friendly for review</li>
+</ul>
+<p>With Runink’s Testing Engine, quality isn’t bolted on — it’s baked into every scenario, from the first line to the final output.</p>
+<hr>
+<h3 id="-interactive-repl-dataframe--sql-interface--json-explorer">🔍 Interactive REPL: DataFrame / SQL Interface / JSON Explorer</h3>
+<p>The <strong>Interactive REPL</strong> is your live terminal into the data universe — purpose-built for <strong>exploration</strong>, <strong>debugging</strong>, and <strong>interactive prototyping</strong>. Whether you&rsquo;re slicing through a JSON blob, cleaning up a CSV, or building a pipeline from scratch, the REPL gives you fast, expressive control over your data in real time.</p>
+<p>Runink’s REPL combines a <strong>DataFrame-inspired API</strong>, <strong>jq-style JSON navigation</strong>, and <strong>SQL-like querying</strong> into a single, cohesive shell. You can apply transformations step by step, inspect intermediate states, and convert your exploratory logic into reusable pipeline components — all without rerunning an entire scenario or writing full Go code. It also supports live previews of how your SQL or REPL commands will map into structured Runink pipeline steps, helping bridge the gap between experimentation and production pipelines.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Live scenario prototyping and debugging, one step at a time</li>
+<li>JSON exploration with jq-style dot access and filtering</li>
+<li>Interactive DataFrame operations (<code>Filter</code>, <code>Join</code>, <code>GroupBy</code>, etc.)</li>
+<li>SQL-like query parsing for quick insights and structured filters</li>
+<li>Preview and export queries into <code>.dsl</code> pipeline DSL code</li>
+</ul>
+<p>Whether you’re writing tests, preparing contracts, or validating the latest stream of events — the REPL keeps you <strong>curious</strong>, <strong>confident</strong>, and <strong>connected</strong> to your data.</p>
+<hr>
+<h3 id="-pipeline-generator">🚧 Pipeline Generator</h3>
+<p>The <strong>Pipeline Generator</strong> is the core of Runink’s automation engine — turning human-readable <code>.dsl</code> files into optimized, production-ready Go pipelines. It analyzes each scenario and compiles it into a <strong>Directed Acyclic Graph (DAG)</strong> of transformations, ensuring that all steps are executed in the correct order while honoring their data dependencies.</p>
+<p>Each tag (<code>@source</code>, <code>@step</code>, <code>@sink</code>) in the DSL is parsed with context-aware parameters, allowing you to reuse logic across platforms and domains. Whether you&rsquo;re sourcing from Snowflake, applying a standard validation like <code>@step(name=ValidateSIN)</code>, or writing to a streaming sink, Runink generates tailored Go code behind the scenes to handle the orchestration.</p>
+<p>The generator intelligently creates <strong>temporary views</strong> for intermediate pipeline steps and defines <strong>final outputs</strong> as durable tables — giving you the flexibility to move between exploration and production without rewriting logic. Whether running in batch or real-time streaming mode, the generated pipelines are built with checkpointing, retries, and resilience out of the box.</p>
+<p><strong>Functions:</strong></p>
+<ul>
+<li>Compiles <code>.dsl</code> DSL into fully executable Go code</li>
+<li>Builds DAGs (Directed Acyclic Graphs) from ordered step dependencies</li>
+<li>Supports parameterized tags like:
+<ul>
+<li><code>@source(type=snowflake|kafka, schema|topic=…, table|format=…)</code></li>
+<li><code>@step(name=ValidateSIN, domain=…)</code></li>
+<li><code>@sink(type=snowflake|kafka, schema|topic=…, table|format=…)</code></li>
+</ul>
+</li>
+<li>Generates <strong>views</strong> for intermediate pipeline objects</li>
+<li>Writes final outputs as persistent <strong>database tables</strong></li>
+<li>Supports both <strong>batch and real-time streaming pipelines</strong></li>
+<li>Includes built-in checkpointing, retries, and fault-tolerant flow control</li>
+</ul>
+<p>With the Pipeline Generator, you go from <strong>business intent to running code</strong> in seconds — no YAML files, no glue code, just pure scenario-driven automation.</p>
+<hr>
+<h3 id="-feature-orchestration">🔄 Feature Orchestration</h3>
+<blockquote>
+<p>Role: Handles pipeline dependency resolution and execution scheduling.</p></blockquote>
+<p>The <strong>Feature Orchestration</strong> engine is the backbone of Runink’s intelligent pipeline execution. It transforms <code>.dsl</code> files into <strong>distributed DAGs (Directed Acyclic Graphs)</strong> that honor data dependencies, execution order, and domain boundaries. Each step — tagged in your DSL — is independently executable and can be scheduled as a microservice or serverless job, enabling true modular execution at scale.</p>
+<p>Orchestration works seamlessly across <strong>batch</strong> and <strong>streaming</strong> modes, supporting windowed ingestion and real-time event slices with equal efficiency. It leverages Go-native primitives (like <code>bigmachine</code>) and Linux cgroups to spin up lightweight, isolated <strong>Runi</strong> compute slices. These slices execute in logical groupings — called <strong>Herds</strong> — using Linux namespaces to separate domain-specific logic, making the entire system cloud-native and data-domain aware by design.</p>
+<p>Whether executing in a local cluster or across distributed environments like Kubernetes, Runink’s orchestration ensures resilience through retries, observability, auto-scaling, and minimal resource overhead — giving you a serverless experience with full pipeline traceability and control.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Robust streaming and windowed processing, with batch ingestion support</li>
+<li>Parallel and distributed DAG-based pipeline execution</li>
+<li>Execution of tagged pipeline steps as microservices or serverless units</li>
+<li>Smart compute orchestration via <strong>Runi slices</strong> (cgroups)</li>
+<li>Domain boundary isolation using <strong>Herd namespaces</strong></li>
+<li>Health checks, automatic retries, and self-healing execution plans</li>
+<li>Ingests both bounded and unbounded data with slice-based identity</li>
+<li>Matches pending pipeline tasks to available capacity.</li>
+<li>Reads desired tasks from the Barn</li>
+<li>Applies Herd quotas, node labels, and resource requirements</li>
+<li>Sends placement commands to Runi Agents</li>
+</ul>
+<p>With this architecture, Runink doesn’t just run pipelines — it orchestrates <strong>data responsibility</strong>, <strong>compute efficiency</strong>, and <strong>modular autonomy</strong> at enterprise scale.</p>
+<hr>
+<h3 id="-data-lineage--metadata">🧭 Data Lineage &amp; Metadata</h3>
+<p>The <strong>Data Lineage &amp; Metadata</strong> layer in Runink gives you full transparency into how data flows — and why it changes. As each record moves through a pipeline, Runink automatically tracks what transformed it, under what contract, when it happened, and where it ran. This built-in traceability turns every pipeline into an auditable, explorable map of data activity.</p>
+<p>Runink attaches rich metadata to every record — including <code>RunID</code>, <code>stage name</code>, <code>contract version</code>, timestamps, and transformation paths — all without requiring extra instrumentation. This metadata powers compliance reports, observability dashboards, and rollback logic. It also supports regulatory requirements like GDPR, HIPAA, and internal DataOps standards.</p>
+<p>Visual lineage graphs can be rendered from pipeline metadata to show how datasets were derived, making both debugging and documentation seamless.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Automatic lineage tracking across all pipeline stages</li>
+<li>Visualize transformations via DAGs and lineage graphs</li>
+<li>Metadata tagging (RunID, stage, contract hash, timestamps)</li>
+<li>Immutable audit logs for compliance and traceability</li>
+<li>Hooks into REPL, test output, and contract validation reports</li>
+</ul>
+<p>With lineage and metadata as a first-class feature, Runink ensures your data is <strong>not just accurate</strong>, but <strong>accountable</strong>.</p>
+<hr>
+<h3 id="-data-quality--validation">✅ Data Quality &amp; Validation</h3>
+<blockquote>
+<p>Role: Maintains data integrity and compliance throughout the pipeline.</p></blockquote>
+<p>The <strong>Data Quality &amp; Validation</strong> layer in Runink ensures that your pipelines don’t just run — they run with <strong>integrity, accuracy, and trust</strong>. It allows you to define validations as part of your pipeline logic, using both schema-driven rules and domain-specific assertions. From pre-ingestion <em>contract validation</em> checks to mid-pipeline <em>schema enforcement</em> validations and final output guarantees, Runink makes quality a first-class citizen.</p>
+<p>Non-technical users can define business rules using <code>.dsl</code> files — asserting required fields, value ranges, regex patterns, or even cross-field relationships. Invalid records can be logged, routed to a <strong>Dead Letter Queue (DLQ)</strong>, or flagged for review, without halting the entire pipeline.</p>
+<p>Built-in quality metrics and thresholds provide insight into pipeline health, and integrate seamlessly with observability tools for alerting and monitoring.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Validate records against schema contracts at multiple stages</li>
+<li>Enforce field-level, type-level, and domain-specific constraints</li>
+<li>Route invalid records to DLQs with full metadata for debugging</li>
+<li>Monitor and alert on data quality thresholds</li>
+<li>Allow business and data teams to codify validation rules in <code>.dsl</code> files</li>
+</ul>
+<p>With Runink, data quality becomes proactive, testable, and deeply integrated — not an afterthought.</p>
+<hr>
+<h3 id="-data-governance--compliance">🔒 Data Governance &amp; Compliance</h3>
+<blockquote>
+<p>Role: Ensures adherence to regulatory and internal data governance standards.</p></blockquote>
+<p>The <strong>Data Governance &amp; Compliance</strong> layer in Runink ensures that your pipelines don’t just move data — they move it <strong>securely</strong>, <strong>transparently</strong>, and <strong>in compliance</strong> with both regulatory and internal standards. From role-based access control to encryption and masking, Runink provides the tools and policies to safeguard sensitive data while enabling responsible data sharing across domains.</p>
+<p>Whether you’re building pipelines for internal analytics or external-facing services, Runink enforces security best practices through clearly defined policies and supports key compliance frameworks like <strong>SOC 2</strong>, <strong>GDPR</strong>, and <strong>ISO 27001</strong>. Each component is designed to be traceable and accountable, with <strong>SPDX-compliant licensing</strong>, <strong>SBOM reporting</strong>, and secure identity handling via <strong>OIDC</strong> and <strong>JWT</strong>.</p>
+<p>Data sensitivity is handled directly in the pipeline — with built-in support for <strong>anonymization</strong>, <strong>data masking</strong>, and <strong>field-level encryption</strong> — so governance becomes part of execution, not an afterthought.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Exposes gRPC/REST API for UI, CLI, and policy checks</li>
+<li>Ingests annotations, metadata, and audit logs from slices</li>
+<li>Enables lineage visualization and quality dashboards</li>
+<li>SPDX-compliant licensing and SBOM (Software Bill of Materials) exports</li>
+<li>Integration and compliance with FDC3 and CDM standards</li>
+<li>Support for SOC 2, GDPR, ISO 27001, HIPAA, and more</li>
+<li>Schema alignment and data interoperability across financial systems</li>
+<li>Schema versioning and drift monitoring specific to industry models</li>
+<li>Applied FinOps on data</li>
+</ul>
+<p>Runink brings <strong>data responsibility</strong> and <strong>regulatory readiness</strong> directly into the pipeline, helping your organization scale securely — and confidently.</p>
+<hr>
+<h3 id="-security--enterprise-dataops">🛡️ Security &amp; Enterprise DataOps</h3>
+<blockquote>
+<p>Role: Secure systems during its conception in an automated manner.</p></blockquote>
+<p>The <strong>Security &amp; Enterprise DataOps</strong> layer in Runink ensures that your pipelines are <strong>secure from day one</strong> — by automating protection across the entire software and data lifecycle. Security isn’t an afterthought; it’s integrated directly into how pipelines are built, tested, and deployed.</p>
+<p>Runink automates <strong>vulnerability scanning</strong> and license auditing during CI/CD, using GitHub Actions and GoReleaser to generate secure, signed artifacts with <strong>SBOMs</strong> and <strong>hash verification</strong> to prevent tampering. It supports <strong>environment-specific configurations</strong>, managing secrets and access per environment, whether local, staging, or production.</p>
+<p>For runtime security, pipelines are governed by <strong>RBAC</strong> and authenticated via <strong>OIDC/JWT</strong>, while data is protected at multiple layers — with <strong>encryption at rest and in transit</strong>, <strong>field-level masking</strong>, and <strong>anonymization</strong> for sensitive fields.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Automated security scanning and vulnerability management during CI/CD</li>
+<li>Service Mesh integration</li>
+<li>Dynamic configuration management</li>
+<li>GitHub Actions + GoReleaser pipelines with reproducible builds</li>
+<li>Data encryption at rest (e.g., file systems, S3) and in transit (TLS)</li>
+<li>Environment-specific pipeline config + secret injection</li>
+<li>Fine-grained network access control and isolation</li>
+<li>Role-based access control (RBAC) with secure auth via OIDC/JWT</li>
+<li>Field-level encryption, masking, and anonymization for PII/PHI</li>
+<li>Signed hash verification of pipeline artifacts and outputs to prevent tampering</li>
+</ul>
+<p>Runink enables <strong>secure-by-default pipelines</strong> for modern, responsible data platforms — empowering you to scale DataOps without sacrificing trust, traceability, or control.</p>
+<hr>
+<h3 id="-observability--monitoring">🌐 Observability &amp; Monitoring</h3>
+<blockquote>
+<p>Role: Enables comprehensive visibility into pipeline health and performance.</p></blockquote>
+<p>Observability means you can <strong>see what your pipelines are doing, when, and why</strong>. In Runink, every feature scenario and pipeline stage is fully instrumented with <strong>real-time metrics</strong>, <strong>structured logs</strong>, and <strong>traceable telemetry</strong> — giving you deep, actionable visibility into your data workflows.</p>
+<p>From <strong>record counts</strong> and <strong>stage durations</strong> to <strong>error rates</strong> and <strong>schema contract versions</strong>, Runink captures detailed metrics tied to each run, stage, and data slice. These are exposed via Prometheus, OpenTelemetry, or your own observability stack, enabling rich dashboards, alerting, and deep debugging capabilities.</p>
+<p>Structured logs include tags like <code>RunID</code>, <code>Stage</code>, and <code>ContractHash</code>, while telemetry tracing shows full DAG execution across parallel or distributed nodes. Whether you&rsquo;re tuning performance, chasing bugs, or watching for data anomalies — Runink helps you stay one step ahead.</p>
+<p><em><strong>Functions:</strong></em></p>
+<ul>
+<li>Monitor pipelines in real time with streaming metrics</li>
+<li>Debug slow or failing stages with stage-level performance data</li>
+<li>Alert on errors, retries, or threshold breaches</li>
+<li>Integrate data quality thresholds into observability dashboards</li>
+<li>Structured logs enriched with run metadata for traceability</li>
+<li>Visualize end-to-end pipeline execution with OpenTelemetry traces</li>
+</ul>
+<p>With Runink, observability is not an add-on — it&rsquo;s an embedded guarantee that your data platform stays transparent, reliable, and responsive.</p>
+
+	
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      <footer class="td-footer row d-print-none">
+  <div class="container-fluid">
+    <div class="row mx-md-2">
+      <div class="td-footer__left col-6 col-sm-4 order-sm-1">
+        
+      </div><div class="td-footer__right col-6 col-sm-4 order-sm-3">
+        
+      </div><div class="td-footer__center col-12 col-sm-4 py-2 order-sm-2">
+        <span class="td-footer__copyright">&copy;
+    2025
+    <span class="td-footer__authors">Runink</span></span><span class="td-footer__all_rights_reserved">All Rights Reserved</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <script src="/js/main.js"></script>
+<script defer src="/js/click-to-copy.js" crossorigin="anonymous"></script>
+<script src='/js/tabpane-persist.js'></script>
+
+  </body>
+</html>
