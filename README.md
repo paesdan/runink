@@ -8,7 +8,14 @@
 
 ## Overview
 
-<img src="./docs/images/logo.png" width="150"/>
+<table>
+  <tr>
+    <th><img src="/images/logo.png" width="250"/></th>
+    <th><h4>Runink is a Go-native distributed pipeline orchestration and governance platform.</h4></th>
+  </tr>
+</table>
+<br>
+<table>
 
 ***Runink*** is an ambitious project aiming to define a **self-sufficient, distributed environment** specifically designed for orchestrating and executing data pipelines. Built natively in **Go** and leveraging core **Linux primitives** (cgroups, namespaces, `exec`), Runink acts as its own cluster resource manager and scheduler, providing a vertically integrated platform that replaces the need for separate systems like Slurm or complex Kubernetes setups for data workloads.
 
@@ -25,6 +32,9 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 
 ## Key Features
 
+<img src="/images/components.png" width="580"/>
+
+
 * **Feature DSL:** Define complex pipelines using a human-readable, Gherkin-inspired `.dsl` file format.
 * **Integrated Orchestration:** A built-in Control Plane parses DSLs into DAGs and schedules distributed execution across managed nodes.
 * **Runi/Herd Execution Model:** Lightweight, isolated pipeline steps (`Runi Slices`) execute within resource-constrained cgroups and logically separated `Herd` namespaces for multi-tenancy and domain isolation.
@@ -33,78 +43,6 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 * **Native Observability:** Components are instrumented for Prometheus metrics and structured logging out-of-the-box.
 * **Schema Contracts:** Define and enforce data structure guarantees throughout the pipeline lifecycle.
 
-## High-Level Architecture
-
-Runink operates with a Control Plane managing multiple Worker Nodes, each running a Runi Agent.
-
-```plaintext
-+---------------------------------------------------------------+
-|                      Developer / Authoring Layer              |
-|---------------------------------------------------------------|
-|  - CLI (runi)                                                 |
-|  - REPL (DataFrame-style, step-by-step)                       |
-|  - DSL Authoring (`features/`)                                |
-|  - Contract Definitions (`contracts/`)                        |
-|  - Test Engine (Golden tests, synthetic fixtures)             |
-+---------------------------------------------------------------+
-                              ↓
-+---------------------------------------------------------------+
-|                   Control Plane (Domain + Orchestration)      |
-|---------------------------------------------------------------|
-|  - API Server (REST/gRPC, OIDC auth, herd scoping)            |
-|  - Scheduler (declarative constraint solver, DAG generator)   |
-|  - Metadata Catalog (contracts, lineage, tags, scenarios)     |
-|  - Secrets Manager (Herd-scoped secrets over Raft)            |
-|  - Compliance & RBAC Enforcer (contract-level access control) |
-|  - Checkpoint Coordinator (tracks partial run status + resume)|
-+---------------------------------------------------------------+
-                              ↓
-+---------------------------------------------------------------+
-|                 Distributed State Layer (Consensus + Storage) |
-|---------------------------------------------------------------|
-|  - Raft Consensus Group (Herd + Scheduler + State sync)       |
-|  - BadgerDB-backed volumes for:                               |
-|      • Pipeline run metadata                                  |
-|      • Slice-local state volumes                              |
-|      • Checkpointed outputs (resume-able DAG stages)          |
-|  - Herd Definitions, Contract Versions, RBAC, Secrets         |
-+---------------------------------------------------------------+
-                              ↓
-+---------------------------------------------------------------+
-|                   Execution Plane (Slices + Agents)           |
-|---------------------------------------------------------------|
-|  - Runi Agent (on every node, manages slices + volumes)       |
-|  - Slice Group Supervisor (windowed runs, state volumes)      |
-|  - Slice Process:                                             |
-|      • Mounts ephemeral namespace, PID net, user, cgroup      |
-|      • Loads step function (from contract)                    |
-|      • Streams data with io.Pipe (zero-copy)                  |
-|      • Accesses read/write state volume via volume proxy      |
-|      • Writes to sink, emits lineage                          |
-|  - Windowed Join Runner:                                      |
-|      • Centralized lineage rehydration across slice groups    |
-|      • Co-group on keys across parallel slice outputs         |
-+---------------------------------------------------------------+
-                              ↓
-+---------------------------------------------------------------+
-|              Governance, Observability, and Quality Plane     |
-|---------------------------------------------------------------|
-|  - Data Quality Rules (contract tags + field checks)          |
-|  - Lineage Engine (runID, contract hash, input/output edges)  |
-|  - Metrics Exporter (Prometheus, Fluentd, OpenTelemetry)      |
-|  - DLQ + Routing Controller (based on step & validation tags) |
-|  - Audit Log Engine (per slice, signed logs)                  |
-+---------------------------------------------------------------+
-                              ↓
-+---------------------------------------------------------------+
-|             External Sources / Sinks / State APIs             |
-|---------------------------------------------------------------|
-|  - Kafka, S3, Snowflake, GCS, Postgres, Redshift              |
-|  - APIs (FDC3, CDM, internal REST sources)                    |
-|  - Optional backing state for key joins (Redis, RocksDB)      |
-+---------------------------------------------------------------+
-
-```
 
 *(For more details, see [`docs/architecture.md`](./docs/architecture.md))*
 
@@ -114,7 +52,7 @@ Runink operates with a Control Plane managing multiple Worker Nodes, each runnin
 
 <table>
   <tr>
-    <th><img src="./docs/images/runink.png" width="450"/></th>
+    <th><img src="/images/runink.png" width="250"/></th>
     <th><h4>The golang code base to deploy features from configurations files deployed by command actions over the CLI/API.</h4></th>
   </tr>
   <tr>
@@ -124,7 +62,7 @@ Runink operates with a Control Plane managing multiple Worker Nodes, each runnin
 <br>
 <table>
   <tr>
-    <th><img src="./docs/images/runi.png" width="450"/></th>
+    <th><img src="/images/runi.png" width="250"/></th>
     <th><h4>A single instance of a pipeline step running as an isolated <i>Runi Slice Process</i> managed by a <i>Runi Agent</i> within the constraints of a specific <i>Herd</i></h4></th>
   </tr>
   <tr>
@@ -134,11 +72,20 @@ Runink operates with a Control Plane managing multiple Worker Nodes, each runnin
 <br>
 <table>
   <tr>
-    <th><img src="./docs/images/herd.png" width="450"/></th>
+    <th><img src="/images/herd.png" width="250"/></th>
     <th><h4>A logical grouping construct, similar to a Kubernetes Namespace, enforced via RBAC policies and resource quotas. Provides multi-tenancy and domain isolation.</h4></th>
   </tr>
   <tr>
     <th>Herd</th>
+  </tr>  
+</table>
+<table>
+  <tr>
+    <th><img src="/images/barn.png" width="350"/></th>
+    <th><h4>A distributed, Raft-backed state store that guarantees strong consistency, high availability, and deterministic orchestration. No split-brain, no guesswork — just fault-tolerant operations.</h4></th>
+  </tr>
+  <tr>
+    <th>Barn</th>
   </tr>  
 </table>
 

@@ -2,6 +2,81 @@
 
 Goal: Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives. This system acts as the cluster resource manager and scheduler (replacing Slurm), provides Kubernetes-like logical isolation and RBAC, integrates data governance features, and ensures robust security and observability. It aims for high efficiency by avoiding traditional virtualization or container runtimes like Docker. Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives, with enhanced metadata capabilities designed to support standard data governance (lineage, catalog) AND future integration of LLM-generated annotations.
 
+## High-Level Architecture
+
+Runink operates with a Control Plane managing multiple Worker Nodes, each running a Runi Agent.
+
+```plaintext
++---------------------------------------------------------------+
+|                      Developer / Authoring Layer              |
+|---------------------------------------------------------------|
+|  - CLI (runi)                                                 |
+|  - REPL (DataFrame-style, step-by-step)                       |
+|  - DSL Authoring (`features/`)                                |
+|  - Contract Definitions (`contracts/`)                        |
+|  - Test Engine (Golden tests, synthetic fixtures)             |
++---------------------------------------------------------------+
+                              ↓
++---------------------------------------------------------------+
+|                   Control Plane (Domain + Orchestration)      |
+|---------------------------------------------------------------|
+|  - API Server (REST/gRPC, OIDC auth, herd scoping)            |
+|  - Scheduler (declarative constraint solver, DAG generator)   |
+|  - Metadata Catalog (contracts, lineage, tags, scenarios)     |
+|  - Secrets Manager (Herd-scoped secrets over Raft)            |
+|  - Compliance & RBAC Enforcer (contract-level access control) |
+|  - Checkpoint Coordinator (tracks partial run status + resume)|
++---------------------------------------------------------------+
+                              ↓
++---------------------------------------------------------------+
+|                 Distributed State Layer (Consensus + Storage) |
+|---------------------------------------------------------------|
+|  - Raft Consensus Group (Herd + Scheduler + State sync)       |
+|  - BadgerDB-backed volumes for:                               |
+|      • Pipeline run metadata                                  |
+|      • Slice-local state volumes                              |
+|      • Checkpointed outputs (resume-able DAG stages)          |
+|  - Herd Definitions, Contract Versions, RBAC, Secrets         |
++---------------------------------------------------------------+
+                              ↓
++---------------------------------------------------------------+
+|                   Execution Plane (Slices + Agents)           |
+|---------------------------------------------------------------|
+|  - Runi Agent (on every node, manages slices + volumes)       |
+|  - Slice Group Supervisor (windowed runs, state volumes)      |
+|  - Slice Process:                                             |
+|      • Mounts ephemeral namespace, PID net, user, cgroup      |
+|      • Loads step function (from contract)                    |
+|      • Streams data with io.Pipe (zero-copy)                  |
+|      • Accesses read/write state volume via volume proxy      |
+|      • Writes to sink, emits lineage                          |
+|  - Windowed Join Runner:                                      |
+|      • Centralized lineage rehydration across slice groups    |
+|      • Co-group on keys across parallel slice outputs         |
++---------------------------------------------------------------+
+                              ↓
++---------------------------------------------------------------+
+|              Governance, Observability, and Quality Plane     |
+|---------------------------------------------------------------|
+|  - Data Quality Rules (contract tags + field checks)          |
+|  - Lineage Engine (runID, contract hash, input/output edges)  |
+|  - Metrics Exporter (Prometheus, Fluentd, OpenTelemetry)      |
+|  - DLQ + Routing Controller (based on step & validation tags) |
+|  - Audit Log Engine (per slice, signed logs)                  |
++---------------------------------------------------------------+
+                              ↓
++---------------------------------------------------------------+
+|             External Sources / Sinks / State APIs             |
+|---------------------------------------------------------------|
+|  - Kafka, S3, Snowflake, GCS, Postgres, Redshift              |
+|  - APIs (FDC3, CDM, internal REST sources)                    |
+|  - Optional backing state for key joins (Redis, RocksDB)      |
++---------------------------------------------------------------+
+
+```
+
+### Detailed Architecture
+
 ```plaintext
 +───────────────────────────────────────────────────────────────────────────────────────────────────────────+
 |                             External User / Client                                                        |
