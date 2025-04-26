@@ -10,7 +10,7 @@
 
 <table>
   <tr>
-    <th><img src="/images/logo.png" width="250"/></th>
+    <th><img src="./docs/images/logo.png" width="250"/></th>
     <th><h4>Runink is a Go-native distributed pipeline orchestration and governance platform.</h4></th>
   </tr>
 </table>
@@ -32,7 +32,7 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 
 ## Key Features
 
-<img src="/images/components.png" width="580"/>
+<img src="./docs/images/components.png" width="580"/>
 
 
 * **Feature DSL:** Define complex pipelines using a human-readable, Gherkin-inspired `.dsl` file format.
@@ -52,7 +52,7 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 
 <table>
   <tr>
-    <th><img src="/images/runink.png" width="250"/></th>
+    <th><img src="./docs/images/runink.png" width="250"/></th>
     <th><h4>The golang code base to deploy features from configurations files deployed by command actions over the CLI/API.</h4></th>
   </tr>
   <tr>
@@ -62,7 +62,7 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 <br>
 <table>
   <tr>
-    <th><img src="/images/runi.png" width="250"/></th>
+    <th><img src="./docs/images/runi.png" width="250"/></th>
     <th><h4>A single instance of a pipeline step running as an isolated <i>Runi Slice Process</i> managed by a <i>Runi Agent</i> within the constraints of a specific <i>Herd</i></h4></th>
   </tr>
   <tr>
@@ -72,7 +72,7 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 <br>
 <table>
   <tr>
-    <th><img src="/images/herd.png" width="250"/></th>
+    <th><img src="./docs/images/herd.png" width="250"/></th>
     <th><h4>A logical grouping construct, similar to a Kubernetes Namespace, enforced via RBAC policies and resource quotas. Provides multi-tenancy and domain isolation.</h4></th>
   </tr>
   <tr>
@@ -81,7 +81,7 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 </table>
 <table>
   <tr>
-    <th><img src="/images/barn.png" width="350"/></th>
+    <th><img src="./docs/images/barn.png" width="350"/></th>
     <th><h4>A distributed, Raft-backed state store that guarantees strong consistency, high availability, and deterministic orchestration. No split-brain, no guesswork — just fault-tolerant operations.</h4></th>
   </tr>
   <tr>
@@ -91,169 +91,8 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 
 <br>
 
----
-
-# Runink Component Reference
-
-This section provides a brief overview of the main Runink components. For detailed descriptions, please refer to [`docs/components.md`](./docs/components.md).
-
----
-
-### ⚙️ Runink CLI (`runi`)
-
-> Role: Developer interface for scaffolding, testing, and running pipelines.
-
-The primary command-line tool for interacting with the Runink platform, managing contracts, features, tests, and deployments.
-
----
-
-### 🤖 Runi Agent
-
-> Role: Node daemon managing local slice execution and reporting.
-
-Runs on each compute node, manages `Runi Slice Process` lifecycle within cgroups/namespaces, fetches secrets, and forwards logs/metrics to the observability stack.
-
----
-
-### 🐑 Herd Namespace
-
-> Role: Logical isolation boundary for multi-tenancy and domain separation.
-
-A logical grouping (similar to K8s namespaces) enforced via RBAC and resource quotas, providing isolation for `Runi Slices` using Linux namespaces.
-
----
-
-### 🖥️ Herd Control Plane
-
-> Role: Central orchestration and management brain of the Runink cluster.
-
-The distributed set of services (API Server, Scheduler, State Store, etc.) managing cluster state, scheduling workloads, enforcing policies, and providing APIs.
-
----
-
-### 💾 Barn (Cluster State Store)
-
-> Role: Distributed, consistent storage for all cluster state.
-
-The authoritative, HA key-value store (backed by Raft) holding configurations, pipeline state, RBAC policies, secrets metadata, and core governance info.
-
----
-
-### 🔐 Secrets Manager
-
-> Role: Secure vault for managing and delivering sensitive credentials.
-
-Stores encrypted secrets (scoped by Herd/RBAC) and securely delivers them to `Runi Agents` for use by `Runi Slices`.
-
----
-
-### 🔑 Identity & RBAC Manager
-
-> Role: Manages authentication and authorization policies.
-
-Handles user/service identities (OIDC), defines and enforces fine-grained, Herd-scoped RBAC policies via the API Server.
-
----
-
-### 🖥️ API Server
-
-> Role: Main gateway for all interactions with the Runink platform.
-
-Exposes gRPC/REST APIs, handles AuthN/AuthZ, validates requests, and routes commands to other control plane services.
-
----
-
-### 📑 Schema Contracts
-
-> Role: Defines authoritative data structures, versions, and validations.
-
-Versioned definitions of data structure used for validation within pipelines and tracked via the governance service.
-
----
-
-### 🧱 Feature DSL (Domain-Specific Language)
-
-> Role: Human-readable language for defining pipeline logic.
-
-A Gherkin-inspired format (`.dsl` files) used to declare pipeline steps and scenarios, parsed by the Control Plane.
-
----
-
-### 🧪 Testing Engine
-
-> Role: Ensures pipeline correctness and prevents regressions.
-
-Supports golden file testing, synthetic data generation, and integration tests, driven via the `Runink CLI`.
-
----
-
-### 🔍 Interactive REPL
-
-> Role: Interface for live data exploration, debugging, and prototyping.
-
-A command-line shell combining DataFrame API, JSON navigation, and SQL-like querying for interactive work.
-
----
-
-### 🚧 Pipeline Generator
-
-> Role: Translates Feature DSL into an executable DAG plan.
-
-Conceptually, the Control Plane component (Scheduler) that interprets the DSL and plans the execution DAG for `Runi Slices`.
-
----
-
-### 🔄 Feature Orchestration
-
-> Role: Handles pipeline dependency resolution and execution scheduling.
-
-The core scheduling and execution logic managed by the `Herd Control Plane Scheduler` and `Runi Agents`, executing steps as `Runi Slices` within `Herd` boundaries.
-
----
-
-### 🧭 Data Lineage & Metadata
-
-> Role: Central service for tracking data flow, context, and annotations.
-
-Managed by the `Data Governance Service`, providing APIs to record and query lineage graphs, catalog info, annotations (incl. LLM), and quality results.
-
----
-
-### ✅ Data Quality & Validation
-
-> Role: Maintains data integrity and compliance throughout the pipeline.
-
-Enforces rules defined in `Schema Contracts` and `Feature Domain Structured Language` within `Worker Slices`, with results tracked by the `Data Governance Service`.
-
----
-
-### 🔒 Data Governance & Compliance
-
-> Role: Ensures adherence to regulatory and internal data governance standards.
-
-Encompasses RBAC (scoped by `Herd`), lineage tracking, audit trails, and security controls managed across the Control Plane and Agents.
-
----
-
-### 🛡️ Security & Enterprise DataOps
-
-> Role: Integrates security practices into the pipeline lifecycle.
-
-Combines platform security features (RBAC, secrets, encryption, isolation via namespaces/cgroups) with recommended CI/CD practices for the platform code itself.
-
----
-
-### 🌐 Observability & Monitoring
-
-> Role: Enables comprehensive visibility into pipeline health and performance.
-
-Provides metrics (Prometheus) and logs (Fluentd) collected by `Runi Agents` from `Runi Slices` and Agents themselves.
-
----
 
 ## Getting Started
-
-*(TODO: Add instructions for installing the Runink CLI, setting up a minimal cluster (Herd Control Plane + Runi Agents), and running a basic example pipeline using the Feature DSL.)*
 
 ```bash
 # Example (Conceptual)
@@ -274,11 +113,14 @@ runi run \
 runi status --runid RUN-20240424-XYZ --herd finance
 ```
 
+Curious?
+
+[Detailed Architecture →](./docs/architecture.md) | [Components Overview →](./docs/components.md) | [Comparison with other open-source projects →](./docs/benchmark/)
+
 ## Development Status
 
 **Alpha / Conceptual:** Runink is currently under active development and should be considered experimental. The architecture and features described represent the target state.
 
-Please read [`docs/benchmark.md`](./docs/benchmark.md) for more details when compared to other common open-source projects.
 
 ## Contributing
 
@@ -286,4 +128,4 @@ Contributions are welcome\! Please read our [`docs/contributing.md`](./docs/cont
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](https://www.google.com/search?q=LICENSE) file for details.
+This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICENSE) file for details.
