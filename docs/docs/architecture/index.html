@@ -1,0 +1,1027 @@
+<!doctype html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Runink</title>
+<meta name="description" content="Runink Architecture: Go/Linux Native Distributed Data Environment Goal: Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives. This system acts as the cluster resource manager and scheduler (replacing Slurm), provides Kubernetes-like logical isolation and RBAC, integrates data governance features, and ensures robust security and observability. It aims for high efficiency by avoiding traditional virtualization or container runtimes like Docker. Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives, with enhanced metadata capabilities designed to support standard data governance (lineage, catalog) AND future integration of LLM-generated annotations.">
+<meta property="og:url" content="https://runink.org/docs/architecture/">
+  <meta property="og:site_name" content="Runink">
+  <meta property="og:title" content="Runink">
+  <meta property="og:description" content="Runink Architecture: Go/Linux Native Distributed Data Environment Goal: Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives. This system acts as the cluster resource manager and scheduler (replacing Slurm), provides Kubernetes-like logical isolation and RBAC, integrates data governance features, and ensures robust security and observability. It aims for high efficiency by avoiding traditional virtualization or container runtimes like Docker. Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives, with enhanced metadata capabilities designed to support standard data governance (lineage, catalog) AND future integration of LLM-generated annotations.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+
+  <meta itemprop="name" content="Runink">
+  <meta itemprop="description" content="Runink Architecture: Go/Linux Native Distributed Data Environment Goal: Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives. This system acts as the cluster resource manager and scheduler (replacing Slurm), provides Kubernetes-like logical isolation and RBAC, integrates data governance features, and ensures robust security and observability. It aims for high efficiency by avoiding traditional virtualization or container runtimes like Docker. Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives, with enhanced metadata capabilities designed to support standard data governance (lineage, catalog) AND future integration of LLM-generated annotations.">
+  <meta itemprop="wordCount" content="5868">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Runink">
+  <meta name="twitter:description" content="Runink Architecture: Go/Linux Native Distributed Data Environment Goal: Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives. This system acts as the cluster resource manager and scheduler (replacing Slurm), provides Kubernetes-like logical isolation and RBAC, integrates data governance features, and ensures robust security and observability. It aims for high efficiency by avoiding traditional virtualization or container runtimes like Docker. Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives, with enhanced metadata capabilities designed to support standard data governance (lineage, catalog) AND future integration of LLM-generated annotations.">
+<link rel="preload" href="/scss/main.scss" as="style" integrity="" crossorigin="anonymous">
+<link href="/scss/main.scss" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous"></script>
+
+  </head>
+  <body class="td-page">
+    <header>
+      <nav class="td-navbar js-navbar-scroll" data-bs-theme="dark">
+<div class="container-fluid flex-column flex-md-row">
+  <a class="navbar-brand" href="/"><span class="navbar-brand__logo navbar-logo"><svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500" style="enable-background:new 0 0 500 500"><g><path style="fill:#fff" d="M116.8525 421.9722c-5.7041.0-10.3442-4.3127-10.3442-9.6129V88.183c0-5.3002 4.6401-9.6117 10.3442-9.6117H320.858c3.0347.0 9.3959.5498 11.7506 2.6302l.3545.3442 58.905 63.2912c2.3101 2.491 2.9202 8.4928 2.9202 11.3184v256.2039c0 5.3002-4.6407 9.6129-10.3436 9.6129H116.8525z"/><g><g><g><path style="fill:#767676" d="M384.4445 423.2066H116.852c-6.3839.0-11.5786-4.8658-11.5786-10.8474V88.1831c0-5.9804 5.1947-10.8461 11.5786-10.8461h204.0062c.377.0 9.2786.0329 12.568 2.9389l.3947.3833 58.9508 63.337c3.2135 3.4652 3.2514 11.7924 3.2514 12.1593v256.2036C396.0231 418.3408 390.8284 423.2066 384.4445 423.2066zM116.5079 411.9189c.0848.0278.1999.0531.3441.0531h267.5925c.1442.0.2581-.0253.3441-.0531V156.1556c-.0076-.9033-.3593-3.7347-.7034-5.0037l-57.6527-61.9416c-1.4651-.3176-4.4533-.6389-5.5742-.6389H116.852c-.143.0-.2594.024-.3441.0531V411.9189zm267.4533-261.149zM327.0321 89.371v.0013V89.371z"/></g></g></g><g><g><path style="fill:#5b7fc0" d="M189.0874 210.1754l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.025 2.454-11.4897 6.4116-15.4473C177.5953 212.627 183.0601 210.1742 189.0874 210.1754zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403S197.0816 234.1722 197.0804 232.033z"/><path style="opacity:.3;fill:#fff" d="M189.0898 210.176c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 212.6276 183.0612 210.176 189.0898 210.176zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 236.239 197.0839 234.2399 197.0839 232.0372z"/><g><defs><path id="SVGID_1_" d="M194.7376 237.6875c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.999 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 234.2399 196.1861 236.239 194.7376 237.6875z"/></defs><clipPath id="SVGID_2_"><use xlink:href="#SVGID_1_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_2_);fill:#fff" d="M190.0704 225.0237c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 225.7247 191.9774 225.0237 190.0704 225.0237z"/><path style="opacity:.13;clip-path:url(#SVGID_2_);fill:#020202" d="M190.0704 225.0237c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 225.7247 191.9774 225.0237 190.0704 225.0237z"/></g><g><defs><path id="SVGID_3_" d="M189.0898 210.176c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 212.6276 183.0612 210.176 189.0898 210.176zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 236.239 197.0839 234.2399 197.0839 232.0372z"/></defs><clipPath id="SVGID_4_"><use xlink:href="#SVGID_3_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_4_);fill:#5b7fc0" d="M172.6595 215.6045c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8612 12.0547.0024 21.8636-9.797 21.8613-21.8612.0024-3.8475-1.0151-7.6326-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 209.1953 176.6171 211.647 172.6595 215.6045z"/></g></g><rect x="198.8952" y="225.1043" style="fill:#5b7fc0" width="122.6266" height="13.8671"/></g><g><path style="fill:#d95140" d="M189.0874 155.7611l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.0249 2.454-11.4897 6.4116-15.4473C177.5953 158.2128 183.0601 155.7599 189.0874 155.7611zm7.993 21.8577c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403C196.2508 181.7667 197.0816 179.758 197.0804 177.6188z"/><path style="opacity:.3;fill:#fff" d="M189.0898 155.7617c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 158.2134 183.0612 155.7617 189.0898 155.7617zm7.9941 21.8613c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 181.8248 197.0839 179.8256 197.0839 177.623z"/><g><defs><path id="SVGID_5_" d="M194.7376 183.2733c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.9989 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 179.8256 196.1861 181.8248 194.7376 183.2733z"/></defs><clipPath id="SVGID_6_"><use xlink:href="#SVGID_5_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_6_);fill:#fff" d="M190.0704 170.6095c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 171.3104 191.9774 170.6095 190.0704 170.6095z"/><path style="opacity:.13;clip-path:url(#SVGID_6_);fill:#020202" d="M190.0704 170.6095c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 171.3104 191.9774 170.6095 190.0704 170.6095z"/></g><g><defs><path id="SVGID_7_" d="M189.0898 155.7617c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 158.2134 183.0612 155.7617 189.0898 155.7617zm7.9941 21.8613c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 181.8248 197.0839 179.8256 197.0839 177.623z"/></defs><clipPath id="SVGID_8_"><use xlink:href="#SVGID_7_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_8_);fill:#d95140" d="M172.6595 161.1903c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8613 12.0547.0024 21.8636-9.797 21.8613-21.8613.0024-3.8474-1.0151-7.6326-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 154.7811 176.6171 157.2327 172.6595 161.1903z"/></g><rect x="198.8952" y="170.69" style="fill:#d95140" width="122.6266" height="13.8671"/></g><g><g><path style="fill:#56a55c" d="M189.5379 264.6147l.0012-.0012c7.7751.0012 15.0294 4.1862 18.932 10.9235 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032-5.8394.0-11.3281-2.2733-15.458-6.4032-4.13-4.13-6.4032-9.6186-6.4056-15.4628.0012-6.0249 2.454-11.4897 6.4116-15.4472C178.0458 267.0663 183.5105 264.6135 189.5379 264.6147zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6538 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403C196.7013 290.6202 197.5321 288.6115 197.5309 286.4723z"/><path style="opacity:.3;fill:#fff" d="M189.5403 264.6153c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8065-21.8612-21.8613.0-6.0285 2.4516-11.492 6.4116-15.452C178.0482 267.0669 183.5117 264.6153 189.5403 264.6153zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.6366 290.6783 197.5344 288.6792 197.5344 286.4765z"/><g><defs><path id="SVGID_9_" d="M195.1881 292.1268c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.9989 7.9942-7.9941 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.5344 288.6792 196.6366 290.6783 195.1881 292.1268z"/></defs><clipPath id="SVGID_10_"><use xlink:href="#SVGID_9_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_10_);fill:#fff" d="M190.5209 279.463c-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7446-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9941 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C194.239 280.164 192.4279 279.463 190.5209 279.463z"/><path style="opacity:.13;clip-path:url(#SVGID_10_);fill:#020202" d="M190.5209 279.463c-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7446-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9941 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C194.239 280.164 192.4279 279.463 190.5209 279.463z"/></g><g><defs><path id="SVGID_11_" d="M189.5403 264.6153c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8065-21.8612-21.8613.0-6.0285 2.4516-11.492 6.4116-15.452C178.0482 267.0669 183.5117 264.6153 189.5403 264.6153zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.6366 290.6783 197.5344 288.6792 197.5344 286.4765z"/></defs><clipPath id="SVGID_12_"><use xlink:href="#SVGID_11_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_12_);fill:#56a55c" d="M173.11 270.0439c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8613 12.0547.0024 21.8636-9.797 21.8613-21.8613.0024-3.8474-1.0151-7.6326-2.9353-10.9462-3.8977-6.7325-11.1497-10.9151-18.926-10.9151C182.5311 263.6346 177.0676 266.0863 173.11 270.0439z"/></g></g><rect x="199.3456" y="279.5436" style="fill:#56a55c" width="122.6266" height="13.8671"/></g><g><g><path style="fill:#f1bc42" d="M189.0874 318.7208l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3305-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.025 2.454-11.4897 6.4116-15.4472C177.5953 321.1724 183.0601 318.7196 189.0874 318.7208zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403S197.0816 342.7176 197.0804 340.5784z"/><path style="opacity:.3;fill:#fff" d="M189.0898 318.7214c7.7763.0 15.0283 4.1826 18.926 10.915 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8612-12.0547.0024-21.8636-9.8065-21.8612-21.8612.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 321.173 183.0612 318.7214 189.0898 318.7214zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 344.7844 197.0839 342.7853 197.0839 340.5826z"/><g><defs><path id="SVGID_13_" d="M194.7376 346.2329c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.999 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 342.7853 196.1861 344.7844 194.7376 346.2329z"/></defs><clipPath id="SVGID_14_"><use xlink:href="#SVGID_13_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_14_);fill:#fff" d="M190.0704 333.5691c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0834 6.1218 2.8788C193.7885 334.2701 191.9774 333.5691 190.0704 333.5691z"/><path style="opacity:.13;clip-path:url(#SVGID_14_);fill:#020202" d="M190.0704 333.5691c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0834 6.1218 2.8788C193.7885 334.2701 191.9774 333.5691 190.0704 333.5691z"/></g><g><defs><path id="SVGID_15_" d="M189.0898 318.7214c7.7763.0 15.0283 4.1826 18.926 10.915 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8612-12.0547.0024-21.8636-9.8065-21.8612-21.8612.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 321.173 183.0612 318.7214 189.0898 318.7214zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 344.7844 197.0839 342.7853 197.0839 340.5826z"/></defs><clipPath id="SVGID_16_"><use xlink:href="#SVGID_15_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_16_);fill:#f1bc42" d="M172.6595 324.15c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8612 12.0547.0024 21.8636-9.797 21.8613-21.8612.0024-3.8474-1.0151-7.6327-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 317.7407 176.6171 320.1924 172.6595 324.15z"/></g></g><rect x="198.8952" y="333.6497" style="fill:#f1bc42" width="122.6266" height="13.8671"/></g></g></svg></span><span class="navbar-brand__name">Runink</span></a>
+  <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/docs/"><span>Docs</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/forum/"><span>Forum</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/blog/"><span>Blog</span></a>
+      </li>
+      </ul>
+  </div>
+  <div class="d-none d-lg-block">
+    
+  </div>
+</div>
+</nav>
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            <div id="td-sidebar-menu" class="td-sidebar__inner">
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ms-3 fas fa-bars" type="button" data-bs-toggle="collapse" data-bs-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  <nav class="td-sidebar-nav collapse" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pe-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docs-li">
+  <a href="/docs/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-docs"><span class="">Documentation</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-docsarchitecture-li">
+  <a href="/docs/architecture/" class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id="m-docsarchitecture"><span class="td-sidebar-nav-active-item"></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsbenchmark-li">
+  <a href="/docs/benchmark/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsbenchmark"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscli-li">
+  <a href="/docs/cli/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscli"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsclihelp-li">
+  <a href="/docs/clihelp/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsclihelp"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscomponents-li">
+  <a href="/docs/components/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscomponents"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontributing-li">
+  <a href="/docs/contributing/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontributing"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsdata-lineage-li">
+  <a href="/docs/data-lineage/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsdata-lineage"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsfeature-dsl-li">
+  <a href="/docs/feature-dsl/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsfeature-dsl"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsgetting_started-li">
+  <a href="/docs/getting_started/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsgetting_started"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsglossary-li">
+  <a href="/docs/glossary/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsglossary"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsroadmap-li">
+  <a href="/docs/roadmap/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsroadmap"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsrunink_quickstart-li">
+  <a href="/docs/runink_quickstart/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsrunink_quickstart"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsschema-contracts-li">
+  <a href="/docs/schema-contracts/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsschema-contracts"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docssecurity-li">
+  <a href="/docs/security/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docssecurity"><span class=""></span></a>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            <div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/paesdan/runink/tree/main/content/docs/architecture.md" class="td-page-meta--view td-page-meta__view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+  <a href="https://github.com/paesdan/runink/edit/main/content/docs/architecture.md" class="td-page-meta--edit td-page-meta__edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/paesdan/runink/new/main/content/docs?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child td-page-meta__child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+  <a href="https://github.com/paesdan/runink/issues/new?title=" class="td-page-meta--issue td-page-meta__issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create documentation issue</a>
+  
+</div>
+
+            <div class="td-toc">
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#high-level-architecture">High-Level Architecture</a>
+      <ul>
+        <li><a href="#detailed-architecture">Detailed architecture</a></li>
+      </ul>
+    </li>
+    <li><a href="#core-principles">Core Principles</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-data-oriented-design-dod">1. <strong>Data-Oriented Design (DOD)</strong></a></li>
+        <li><a href="#core-idea">Core Idea:</a></li>
+        <li><a href="#apply-dod-in-runink">Apply DOD in Runink:</a></li>
+        <li><a href="#in-runi-slice">In <code>runi slice</code>:</a></li>
+        <li><a href="#benefits">Benefits:</a></li>
+        <li><a href="#2-zero-copy-and-streaming-pipelines">2. <strong>Zero-Copy and Streaming Pipelines</strong></a></li>
+        <li><a href="#core-idea-1">Core Idea:</a></li>
+        <li><a href="#runink-optimizations">Runink Optimizations:</a></li>
+        <li><a href="#benefits-1">Benefits:</a></li>
+        <li><a href="#3-declarative-scheduling-with-constraint-propagation">3. <strong>Declarative Scheduling with Constraint Propagation</strong></a></li>
+        <li><a href="#core-idea-2">Core Idea:</a></li>
+        <li><a href="#runink-dsl-extension">Runink DSL Extension:</a></li>
+        <li><a href="#scheduler-logic-pseudo-go">Scheduler Logic (Pseudo-Go):</a></li>
+        <li><a href="#bonus-all-decisions-can-be-raft-logged-making-slice-scheduling-auditable-and-replayable">Bonus: All decisions can be <strong>Raft-logged</strong>, making slice scheduling <strong>auditable and replayable</strong>.</a></li>
+      </ul>
+    </li>
+    <li><a href="#-designed-for-infra-native-developers">✨ Designed for Infra-Native Developers</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#-overview">🔍 Overview</a></li>
+    <li><a href="#-what-are-bounded-and-unbounded-slices">🧬 What Are Bounded and Unbounded Slices?</a></li>
+    <li><a href="#-slice-internals-go--linux-synergy">🧰 Slice Internals: Go + Linux Synergy</a>
+      <ul>
+        <li><a href="#-cgroups">✅ Cgroups</a></li>
+        <li><a href="#-namespaces">✅ Namespaces</a></li>
+        <li><a href="#-pipes--ipc">✅ Pipes &amp; IPC</a></li>
+        <li><a href="#-execution">✅ Execution</a></li>
+      </ul>
+    </li>
+    <li><a href="#-raft-as-execution-backbone">🔄 Raft as Execution Backbone</a>
+      <ul>
+        <li><a href="#1-data-oriented-design-dod-1">1. <strong>Data-Oriented Design (DOD)</strong></a></li>
+        <li><a href="#2-zero-copy-streaming-pipelines">2. <strong>Zero-Copy Streaming Pipelines</strong></a></li>
+        <li><a href="#3-slice-level-isolation-via-linux-primitives">3. <strong>Slice-Level Isolation via Linux Primitives</strong></a></li>
+        <li><a href="#4-declarative-scheduling-with-constraint-solving">4. <strong>Declarative Scheduling with Constraint Solving</strong></a></li>
+        <li><a href="#5-golden-testing-and-contract-aware-execution">5. <strong>Golden Testing and Contract-Aware Execution</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#-for-java-and-python-developers">✨ For Java and Python Developers</a></li>
+    <li><a href="#-why-these-approaches-matter-component-wise-breakdown">🔍 Why These Approaches Matter (Component-Wise Breakdown)</a>
+      <ul>
+        <li><a href="#-functional-pipelines">🎯 Functional Pipelines</a></li>
+        <li><a href="#-data-oriented-design-dod">🧱 Data-Oriented Design (DOD)</a></li>
+        <li><a href="#-zero-copy-streaming">🔄 Zero-Copy Streaming</a></li>
+        <li><a href="#-declarative-scheduling">🧠 Declarative Scheduling</a></li>
+      </ul>
+    </li>
+    <li><a href="#-raft-backed-architecture">🧠 Raft-Backed Architecture</a>
+      <ul>
+        <li><a href="#cluster-state-store-barn">Cluster State Store (Barn):</a></li>
+        <li><a href="#scheduler">Scheduler:</a></li>
+        <li><a href="#secrets-manager">Secrets Manager:</a></li>
+        <li><a href="#data-governance--lineage">Data Governance &amp; Lineage:</a></li>
+        <li><a href="#resilience--high-availability">Resilience &amp; High Availability:</a></li>
+      </ul>
+    </li>
+    <li><a href="#architecture-components">Architecture Components</a></li>
+    <li><a href="#benefits--tradeoffs">Benefits &amp; Tradeoffs</a></li>
+    <li><a href="#future-llm-integration">Future LLM Integration</a></li>
+  </ul>
+</nav>
+      </div>
+    
+            
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 ps-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="td-breadcrumbs">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="/docs/">Documentation</a></li>
+  <li class="breadcrumb-item active" aria-current="page">
+    </li>
+  </ol>
+</nav>
+<div class="td-content">
+	<h1></h1>
+	
+	<header class="article-meta">
+		
+</header>
+	<h1 id="runink-architecture-golinux-native-distributed-data-environment">Runink Architecture: Go/Linux Native Distributed Data Environment</h1>
+<p>Goal: Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives. This system acts as the cluster resource manager and scheduler (replacing Slurm), provides Kubernetes-like logical isolation and RBAC, integrates data governance features, and ensures robust security and observability. It aims for high efficiency by avoiding traditional virtualization or container runtimes like Docker. Define a self-sufficient, distributed environment for orchestrating and executing data pipelines using Go and Linux primitives, with enhanced metadata capabilities designed to support standard data governance (lineage, catalog) AND future integration of LLM-generated annotations.</p>
+<h2 id="high-level-architecture">High-Level Architecture</h2>
+<p>Runink operates with a Control Plane managing multiple Worker Nodes, each running a Runi Agent.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>|                      Developer / Authoring Layer              |
+</span></span><span style="display:flex;"><span>|---------------------------------------------------------------|
+</span></span><span style="display:flex;"><span>|  - CLI (runi)                                                 |
+</span></span><span style="display:flex;"><span>|  - REPL (DataFrame-style, step-by-step)                       |
+</span></span><span style="display:flex;"><span>|  - DSL Authoring (`features/`)                                |
+</span></span><span style="display:flex;"><span>|  - Contract Definitions (`contracts/`)                        |
+</span></span><span style="display:flex;"><span>|  - Test Engine (Golden tests, synthetic fixtures)             |
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>                              ↓
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>|                   Control Plane (Domain + Orchestration)      |
+</span></span><span style="display:flex;"><span>|---------------------------------------------------------------|
+</span></span><span style="display:flex;"><span>|  - API Server (REST/gRPC, OIDC auth, herd scoping)            |
+</span></span><span style="display:flex;"><span>|  - Scheduler (declarative constraint solver, DAG generator)   |
+</span></span><span style="display:flex;"><span>|  - Metadata Catalog (contracts, lineage, tags, scenarios)     |
+</span></span><span style="display:flex;"><span>|  - Secrets Manager (Herd-scoped secrets over Raft)            |
+</span></span><span style="display:flex;"><span>|  - Compliance &amp; RBAC Enforcer (contract-level access control) |
+</span></span><span style="display:flex;"><span>|  - Checkpoint Coordinator (tracks partial run status + resume)|
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>                              ↓
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>|                 Distributed State Layer (Consensus + Storage) |
+</span></span><span style="display:flex;"><span>|---------------------------------------------------------------|
+</span></span><span style="display:flex;"><span>|  - Raft Consensus Group (Herd + Scheduler + State sync)       |
+</span></span><span style="display:flex;"><span>|  - BadgerDB-backed volumes for:                               |
+</span></span><span style="display:flex;"><span>|      • Pipeline run metadata                                  |
+</span></span><span style="display:flex;"><span>|      • Slice-local state volumes                              |
+</span></span><span style="display:flex;"><span>|      • Checkpointed outputs (resume-able DAG stages)          |
+</span></span><span style="display:flex;"><span>|  - Herd Definitions, Contract Versions, RBAC, Secrets         |
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>                              ↓
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>|                   Execution Plane (Slices + Agents)           |
+</span></span><span style="display:flex;"><span>|---------------------------------------------------------------|
+</span></span><span style="display:flex;"><span>|  - Runi Agent (on every node, manages slices + volumes)       |
+</span></span><span style="display:flex;"><span>|  - Slice Group Supervisor (windowed runs, state volumes)      |
+</span></span><span style="display:flex;"><span>|  - Slice Process:                                             |
+</span></span><span style="display:flex;"><span>|      • Mounts ephemeral namespace, PID net, user, cgroup      |
+</span></span><span style="display:flex;"><span>|      • Loads step function (from contract)                    |
+</span></span><span style="display:flex;"><span>|      • Streams data with io.Pipe (zero-copy)                  |
+</span></span><span style="display:flex;"><span>|      • Accesses read/write state volume via volume proxy      |
+</span></span><span style="display:flex;"><span>|      • Writes to sink, emits lineage                          |
+</span></span><span style="display:flex;"><span>|  - Windowed Join Runner:                                      |
+</span></span><span style="display:flex;"><span>|      • Centralized lineage rehydration across slice groups    |
+</span></span><span style="display:flex;"><span>|      • Co-group on keys across parallel slice outputs         |
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>                              ↓
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>|              Governance, Observability, and Quality Plane     |
+</span></span><span style="display:flex;"><span>|---------------------------------------------------------------|
+</span></span><span style="display:flex;"><span>|  - Data Quality Rules (contract tags + field checks)          |
+</span></span><span style="display:flex;"><span>|  - Lineage Engine (runID, contract hash, input/output edges)  |
+</span></span><span style="display:flex;"><span>|  - Metrics Exporter (Prometheus, Fluentd, OpenTelemetry)      |
+</span></span><span style="display:flex;"><span>|  - DLQ + Routing Controller (based on step &amp; validation tags) |
+</span></span><span style="display:flex;"><span>|  - Audit Log Engine (per slice, signed logs)                  |
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>                              ↓
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>|             External Sources / Sinks / State APIs             |
+</span></span><span style="display:flex;"><span>|---------------------------------------------------------------|
+</span></span><span style="display:flex;"><span>|  - Kafka, S3, Snowflake, GCS, Postgres, Redshift              |
+</span></span><span style="display:flex;"><span>|  - APIs (FDC3, CDM, internal REST sources)                    |
+</span></span><span style="display:flex;"><span>|  - Optional backing state for key joins (Redis, RocksDB)      |
+</span></span><span style="display:flex;"><span>+---------------------------------------------------------------+
+</span></span></code></pre></div><h3 id="detailed-architecture">Detailed architecture</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>+───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+</span></span><span style="display:flex;"><span>|                             External User / Client                                                        |
+</span></span><span style="display:flex;"><span>|               (Runink CLI, UI, API Client via OIDC/API Key Auth)                                          |
+</span></span><span style="display:flex;"><span>|                (Requests scoped to specific &#39;Herds&#39;/Namespaces)                                           |
+</span></span><span style="display:flex;"><span>+───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+</span></span><span style="display:flex;"><span>                                     | (gRPC/REST API Calls - TLS Encrypted)
+</span></span><span style="display:flex;"><span>                                     | (Pipeline Definitions, Queries within Herd context)
+</span></span><span style="display:flex;"><span>                                     v
+</span></span><span style="display:flex;"><span>+───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+</span></span><span style="display:flex;"><span>|                HERD CONTROL PLANE (HA Replicas using Raft)                                                |
+</span></span><span style="display:flex;"><span>+───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+</span></span><span style="display:flex;"><span>|                                                                                                           |
+</span></span><span style="display:flex;"><span>|  [1. API Server (Replica 1..N)] &lt;───────╮ (Internal gRPC - TLS)                                           |
+</span></span><span style="display:flex;"><span>|  |- Entry Point                         │                                                                 |
+</span></span><span style="display:flex;"><span>|  |- AuthN/AuthZ (OIDC, RBAC) &lt;──────────+──────[4. Identity &amp; RBAC Mgr]                                   |
+</span></span><span style="display:flex;"><span>|  |  *Enforces RBAC per Herd*            │      (Runs Co-located or Standalone)                            |
+</span></span><span style="display:flex;"><span>|  |- Validation (inc. Herd scope)        │                                                                 |
+</span></span><span style="display:flex;"><span>|  |- Gateway                             │                                                                 |
+</span></span><span style="display:flex;"><span>|  |                                      │                                                                 |
+</span></span><span style="display:flex;"><span>|  |──────────────────────────────────────╯                                                                 |
+</span></span><span style="display:flex;"><span>|  │ ▲ │                                                                                                    |
+</span></span><span style="display:flex;"><span>|  │ │ └────────────────────────────────────────────────────────────────────────────────┐                   |
+</span></span><span style="display:flex;"><span>|  │ │ (State Read/Write Requests to Raft Leader)                                       |                   |
+</span></span><span style="display:flex;"><span>|  │ │ (*Read* Request potentially served by Leader/Follower)                           |                   |
+</span></span><span style="display:flex;"><span>|  │ ▼                                                                                  |                   |
+</span></span><span style="display:flex;"><span>|  [2. Cluster State Store / &#34;Barn&#34; (Nodes 1..N)] &lt;──────────&gt; [Raft Consensus Protocol]|                   |
+</span></span><span style="display:flex;"><span>|  - *Achieves State Machine Replication via Raft                                       |                   |
+</span></span><span style="display:flex;"><span>|  |       Consensus for HA &amp; Consistency*                                              |                   |
+</span></span><span style="display:flex;"><span>|  |       (Leader Election, Log Replication)                                           |                   |
+</span></span><span style="display:flex;"><span>|  - Stores: Nodes, Pipelines, Slices,                                                  |                   |               
+</span></span><span style="display:flex;"><span>|  |         Logical Herds (Definition, Quotas),                                        |                   |
+</span></span><span style="display:flex;"><span>|  |         RBAC Policies, Secrets, Core Metadata Refs                                 |                   |
+</span></span><span style="display:flex;"><span>|  │                                                                                    |                   |
+</span></span><span style="display:flex;"><span>|  │  [ Raft Leader ] &lt;------(Write Op)-- Clients (API Srv, Scheduler, etc.)            |                   |
+</span></span><span style="display:flex;"><span>|  │   |                                                                                |                   |
+</span></span><span style="display:flex;"><span>|  │   | 1. Append Op to *Own* Log                                                      |                   |
+</span></span><span style="display:flex;"><span>|  │   v                                                                                |                   |
+</span></span><span style="display:flex;"><span>|  │  [ Replicated Log ] ----(Replicate Entry)--&gt; [ Raft Followers (N-1) ]              |                   |
+</span></span><span style="display:flex;"><span>|  │   |                     &lt;--(Acknowledge)------                                     |                   |
+</span></span><span style="display:flex;"><span>|  │   | 2. Wait for Quorum                                                             |                   |
+</span></span><span style="display:flex;"><span>|  │   v                                                                                |                   |
+</span></span><span style="display:flex;"><span>|  │  [ Commit Point ] -----(Notify Apply)-----&gt; [ Leader &amp; Followers ]                 |                   |
+</span></span><span style="display:flex;"><span>|  │   |                                                                                |                   |
+</span></span><span style="display:flex;"><span>|  │   v 3. Apply Committed Op to *Local* State Machine                                 |                   |
+</span></span><span style="display:flex;"><span>|  │  [ State Machine (KV Store) @ Leader ]                                             |                   |
+</span></span><span style="display:flex;"><span>|  │                                                                                    |                   |
+</span></span><span style="display:flex;"><span>|  └───────── // Same process applies committed Ops on Followers // ────────────────────┘                   |
+</span></span><span style="display:flex;"><span>|  │ ▲          [ State Machine (KV Store) @ Follower 1..N-1 ]                                              |
+</span></span><span style="display:flex;"><span>|  │ │                                                                                                      |
+</span></span><span style="display:flex;"><span>|  │ │ (Consistent Reads, Watches on Committed State)                                                       |
+</span></span><span style="display:flex;"><span>|  │ │                                                                                                      |
+</span></span><span style="display:flex;"><span>|  │ ▼                                                                                                      |
+</span></span><span style="display:flex;"><span>|  [3. Scheduler (Active Leader or Replicas)] ────────→┤ (Placement Cmds via API Server)                    |
+</span></span><span style="display:flex;"><span>|  | - Reads Consistent State from Raft Store          │                                                    |
+</span></span><span style="display:flex;"><span>|  | - Considers Task Reqs, Herd Quotas, Affinity      │                                                    |
+</span></span><span style="display:flex;"><span>|  |                                                   │                                                    |
+</span></span><span style="display:flex;"><span>|   ───────────────────────────────────────────────────┘                                                    |
+</span></span><span style="display:flex;"><span>|   │ ▲ │                                                                                                   |
+</span></span><span style="display:flex;"><span>|   │ │ └───────────────────────────────────────────────────┐                                               |
+</span></span><span style="display:flex;"><span>|   │ │ (Secrets Read/Write Requests to Raft Leader)        │                                               |
+</span></span><span style="display:flex;"><span>|   │ │                                                     │                                               |
+</span></span><span style="display:flex;"><span>|   │ ▼                                                     │                                               |
+</span></span><span style="display:flex;"><span>|  [5. Secrets Manager]────────────────────────────────────&gt;┤ (Secrets Delivery via Runi Agent)             |
+</span></span><span style="display:flex;"><span>|  |- Reads/Writes Encrypted Secrets via Raft Store         │                                               |
+</span></span><span style="display:flex;"><span>|  |- RBAC for Secrets Access (Enforced via API Server)     │                                               |
+</span></span><span style="display:flex;"><span>|  |- Interact with State Store via API Server/Directly     |                                               |
+</span></span><span style="display:flex;"><span>|  |- Read consistent state, submit changes via Leader      |                                               |                                                      
+</span></span><span style="display:flex;"><span>|  +────────────────────────────────────────────────────────┘                                               |
+</span></span><span style="display:flex;"><span>|   │ ▲                                                                                                     |
+</span></span><span style="display:flex;"><span>|   │ │ (Metadata Read/Write Requests to Raft Leader/Service)                                               |
+</span></span><span style="display:flex;"><span>|   │ │                                                                                                     |
+</span></span><span style="display:flex;"><span>|   │ ▼                                                                                                     |
+</span></span><span style="display:flex;"><span>|  [6. Data Governance Service]───────────────────────+─&gt; (Queries via API Server)                          |
+</span></span><span style="display:flex;"><span>|  |- Stores Core Metadata/Refs via Raft Store        │                                                     |
+</span></span><span style="display:flex;"><span>|  |- May use separate backend for Annotations        │                                                     |
+</span></span><span style="display:flex;"><span>|  |- Provides Metadata gRPC API                      │                                                     |
+</span></span><span style="display:flex;"><span>|  |                                                  │                                                     |
+</span></span><span style="display:flex;"><span>+────────────────────────────────────^────────────────^─────────────────────────────────────────────────────+
+</span></span><span style="display:flex;"><span>|                                    │                │ (Internal gRPC/TLS)                                 |
+</span></span><span style="display:flex;"><span>| (Agent Registration, Health,       │                │ (Cmds to Agent from Control Plane Leader/API)       |
+</span></span><span style="display:flex;"><span>|  Metrics Reporting, Log Forwarding)│                │ (Cmds: Launch Slice *in Herd*, Secrets Req, Status) | 
+</span></span><span style="display:flex;"><span>|                                    │                │ (Metadata Reporting via Worker to Gov Service)      |
+</span></span><span style="display:flex;"><span>+────────────────────────────────────v────────────────v─────────────────────────────────────────────────────+
+</span></span><span style="display:flex;"><span>|                      RUNI AGENT (Daemon on each Worker Node)                                              |
+</span></span><span style="display:flex;"><span>+───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+</span></span><span style="display:flex;"><span>|  - Registers with Control Plane (via API Server to Raft Store)                                            |
+</span></span><span style="display:flex;"><span>|  - Reports Node Resources &amp; Health (via API Server to Raft Store)                                         |
+</span></span><span style="display:flex;"><span>|  - Receives Commands (from Scheduler via API Server)                                                      |
+</span></span><span style="display:flex;"><span>|  - Manages Local `Slice Manager` (cgroups, namespaces, exec)                                              |
+</span></span><span style="display:flex;"><span>|  - Manages Local Worker Lifecycle                                                                         |
+</span></span><span style="display:flex;"><span>|  - Securely Fetches Secrets (from Secrets Mgr via API Server)                                             |
+</span></span><span style="display:flex;"><span>|  - Sets up Network &amp; Storage for Workers                                                                  |
+</span></span><span style="display:flex;"><span>|  - Collects/Forwards Worker Observability (Logs to Fluentd, Metrics Scrape)                               |
+</span></span><span style="display:flex;"><span>|  - Exposes Own &amp; Aggregated Metrics                                                                       |
+</span></span><span style="display:flex;"><span>|                                                                                                           |
+</span></span><span style="display:flex;"><span>+───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+</span></span><span style="display:flex;"><span>|           (Launch Cmd *within Herd context*,    │ ▲    (Log/Metrics Collection)                           |
+</span></span><span style="display:flex;"><span>|            Config, Secrets)                     │ |                                                       |
+</span></span><span style="display:flex;"><span>|                                                 ▼ │                                                       |
+</span></span><span style="display:flex;"><span>+───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+</span></span><span style="display:flex;"><span>|                  RUNI SLICE (Isolated Go Process)                                                         |
+</span></span><span style="display:flex;"><span>|                    *Runs within the context of a specific Herd*                                           |
+</span></span><span style="display:flex;"><span>+───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+</span></span><span style="display:flex;"><span>|  - Executes User Pipeline Step Code                                                                       |
+</span></span><span style="display:flex;"><span>|  - Isolated via Namespaces (User, PID, Net, Mount, etc.)                                                  |
+</span></span><span style="display:flex;"><span>|  - Constrained by Cgroups (*reflecting Herd quotas*)                                                      |
+</span></span><span style="display:flex;"><span>|  - Runs as Ephemeral User (mapped from Service Account, authorized for Herd)                              |
+</span></span><span style="display:flex;"><span>|  - Receives Config/Secrets                                                                                |
+</span></span><span style="display:flex;"><span>|                                                                                                           |
+</span></span><span style="display:flex;"><span>|  **Interactions:**                                                                                        |
+</span></span><span style="display:flex;"><span>|  - Communicates with Other Slices (gRPC, TLS, AuthN)                                                      |
+</span></span><span style="display:flex;"><span>|  - Accesses External Services (DBs, MinIO, OpenAI)                                                        |
+</span></span><span style="display:flex;"><span>|  - Reports Lineage/Annotations to `Data Governance Service` (*tagged by Herd*)                            |
+</span></span><span style="display:flex;"><span>|  - Exposes */metrics* endpoint (scraped by Runi Agent)                                                    |
+</span></span><span style="display:flex;"><span>|  - Writes Structured Logs to stdout/stderr (collected by Runi Agent)                                      |
+</span></span><span style="display:flex;"><span>|                                                                                                           |
+</span></span><span style="display:flex;"><span>+───────────────────────────────────────────────────────────────────────────────────────────────────────────+
+</span></span></code></pre></div><h2 id="core-principles">Core Principles</h2>
+<ul>
+<li><strong>User Interaction:</strong> Client requests are often scoped to a specific Herd.</li>
+<li><strong>API Server / RBAC:</strong> Enforces RBAC policies based on user/service account permissions within a target Herd.</li>
+<li><strong>Cluster State Store:</strong> Explicitly stores Herd definitions and their associated resource quotas.</li>
+<li><strong>Scheduler:</strong> Considers Herd-level quotas when making placement decisions.</li>
+<li><strong>Secrets Manager:</strong> Access to secrets might be scoped by Herd.</li>
+<li><strong>Data Governance:</strong> Metadata (lineage, annotations) can be tagged by or associated with the Herd it belongs to.</li>
+<li><strong>Runi Agent:</strong> Receives the target Herd context when launching a slice and uses this information to potentially configure namespaces and apply appropriate cgroup limits based on Herd quotas.</li>
+<li><strong>Runi Slice:</strong> A single instance of a pipeline step running as an isolated Worker Slice Process. Executes entirely within the logical boundary and resource constraints defined by its assigned Herd.</li>
+<li><strong>Runi Pipes:</strong> Primarily used now for internal communication within the <code>Runi Agent</code> to capture logs/stdio from the <code>Runi Slice</code> it <code>exec</code>s, rather than for primary data transfer between steps.</li>
+<li><strong>Herd:</strong> A logical grouping construct, similar to a Kubernetes Namespace, enforced via RBAC policies and potentially mapped to specific sets of Linux namespaces managed by Agents. Provides multi-tenancy and team isolation. Quotas can be applied per Herd.</li>
+<li><strong>Go Native &amp; Linux Primitives:</strong> Core components written in Go, directly leveraging cgroups, namespaces (user, pid, net, mount, uts, ipc), pipes, sockets, and <code>exec</code> for execution and isolation.</li>
+<li><strong>Self-Contained Cluster Management:</strong> Manages a pool of physical or virtual machines, schedules workloads onto them, and handles node lifecycle.</li>
+<li><strong>Serverless Execution Model:</strong> Users define pipelines and resource requests; Runink manages node allocation, scheduling, isolation, scaling (by launching more slices), and lifecycle. Users are subject to quotas managed via cgroups.</li>
+<li><strong>Security First:</strong> Integrated identity (OIDC), RBAC, secrets management, network policies, encryption in transit/rest.</li>
+<li><strong>Data Governance Aware:</strong> Built-in metadata tracking, lineage capture, and support for quality checks. With extension for storage/management of rich data annotations (e.g., from LLMs).</li>
+<li><strong>Rich Observability:</strong> Native support for metrics (Prometheus) and logs (Fluentd).</li>
+</ul>
+<hr>
+<h1 id="-programming-approaches-why-they-power-runink">🧠 Programming Approaches: Why They Power Runink</h1>
+<p>Runink’s architecture isn’t just Go-native — it’s intentionally designed around a few <strong>low-level but high-impact programming paradigms</strong>. These concepts are what let Runink outperform containerized stacks, enforce security without overhead, and keep pipelines testable, composable, and fast.</p>
+<p>Below, we walk through the four core techniques and where they show up in Runink’s components.</p>
+<hr>
+<h3 id="1-data-oriented-design-dod">1. <strong>Data-Oriented Design (DOD)</strong></h3>
+<p><em>&ldquo;Design for the CPU, not the developer.&rdquo;</em></p>
+<p>Instead of designing around objects and interfaces, optimize around <strong>memory layout and data access patterns</strong>. This is especially important for Runink’s slice execution and contract validation stages, where predictable access to batches of structs (records) matters.</p>
+<ul>
+<li>Use slices of structs over slices of pointers to enable <strong>CPU cache locality</strong>.</li>
+<li>Align field access with columnar memory usage if streaming transforms run across many rows.</li>
+<li>Preallocate buffers in <code>Runi Agent</code>’s slice execution path to avoid GC churn.</li>
+</ul>
+<hr>
+<h3 id="core-idea">Core Idea:</h3>
+<p>Layout memory for how it will be accessed, not how it&rsquo;s logically grouped. Runink’s slices often scan, validate, or enrich large batches of records — so struct layout, batching, and memory predictability <strong>directly impact performance</strong>.</p>
+<h3 id="apply-dod-in-runink">Apply DOD in Runink:</h3>
+<ul>
+<li>Prefer <strong>flat structs over nested ones</strong> in contracts:
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Better</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">User</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">ID</span>    <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Name</span>  <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Email</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Avoid: nested fields unless necessary</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">User</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Meta</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ID</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Profile</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Name</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">Email</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+</ul>
+<h3 id="in-runi-slice">In <code>runi slice</code>:</h3>
+<ul>
+<li>Use <code>sync.Pool</code> for reusable buffers (especially JSON decoding).</li>
+<li>Pre-size buffers based on contract hints (e.g., <code>maxRecords=10000</code>).</li>
+<li>Avoid interface{} — use generated structs via <code>go/types</code> or <code>go:generate</code>.</li>
+</ul>
+<h3 id="benefits">Benefits:</h3>
+<ul>
+<li>Better <strong>memory throughput</strong>, fewer allocations, and <strong>Go GC-friendliness</strong> under load.</li>
+<li>Use <strong>structs of arrays (SoA)</strong> or <code>[]User</code> with preallocated slices in transformations.</li>
+<li>Minimize pointer indirection. Use value receivers and avoid <code>*string</code>, <code>*int</code> unless you need nil.</li>
+<li>Design transforms that operate in <strong>tight loops</strong>, e.g., <code>for _, rec := range batch</code>.</li>
+</ul>
+<hr>
+<h3 id="2-zero-copy-and-streaming-pipelines">2. <strong>Zero-Copy and Streaming Pipelines</strong></h3>
+<p><em>&ldquo;Avoid full in-memory materialization — process as the data flows.&rdquo;</em></p>
+<p>Avoid unnecessary data marshaling or full deserialization. Rely on:</p>
+<ul>
+<li><strong><code>io.Reader</code> / <code>io.Writer</code> interfaces</strong> for pipeline steps.</li>
+<li><code>os.Pipe()</code>, <code>bufio</code>, or <code>net.Pipe()</code> for intra-slice streaming.</li>
+<li>Only materialize records <strong>when needed for validation or transformation</strong>.</li>
+</ul>
+<p>In slices, structure execution as <code>stream -&gt; transform -&gt; stream</code>, not <code>[]record -&gt; map -&gt; []record</code>.</p>
+<hr>
+<h3 id="core-idea-1">Core Idea:</h3>
+<p>Instead of <code>[]Record -&gt; Transform -&gt; []Record</code>, operate on <strong>streams of bytes or structs</strong> using <code>io.Reader</code>, <code>chan Record</code>, or even UNIX pipes between stages.</p>
+<h3 id="runink-optimizations">Runink Optimizations:</h3>
+<ul>
+<li>
+<p>Use <strong><code>io.Reader → Decoder → Transform → Encoder → io.Writer</code></strong> chain.</p>
+</li>
+<li>
+<p>Design step transforms like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ValidateUser</span>(<span style="color:#a6e22e">r</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Reader</span>, <span style="color:#a6e22e">w</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Writer</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">decoder</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">NewDecoder</span>(<span style="color:#a6e22e">r</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">encoder</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">NewEncoder</span>(<span style="color:#a6e22e">w</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">decoder</span>.<span style="color:#a6e22e">More</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">user</span> <span style="color:#a6e22e">contracts</span>.<span style="color:#a6e22e">User</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">decoder</span>.<span style="color:#a6e22e">Decode</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">user</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">isValid</span>(<span style="color:#a6e22e">user</span>) {
+</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">encoder</span>.<span style="color:#a6e22e">Encode</span>(<span style="color:#a6e22e">user</span>)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div></li>
+<li>
+<p>For multi-stage slices, use <strong><code>os.Pipe()</code></strong>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">r1</span>, <span style="color:#a6e22e">w1</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Pipe</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">r2</span>, <span style="color:#a6e22e">w2</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Pipe</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">go</span> <span style="color:#a6e22e">Normalize</span>(<span style="color:#a6e22e">r0</span>, <span style="color:#a6e22e">w1</span>) <span style="color:#75715e">// input -&gt; step 1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">go</span> <span style="color:#a6e22e">Enrich</span>(<span style="color:#a6e22e">r1</span>, <span style="color:#a6e22e">w2</span>)    <span style="color:#75715e">// step 1 -&gt; step 2</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">go</span> <span style="color:#a6e22e">Sink</span>(<span style="color:#a6e22e">r2</span>, <span style="color:#a6e22e">out</span>)     <span style="color:#75715e">// step 2 -&gt; sink</span>
+</span></span></code></pre></div></li>
+</ul>
+<h3 id="benefits-1">Benefits:</h3>
+<ul>
+<li><strong>Constant memory</strong> even for massive datasets.</li>
+<li><strong>Backpressure</strong>: If downstream slows down, upstream blocks — great for streaming (Kafka, etc.).</li>
+<li>Enables <strong>DLQ teeing</strong>: <code>tee := io.MultiWriter(validOut, dlqSink)</code>.</li>
+</ul>
+<hr>
+<h3 id="3-declarative-scheduling-with-constraint-propagation">3. <strong>Declarative Scheduling with Constraint Propagation</strong></h3>
+<p><em>&ldquo;Schedule via logic, not instructions.&rdquo;</em>
+The <code>Herd</code> and <code>Runi Agent</code> coordination already benefits from Raft-backed state, but push it further with <strong>affinity-aware, declarative scheduling</strong>:</p>
+<ul>
+<li>Define <strong>resource constraints</strong> (e.g., <code>@requires(cpu=2, memory=512Mi, label=“gpu”)</code>) in <code>.dsl</code>.</li>
+<li>Propagate <strong>slice placement decisions</strong> through constraint-solving logic instead of imperative scheduling.</li>
+<li>Record constraints in the Raft-backed state store to enforce deterministic task placement.</li>
+</ul>
+<p>You can build this as a small DSL-on-DSL layer (e.g. <code>@affinity(domain=&quot;finance&quot;, colocate_with=&quot;step:JoinUsers&quot;)</code>).</p>
+<p><em>Benefit:</em> Stronger <strong>determinism</strong>, <strong>replayability</strong>, and <strong>multi-tenant safety</strong>.</p>
+<h3 id="core-idea-2">Core Idea:</h3>
+<p>Model placement as a <strong>set of constraints</strong>: affinity, herd quota, GPU needs, tenant isolation, etc. Let the scheduler <strong>solve</strong> the placement rather than being told where to run.</p>
+<h3 id="runink-dsl-extension">Runink DSL Extension:</h3>
+<p>In <code>.dsl</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-gherkin" data-lang="gherkin"><span style="display:flex;"><span><span style="color:#f92672">@step(&#34;RunLLMValidation&#34;)</span><span style="color:#a6e22e">
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span><span style="color:#f92672">@affinity(label=&#34;gpu&#34;,</span><span style="color:#a6e22e"> colocate_with=&#34;</span><span style="color:#e6db74">step:ParsePDFs</span><span style="color:#a6e22e">&#34;)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span><span style="color:#f92672">@requires(cpu=&#34;4&#34;,</span><span style="color:#a6e22e"> memory=&#34;</span><span style="color:#e6db74">2Gi</span><span style="color:#a6e22e">&#34;)
+</span></span></span></code></pre></div><p>This can be compiled into metadata stored in the Raft-backed scheduler store.</p>
+<h3 id="scheduler-logic-pseudo-go">Scheduler Logic (Pseudo-Go):</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Constraints</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">CPU</span>       <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Memory</span>    <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Affinity</span>  <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">Colocate</span>  <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">HerdScope</span> <span style="color:#66d9ef">string</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">ScheduleStep</span>(<span style="color:#a6e22e">stepID</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">constraints</span> <span style="color:#a6e22e">Constraints</span>) (<span style="color:#a6e22e">NodeID</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">candidates</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filterByHerd</span>(<span style="color:#a6e22e">constraints</span>.<span style="color:#a6e22e">HerdScope</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">candidates</span> = <span style="color:#a6e22e">filterByResources</span>(<span style="color:#a6e22e">candidates</span>, <span style="color:#a6e22e">constraints</span>.<span style="color:#a6e22e">CPU</span>, <span style="color:#a6e22e">constraints</span>.<span style="color:#a6e22e">Memory</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">constraints</span>.<span style="color:#a6e22e">Colocate</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">candidates</span> = <span style="color:#a6e22e">colocateWith</span>(<span style="color:#a6e22e">candidates</span>, <span style="color:#a6e22e">constraints</span>.<span style="color:#a6e22e">Colocate</span>)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">constraints</span>.<span style="color:#a6e22e">Affinity</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#34;&#34;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">candidates</span> = <span style="color:#a6e22e">matchLabel</span>(<span style="color:#a6e22e">candidates</span>, <span style="color:#a6e22e">constraints</span>.<span style="color:#a6e22e">Affinity</span>)
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pickBest</span>(<span style="color:#a6e22e">candidates</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="bonus-all-decisions-can-be-raft-logged-making-slice-scheduling-auditable-and-replayable">Bonus: All decisions can be <strong>Raft-logged</strong>, making slice scheduling <strong>auditable and replayable</strong>.</h3>
+<hr>
+<h2 id="-designed-for-infra-native-developers">✨ Designed for Infra-Native Developers</h2>
+<p>Whether you&rsquo;re used to <strong>Spark DAGs</strong>, <strong>Airflow tasks</strong>, or <strong>Python dataframes</strong>, Runink gives you:</p>
+<ul>
+<li><strong>Lower startup latency</strong> than containers</li>
+<li><strong>Testable pipeline logic</strong> with clear steps</li>
+<li><strong>No need for external orchestrators</strong></li>
+<li><strong>Secure-by-default execution</strong> with zero-trust isolation</li>
+</ul>
+<p>By combining Go, Raft, Linux namespaces, and functional data transforms — Runink builds pipelines that feel like <strong>code, not infrastructure</strong>.</p>
+<hr>
+<h1 id="-go-slices-linux-primitives-and-raft-runinks-execution-philosophy">🧩 Go Slices, Linux Primitives, and Raft: Runink’s Execution Philosophy</h1>
+<p><strong>Host-Efficient Execution for Secure Data Ingestion</strong></p>
+<p>Runink takes a radically different approach to pipeline execution than traditional data platforms — instead of running heavy containers, JVMs, or external orchestrators, Runink uses <strong>Go-native workers</strong>, Linux primitives like <strong>cgroups and namespaces</strong>, and concepts like <strong>data-oriented design and zero-copy streaming</strong> to deliver <strong>blazing-fast, memory-stable, and secure slices</strong>.</p>
+<h2 id="-overview">🔍 Overview</h2>
+<p>Runink executes data pipelines using <strong>Go &ldquo;slices&rdquo;</strong> — lightweight, isolated execution units designed to model both <strong>bounded</strong> (batch) and <strong>unbounded</strong> (streaming) data workloads. These are:</p>
+<ul>
+<li>Spawned by the <strong>Runi agent</strong> on worker nodes</li>
+<li>Executed as <strong>isolated processes</strong></li>
+<li>Scoped to <strong>Herd namespaces</strong></li>
+<li>Constrained by <strong>cgroups</strong></li>
+<li>Communicate via <strong>pipes</strong>, <strong>sockets</strong>, or <strong>gRPC streams</strong></li>
+</ul>
+<p>This orchestration is <strong>Raft-coordinated</strong>, making every launch deterministic, fault-tolerant, and observable.</p>
+<hr>
+<h2 id="-what-are-bounded-and-unbounded-slices">🧬 What Are Bounded and Unbounded Slices?</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Type</th>
+          <th>Use Case</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Bounded</strong></td>
+          <td>Batch ETL, contract validation</td>
+          <td>Processes a finite dataset and terminates</td>
+      </tr>
+      <tr>
+          <td><strong>Unbounded</strong></td>
+          <td>Streaming ingestion, log/event flows</td>
+          <td>Long-running, backpressured pipelines with checkpointing</td>
+      </tr>
+  </tbody>
+</table>
+<p>Both types run as <strong>Go processes</strong> within a controlled <strong>Herd namespace</strong>, and can be composed together in DAGs.</p>
+<hr>
+<h2 id="-slice-internals-go--linux-synergy">🧰 Slice Internals: Go + Linux Synergy</h2>
+<p>Each slice is a <strong>native Go process</strong> managed via:</p>
+<h3 id="-cgroups">✅ Cgroups</h3>
+<ul>
+<li>Applied per Herd, per slice</li>
+<li>Limits on CPU, memory, I/O</li>
+<li>Enforced using Linux <code>cgroupv2</code> hierarchy</li>
+<li>Supports slice preemption and fair resource sharing</li>
+</ul>
+<h3 id="-namespaces">✅ Namespaces</h3>
+<ul>
+<li>User, mount, network, and PID namespaces</li>
+<li>Enforce isolation between tenants (Herds)</li>
+<li>Prevent noisy-neighbor problems and info leaks</li>
+</ul>
+<h3 id="-pipes--ipc">✅ Pipes &amp; IPC</h3>
+<ul>
+<li>Use of <code>os.Pipe()</code> or <code>io.Pipe()</code> in Go to model stage-to-stage communication</li>
+<li><code>net.Pipe()</code> and UNIX domain sockets for local transport</li>
+<li>Optionally enhanced via <code>io.Reader</code>, <code>bufio</code>, or gRPC streams (for cross-node slices)</li>
+</ul>
+<h3 id="-execution">✅ Execution</h3>
+<ul>
+<li><code>os/exec</code> with setns(2) and clone(2) to launch each slice</li>
+<li>Environment-injected config and secrets fetched securely via Raft-backed Secrets Manager</li>
+</ul>
+<hr>
+<h2 id="-raft-as-execution-backbone">🔄 Raft as Execution Backbone</h2>
+<p>The <strong>Barn (Cluster State Store)</strong> is Raft-backed. It ensures:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Raft Role</th>
+          <th>Benefit to Runink</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Leader Election</strong></td>
+          <td>Prevents race conditions in pipeline launches</td>
+      </tr>
+      <tr>
+          <td><strong>Log Replication</strong></td>
+          <td>Guarantees all agents/schedulers share same DAG, lineage, and config</td>
+      </tr>
+      <tr>
+          <td><strong>Strong Consistency</strong></td>
+          <td>Execution decisions are deterministic and audit-traceable</td>
+      </tr>
+      <tr>
+          <td><strong>Fault Tolerance</strong></td>
+          <td>Node crashes do not corrupt state or duplicate work</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Examples of Raft-integrated flows:</strong></p>
+<ul>
+<li>DAG submission is a Raft log entry</li>
+<li>Herd quota changes update slice scheduling state</li>
+<li>DLQ routing is replicated for contract validation violations</li>
+<li>Slice termination is consensus-driven (no orphaned processes)</li>
+</ul>
+<hr>
+<h3 id="1-data-oriented-design-dod-1">1. <strong>Data-Oriented Design (DOD)</strong></h3>
+<p>Rather than designing around objects or classes, Runink favors <strong>struct-of-arrays</strong> and flat memory access patterns. Why?</p>
+<ul>
+<li>Go structs are faster to iterate over than Python dictionaries or Java POJOs.</li>
+<li>Access patterns align with how CPUs fetch and cache data.</li>
+<li>Contract validation and transforms run over <strong>preallocated <code>[]struct</code> batches</strong>, not heap-bound objects.</li>
+</ul>
+<p>💡 <em>For Python/Java devs:</em> Think of this like switching from <code>dicts of dicts</code> to <strong>NumPy-like</strong> flat arrays — but in Go, with static types and no GC spikes.</p>
+<hr>
+<h3 id="2-zero-copy-streaming-pipelines">2. <strong>Zero-Copy Streaming Pipelines</strong></h3>
+<p>Every slice in Runink processes data as a stream:</p>
+<ul>
+<li>Uses <code>io.Reader</code> / <code>io.Writer</code> rather than buffering everything in memory.</li>
+<li>Transforms run as <strong>pipes between goroutines</strong> — like UNIX but typed.</li>
+<li>Memory stays flat, predictable, and bounded — even for 10M+ record streams.</li>
+</ul>
+<p>💡 <em>For pandas/Spark devs:</em> This is closer to <strong>generator pipelines</strong> or <strong>structured stream micro-batches</strong>, but with Go’s backpressure-aware channels and streaming codecs.</p>
+<hr>
+<h3 id="3-slice-level-isolation-via-linux-primitives">3. <strong>Slice-Level Isolation via Linux Primitives</strong></h3>
+<p>Each pipeline stage runs in a <strong>Runi Slice</strong>, a native Go process launched via:</p>
+<ul>
+<li><strong><code>os/exec</code></strong>, inside a unique PID/user/mount/network <strong>namespace</strong></li>
+<li>With <strong>cgroupv2</strong> constraints for CPU, memory, and I/O</li>
+<li>Injected with secrets via <strong>Raft-backed vault</strong>, scoped to Herd + slice</li>
+</ul>
+<p>This gives container-like security and isolation <strong>without Docker</strong>.</p>
+<p>💡 <em>If you&rsquo;re used to Kubernetes or Docker:</em> Think of slices as <strong>ephemeral containers, but 10x faster</strong> — no image pulls, no pod scheduling latency.</p>
+<hr>
+<h3 id="4-declarative-scheduling-with-constraint-solving">4. <strong>Declarative Scheduling with Constraint Solving</strong></h3>
+<p>Runink doesn&rsquo;t “assign pods” — it <strong>solves constraints</strong>:</p>
+<ul>
+<li>Define resource needs in <code>.dsl</code> (<code>@requires(cpu=4, memory=2Gi)</code>)</li>
+<li>Add placement rules (<code>@affinity(colocate_with=step:Join)</code>)</li>
+<li>Scheduler uses a <strong>Raft-backed store</strong> to enforce and replay decisions</li>
+</ul>
+<p>💡 <em>In Airflow, scheduling is time-based. In Spark, it’s coarse-grained. In Runink, it’s <strong>placement-aware, deterministic, and multi-tenant safe.</strong></em></p>
+<hr>
+<h3 id="5-golden-testing-and-contract-aware-execution">5. <strong>Golden Testing and Contract-Aware Execution</strong></h3>
+<p>All pipelines are backed by <strong>Go structs as schema contracts</strong>:</p>
+<ul>
+<li>Versioned, diffable, validated at runtime</li>
+<li>Pipeline steps are tested using <strong>golden output</strong> and <strong>synthetic data generators</strong></li>
+<li>Runink can <strong>detect schema drift</strong> and route invalid records to DLQ</li>
+</ul>
+<p>💡 <em>This gives you the safety of DBT with the flexibility of code-first transforms.</em></p>
+<hr>
+<h2 id="-for-java-and-python-developers">✨ For Java and Python Developers</h2>
+<p><strong>You won’t see:</strong></p>
+<ul>
+<li>JVM warmup times</li>
+<li>YAML config sprawl</li>
+<li>Container image builds</li>
+<li>Cross-language serialization bugs</li>
+</ul>
+<p><strong>You’ll get:</strong></p>
+<ul>
+<li>Sub-millisecond slice startups</li>
+<li>Schema-first data governance baked in</li>
+<li>Functional transforms with typed inputs/outputs</li>
+<li>Pipelines you can test, diff, and re-run like unit tests</li>
+</ul>
+<p><strong>Runink slices run like fast, secure micro-VMs — written in Go, isolated with Linux, coordinated by Raft.</strong><br>
+This gives you the <strong>speed of compiled code</strong>, the <strong>safety of contracts</strong>, and the <strong>audibility of Git.</strong></p>
+<blockquote>
+<p><em><strong>No containers, no clusters — just data pipelines that behave like code.</strong></em></p></blockquote>
+<hr>
+<h2 id="-why-these-approaches-matter-component-wise-breakdown">🔍 Why These Approaches Matter (Component-Wise Breakdown)</h2>
+<hr>
+<h3 id="-functional-pipelines">🎯 Functional Pipelines</h3>
+<blockquote>
+<p>Used in: <code>Pipeline Generator</code>, <code>REPL</code>, <code>Testing Engine</code></p></blockquote>
+<ul>
+<li>The <code>.dsl</code> files describe <em>what</em> should happen, not <em>how</em>. This declarative structure allows Runink to generate <strong>Go DAGs</strong> with <strong>pure functions</strong> per step (<code>func Transform(in io.Reader) io.Reader</code>).</li>
+<li>Each step is <strong>stateless</strong>, making it safe to test in isolation or stub during REPL prototyping.</li>
+<li>Enables <strong>golden file testing</strong> with fixed input/output expectations — like unit tests for data.</li>
+</ul>
+<p>🧠 <em>Why this works:</em> You get <strong>Airflow DAG logic</strong> with <strong>Go-like testability</strong> and <strong>Unix pipeline semantics</strong> — without Python globals or scheduler state leaks.</p>
+<hr>
+<h3 id="-data-oriented-design-dod">🧱 Data-Oriented Design (DOD)</h3>
+<blockquote>
+<p>Used in: <code>Schema Contracts</code>, <code>Runi Slice</code></p></blockquote>
+<ul>
+<li>Contracts compile to <strong>flat Go structs</strong>, not JSON blobs or reflective maps.</li>
+<li>In slices, contracts are used in <strong>tight, cache-friendly loops</strong> for validation, enrichment, and routing.</li>
+<li>Avoids pointer chasing (<code>*string</code>) and nested structs — aligns memory layout to CPU caching.</li>
+</ul>
+<p>💡 <em>Why this works:</em> Validating 1M records becomes a <strong>loop over structs</strong>, not a heap traversal. GC pressure drops. Throughput climbs.</p>
+<hr>
+<h3 id="-zero-copy-streaming">🔄 Zero-Copy Streaming</h3>
+<blockquote>
+<p>Used in: <code>Runi Agent</code>, <code>Slice Manager</code>, <code>REPL</code></p></blockquote>
+<ul>
+<li>Transforms use <code>io.Reader → Decoder → Transform → Encoder → io.Writer</code> instead of <code>[]record → []record</code>.</li>
+<li><code>os.Pipe()</code> and <code>net.Pipe()</code> connect slice stages like Unix pipes, allowing <strong>constant memory flow</strong>.</li>
+<li>If downstream slows, upstream <strong>naturally blocks</strong> — no need for buffering, polling, or timeouts.</li>
+</ul>
+<p>⚡ <em>Why this works:</em> You process 100GB streams with <strong>&lt;100MB RAM</strong>, and gain DLQ, audit, and observability inline — perfect for streaming Kafka or big batch ETL.</p>
+<hr>
+<h3 id="-declarative-scheduling">🧠 Declarative Scheduling</h3>
+<blockquote>
+<p>Used in: <code>Scheduler</code>, <code>Barn</code>, <code>API Server</code></p></blockquote>
+<ul>
+<li>Constraints like <code>@requires(cpu=2, label=&quot;gpu&quot;)</code> are parsed and <strong>stored in Raft</strong> as part of scheduling state.</li>
+<li>The scheduler solves placement <strong>logically</strong>, not imperatively: it picks a node that <em>satisfies</em> the constraint — not one hardcoded by a script.</li>
+<li>Quotas, affinity, and co-location rules are enforced <strong>at the control plane</strong>, across all agents.</li>
+</ul>
+<p>🔐 <em>Why this works:</em> Scheduling is <strong>deterministic</strong>, <strong>auditable</strong>, and <strong>multi-tenant safe</strong> — slices run where they should, not where they might.</p>
+<hr>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Approach</strong></th>
+          <th><strong>Runink Component</strong></th>
+          <th><strong>Why It Matters</strong></th>
+          <th><strong>Key Gains</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Functional Pipelines</strong></td>
+          <td><code>Pipeline Generator</code>, <code>REPL</code>, <code>Testing Engine</code></td>
+          <td><code>.dsl</code> scenarios compile into pure, testable Go transforms — no hidden state, no globals. Steps are reusable and composable.</td>
+          <td>Predictable DAGs, step reuse, snapshotable output</td>
+      </tr>
+      <tr>
+          <td><strong>Data-Oriented Design</strong></td>
+          <td><code>Schema Contracts</code>, <code>Slice Internals</code></td>
+          <td>Contracts compile into flat Go structs, used in hot paths like slice execution. Avoids nested heap objects that hurt performance under load.</td>
+          <td>GC control, memory locality, faster contract eval</td>
+      </tr>
+      <tr>
+          <td><strong>Zero-Copy Streaming</strong></td>
+          <td><code>Runi Agent</code>, <code>Runi Slice</code>, <code>REPL</code></td>
+          <td>Stages communicate via <code>io.Reader</code>/<code>Writer</code>, <code>os.Pipe</code>, and JSON streams — not in-memory records. Transforms process as they receive data.</td>
+          <td>Constant memory, low-latency, backpressure-safe</td>
+      </tr>
+      <tr>
+          <td><strong>Declarative Scheduling</strong></td>
+          <td><code>Scheduler</code>, <code>API Server</code>, <code>Barn</code></td>
+          <td>Placement decisions are driven by constraints in <code>.dsl</code> (<code>@requires</code>, <code>@affinity</code>) and stored in the Raft-backed store for deterministic execution.</td>
+          <td>Multi-tenant fairness, auditability, resilience</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="-raft-backed-architecture">🧠 Raft-Backed Architecture</h2>
+<p>At the heart of Runink&rsquo;s distributed control plane is Raft consensus, which ensures strong consistency and availability across multiple replicas in a multi-tenant setup. Here’s how Raft plays a crucial role:</p>
+<h3 id="cluster-state-store-barn">Cluster State Store (Barn):</h3>
+<p><em>Raft ensures</em> consistency between multiple replicas of the state store, preventing conflicts and enabling data to be synchronized across different services. With critical data, such as pipeline definitions, herd configurations, secrets, and RBAC policies, is replicated and stored in the Barn, which is under Raft consensus.</p>
+<p><em>Writes and Reads</em>: All writes (e.g., task assignments, secrets, RBAC policies) go through the Raft leader to ensure consistency. If the leader fails, Raft elects a new leader to ensure continuous operation without data loss.</p>
+<h3 id="scheduler">Scheduler:</h3>
+<p>Uses Raft&rsquo;s consensus for task scheduling to ensure that nodes in the cluster agree on which worker slices should be assigned the next task.
+Task assignments are synchronized across the cluster to avoid conflicts and duplications.</p>
+<h3 id="secrets-manager">Secrets Manager:</h3>
+<p>Managed via Raft to ensure that secrets are consistently available across all nodes, with encrypted storage and strict RBAC.
+Guarantees that secrets are securely injected into Runi agents and worker slices at runtime, with access scoped per Herd.</p>
+<h3 id="data-governance--lineage">Data Governance &amp; Lineage:</h3>
+<p>Lineage and metadata are tagged and tracked consistently across the cluster, with Raft-backed guarantees to prevent discrepancies in historical records.</p>
+<h3 id="resilience--high-availability">Resilience &amp; High Availability:</h3>
+<p>Raft consensus enables Runink to maintain availability and consistency in the face of node failures by synchronizing state across multiple replicas.
+The API Server, Scheduler, Secrets Manager, and other components benefit from Raft to ensure high availability, disaster recovery, and distributed state consistency.</p>
+<p>With Raft integrated into Runink, the system can operate fault-tolerantly, ensuring that data across the entire platform remains consistent, even when network partitions or node failures occur. This guarantees that your data pipelines, metadata, secrets, and workload scheduling are managed reliably in any cloud-native or distributed environment</p>
+<hr>
+<h2 id="architecture-components">Architecture Components</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>I. Runink Control Plane (Distributed &amp; Persistent)
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ├─ Description: The central brain of the Runink cluster. Likely needs to be run in a High Availability (HA) configuration using multiple replicas.
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ├─ 1. API Server (Go Service)
+</span></span><span style="display:flex;"><span>   │   │
+</span></span><span style="display:flex;"><span>   │   ├─ Role: Primary entry point for all external (CLI, UI, API clients) and internal (Node Agents) communication.
+</span></span><span style="display:flex;"><span>   │   ├─ Responsibilities:
+</span></span><span style="display:flex;"><span>   │   │   • Exposes gRPC (primary) and potentially REST APIs.
+</span></span><span style="display:flex;"><span>   │   │   • Authentication: Handles user/client authentication (e.g., OIDC integration, API keys). Issues internal tokens.
+</span></span><span style="display:flex;"><span>   │   │   • Authorization: Enforces RBAC policies on all incoming requests based on user/service account identity.
+</span></span><span style="display:flex;"><span>   │   │   • Request Validation: Validates pipeline definitions, resource requests, etc.
+</span></span><span style="display:flex;"><span>   │   │   • Gateway to other control plane services.
+</span></span><span style="display:flex;"><span>   │   │   • Stores pointers/core info for Data Governance.
+</span></span><span style="display:flex;"><span>   │   └─ Security: Uses TLS for all communication.
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ├─ 2. Cluster State Store (e.g., Raft-based Go Store)
+</span></span><span style="display:flex;"><span>   │   │
+</span></span><span style="display:flex;"><span>   │   ├─ Role: Distributed, consistent, and persistent storage for all cluster state. Replaces the need for external databases or etcd for core state.
+</span></span><span style="display:flex;"><span>   │   ├─ Responsibilities:
+</span></span><span style="display:flex;"><span>   │   │   • Stores information about: Nodes (registration, resources, health), pending/running pipelines &amp; slices, logical Herds (namespaces), Service Accounts, RBAC Policies, Secrets, Data Catalog/Lineage metadata.
+</span></span><span style="display:flex;"><span>   │   │   • Uses a consensus algorithm (like Raft - e.g., `hashicorp/raft`) for HA and consistency across control plane replicas.
+</span></span><span style="display:flex;"><span>   │   │   • Data typically persisted to disk on control plane nodes (potentially encrypted at rest).
+</span></span><span style="display:flex;"><span>   │   └─ Implementation: Could use libraries like `hashicorp/raft` combined with embedded key-value stores (BoltDB, BadgerDB).
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ├─ 3. Scheduler (Go Service)
+</span></span><span style="display:flex;"><span>   │   │
+</span></span><span style="display:flex;"><span>   │   ├─ Role: Matches pending pipeline steps (Worker Slices) with available resources on registered `Runi Agents`. Replaces Slurm&#39;s scheduling function.
+</span></span><span style="display:flex;"><span>   │   ├─ Responsibilities:
+</span></span><span style="display:flex;"><span>   │   │   • Watches the `Cluster State Store` for new pending tasks.
+</span></span><span style="display:flex;"><span>   │   │   • Maintains an inventory of available resources on each `Runi Agent` node.
+</span></span><span style="display:flex;"><span>   │   │   • Considers pipeline requirements (CPU, memory, specific hardware), Herd quotas, RBAC permissions, and potentially data locality hints.
+</span></span><span style="display:flex;"><span>   │   │   • Makes placement decisions and instructs the target `Runi Agent` (via API Server) to launch the Worker Slice.
+</span></span><span style="display:flex;"><span>   │   │   • GPU aware for local LLM nodes.
+</span></span><span style="display:flex;"><span>   │   └─ Sophistication: Can range from simple bin-packing to more complex policies.
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ├─ 4. Identity &amp; RBAC Manager (Go Service / Library)
+</span></span><span style="display:flex;"><span>   │   │
+</span></span><span style="display:flex;"><span>   │   ├─ Role: Manages identities and access control policies.
+</span></span><span style="display:flex;"><span>   │   ├─ Responsibilities:
+</span></span><span style="display:flex;"><span>   │   │   • Manages internal Service Accounts used by system components and pipelines.
+</span></span><span style="display:flex;"><span>   │   │   • Handles OIDC federation for user identities.
+</span></span><span style="display:flex;"><span>   │   │   • Generates and validates internal authentication tokens (e.g., JWTs) used for secure communication between components.
+</span></span><span style="display:flex;"><span>   │   │   • Provides interface for defining and querying RBAC policies stored in the `Cluster State Store`.
+</span></span><span style="display:flex;"><span>   │   └─ Integration: Tightly integrated with the `API Server` for enforcement.
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   ├─ 5. Secrets Manager (Go Service / Library)
+</span></span><span style="display:flex;"><span>   │   │
+</span></span><span style="display:flex;"><span>   │   ├─ Role: Securely stores and manages sensitive information (e.g., database passwords, API keys).
+</span></span><span style="display:flex;"><span>   │   ├─ Responsibilities:
+</span></span><span style="display:flex;"><span>   │   │   • Stores secrets encrypted within the `Cluster State Store`.
+</span></span><span style="display:flex;"><span>   │   │   • Provides mechanisms for `Runi Agents` to securely retrieve secrets needed by `Worker Slices`.
+</span></span><span style="display:flex;"><span>   │   │   • Integrates with RBAC to control access to secrets.
+</span></span><span style="display:flex;"><span>   │   │   • API keys for external LLMs or credentials for internal ones.
+</span></span><span style="display:flex;"><span>   │   └─ Delivery: Secrets delivered to workers via secure environment variables or mounted tmpfs files within the slice&#39;s namespace.
+</span></span><span style="display:flex;"><span>   │
+</span></span><span style="display:flex;"><span>   └─ 6. Data Governance Service (Go Service)
+</span></span><span style="display:flex;"><span>       │
+</span></span><span style="display:flex;"><span>       ├─ Role: Central hub for all metadata: catalog, lineage, quality, and extensible annotations. Acts as the system of record for understanding data context.
+</span></span><span style="display:flex;"><span>       ├─ Responsibilities:
+</span></span><span style="display:flex;"><span>       │   • **Data Catalog:** Stores schemas, descriptions, owners, tags, business glossary links.
+</span></span><span style="display:flex;"><span>       │   • **Data Lineage:** Records the graph of data transformations (inputs -&gt; transform step -&gt; outputs) reported by Worker Slices. Links data artifacts across pipeline steps.
+</span></span><span style="display:flex;"><span>       │   • **Annotation Management:**
+</span></span><span style="display:flex;"><span>       │     * Stores extensible key-value annotations associated with specific data artifacts (datasets, columns, records, pipeline runs).
+</span></span><span style="display:flex;"><span>       │     * **LLM Annotation Schema:** Defines structure to capture LLM-specific details:
+</span></span><span style="display:flex;"><span>       │       - `annotation_type` (e.g., &#39;classification&#39;, &#39;summary&#39;, &#39;entity_extraction&#39;)
+</span></span><span style="display:flex;"><span>       │       - `annotation_value` (the actual text/tag generated)
+</span></span><span style="display:flex;"><span>       │       - `source_model` (e.g., &#39;openai:gpt-4-turbo&#39;, &#39;minio:llama3-8b-v1.0&#39;)
+</span></span><span style="display:flex;"><span>       │       - `confidence_score` (float, if applicable)
+</span></span><span style="display:flex;"><span>       │       - `prompt_reference` (optional, hash or ID of prompt used)
+</span></span><span style="display:flex;"><span>       │       - `timestamp`
+</span></span><span style="display:flex;"><span>       │       - `annotated_data_ref` (pointer to the specific data element)
+</span></span><span style="display:flex;"><span>       │   • **Quality Rules &amp; Results:** Stores data quality rule definitions and results reported by quality check steps.
+</span></span><span style="display:flex;"><span>       │   • **API:** Provides gRPC API for:
+</span></span><span style="display:flex;"><span>       │     * Registering/Querying catalog entries.
+</span></span><span style="display:flex;"><span>       │     * Reporting/Querying lineage graphs.
+</span></span><span style="display:flex;"><span>       │     * Writing/Querying annotations (supporting filtering by type, source, data ref, etc.).
+</span></span><span style="display:flex;"><span>       │     * Managing quality rules/results.
+</span></span><span style="display:flex;"><span>       ├─ **Storage Backend Strategy:**
+</span></span><span style="display:flex;"><span>       │   • **Core Metadata (Catalog, Lineage Graph Structure):** Can reside within the primary `Cluster State Store` (Raft/KV store) for consistency with cluster operations.
+</span></span><span style="display:flex;"><span>       │   • **Annotation / Detailed Metadata:** For potentially high-volume annotations or rich metadata, consider an abstracted storage layer. Initially, could use the main State Store, but allow plugging in a dedicated database (e.g., Document DB for flexible schemas, Graph DB for complex relationships, Search Index like OpenSearch for fast querying) if annotation volume requires it. This avoids bloating the core Raft state.
+</span></span><span style="display:flex;"><span>       └─ Integration: `Worker Slices` report metadata via API; users query via `API Server`.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>II. Runi Agent (Daemon on each Worker Node)
+</span></span><span style="display:flex;"><span>    │
+</span></span><span style="display:flex;"><span>    ├─ Role: Runs on every compute node managed by the Runink cluster. Acts as the local representative of the Control Plane. Analogous to Kubernetes Kubelet.
+</span></span><span style="display:flex;"><span>    ├─ Responsibilities:
+</span></span><span style="display:flex;"><span>    │   • Node Registration &amp; Health: Registers the node with the Control Plane, reports resources (CPU, memory, etc.), and sends regular heartbeats.
+</span></span><span style="display:flex;"><span>    │   • Worker Lifecycle Management: Receives commands from the `Scheduler` (via `API Server`) to start, stop, and monitor `Worker Slice Processes`.
+</span></span><span style="display:flex;"><span>    │   • Local Slice Execution: Uses internal `Slice Manager` logic to:
+</span></span><span style="display:flex;"><span>    │     * Create cgroups for strict resource quotas (CPU, memory) per slice.
+</span></span><span style="display:flex;"><span>    │     * Create namespaces for isolation (PID, Net, Mount, User, UTS, IPC). Maps Service Account identity to ephemeral local UID via user namespace.
+</span></span><span style="display:flex;"><span>    │     * Launch worker processes using `os/exec`.
+</span></span><span style="display:flex;"><span>    │   • Secret Delivery: Securely retrieves secrets from the `Secrets Manager` and makes them available to the worker slice (env var, file mount).
+</span></span><span style="display:flex;"><span>    │   • Networking: Configures network interfaces within the slice&#39;s network namespace, manages connections for inter-slice communication (gRPC). Potentially enforces basic network policies locally.
+</span></span><span style="display:flex;"><span>    │   • Storage: Manages mounting necessary storage (e.g., shared FS paths, perhaps encrypted local tmpfs) into the slice&#39;s mount namespace. Needs integration for encryption at rest if handling local ephemeral data.
+</span></span><span style="display:flex;"><span>    │   • **GPU Awareness (Optional):** Can report presence and status of GPUs to the `Scheduler` for placement of GPU-intensive tasks (like local LLM inference).
+</span></span><span style="display:flex;"><span>    │   • Observability Collection:
+</span></span><span style="display:flex;"><span>    │     * Collects structured logs from worker stdout/stderr. Forwards logs to a configured Fluentd endpoint/aggregator.
+</span></span><span style="display:flex;"><span>    │     * Scrapes Prometheus metrics from the worker&#39;s exposed HTTP endpoint. Exposes aggregated node + worker metrics for scraping by a central Prometheus server.
+</span></span><span style="display:flex;"><span>    └─ Security: Authenticates to the API Server using node-specific credentials/tokens. Ensures local operations are authorized.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>III. Runi Slice (Isolated Go Process)
+</span></span><span style="display:flex;"><span>     │
+</span></span><span style="display:flex;"><span>     ├─ Role: Executes a single step of a user&#39;s data pipeline within a secure, isolated environment managed by the `Runi Agent`.
+</span></span><span style="display:flex;"><span>     ├─ Environment:
+</span></span><span style="display:flex;"><span>     │   • Runs as an ephemeral, non-privileged user (via user namespace) corresponding to a specific Runink `Service Account`.
+</span></span><span style="display:flex;"><span>     │   • Constrained by cgroups (CPU, memory quotas).
+</span></span><span style="display:flex;"><span>     │   • Isolated via Linux namespaces (sees own PID space, network stack, filesystem view).
+</span></span><span style="display:flex;"><span>     │   • Provided with necessary secrets and configuration via env vars or mounted files.
+</span></span><span style="display:flex;"><span>     │   • Issued short-lived tokens for authenticated communication.
+</span></span><span style="display:flex;"><span>     ├─ Responsibilities:
+</span></span><span style="display:flex;"><span>     │   • Executes the specific Go function/code for the pipeline step.
+</span></span><span style="display:flex;"><span>     │   • Communicates with other Runi Slices (potentially on other nodes) via authenticated, encrypted gRPC over the network established by the `Runi Agent`.
+</span></span><span style="display:flex;"><span>     │   • Interacts with external data stores (DBs, streams, files) using credentials provided securely.
+</span></span><span style="display:flex;"><span>     │   • Executes step logic (e.g., data transformation, quality check, LLM interaction).
+</span></span><span style="display:flex;"><span>     │   • **LLM Interaction Steps:**
+</span></span><span style="display:flex;"><span>     │     * Securely fetches data (e.g., from MinIO via S3 API using provided credentials).
+</span></span><span style="display:flex;"><span>     │     * Calls external (OpenAI) or internal (e.g., served from MinIO/GPU node) LLM APIs using secure credentials/network config.
+</span></span><span style="display:flex;"><span>     │     * Parses LLM responses.
+</span></span><span style="display:flex;"><span>     │   • Reports lineage data (inputs, outputs, transform details) to the`Data Governance Service` via gRPC.
+</span></span><span style="display:flex;"><span>     │     * **Reports LLM Annotations:** Formats generated annotations according to the defined schema and sends them to the `Data Governance Service` via its gRPC API.
+</span></span><span style="display:flex;"><span>     │   • Communicates with other slices via authenticated/encrypted gRPC.
+</span></span><span style="display:flex;"><span>     │   • Exposes Prometheus metrics endpoint.
+</span></span><span style="display:flex;"><span>     │   • Writes structured logs to stdout/stderr by the`Runi Agent`.
+</span></span><span style="display:flex;"><span>     │   • Data I/O: Primarily uses gRPC with TLS for inter-slice communication. May interact with shared filesystems mounted into its namespace by the `Runi Agent`.
+</span></span><span style="display:flex;"><span>     └─ Data I/O &amp; Security: Requires appropriate RBAC permissions and Secrets (API keys, internal service URLs) to access data sources (MinIO) and LLM endpoints. Network policies may be needed to allow egress to external APIs or internal LLM services.
+</span></span></code></pre></div><h2 id="benefits--tradeoffs">Benefits &amp; Tradeoffs</h2>
+<ul>
+<li><strong>Potential Performance:</strong> By avoiding full container runtimes and using direct <code>exec</code> with namespaces/cgroups, startup times and per-slice overhead <em>could</em> be lower than Kubernetes pods. Go&rsquo;s efficiency helps.</li>
+<li><strong>Full Control &amp; Customization:</strong> Tailored specifically for Go-based data workloads.</li>
+<li><strong>Huge Complexity:</strong> Building and maintaining a reliable, secure distributed operating system/scheduler is immensely complex. Replaces Slurm, competes conceptually with Kubernetes/Nomad.</li>
+<li><strong>Ecosystem:</strong> Lacks the vast ecosystem, tooling, and community support of Kubernetes or HPC schedulers.</li>
+<li><strong>Security Burden:</strong> All security aspects (RBAC, secrets, TLS, identity, namespace config) must be implemented correctly and securely from scratch.</li>
+</ul>
+<h2 id="future-llm-integration">Future LLM Integration</h2>
+<ol>
+<li><strong>Pipeline Definition:</strong> A user defines a pipeline step specifically for LLM annotation. This step specifies the input data source (e.g., path on shared FS/MinIO), the target LLM (e.g., OpenAI model name or internal service endpoint), the prompt, and potentially the output format.</li>
+<li><strong>Scheduling:</strong> The <code>Scheduler</code> assigns this step to a <code>Runi Agent</code>. If targeting an internal LLM requiring specific hardware (GPU), the scheduler uses node resource information (reported by Agents) for placement.</li>
+<li><strong>Execution:</strong> The <code>Runi Agent</code> launches a <code>Worker Slice Process</code> for this step.</li>
+<li><strong>Credentials:</strong> The Worker Slice receives necessary credentials (e.g., OpenAI API key, MinIO access key) securely via the <code>Secrets Manager</code>.</li>
+<li><strong>LLM Call:</strong> The worker reads input data, constructs the prompt, calls the relevant LLM API (external or internal), potentially handling batching or retries.</li>
+<li><strong>Metadata Persistence:</strong> Upon receiving results, the worker extracts the annotations, formats them according to the <code>Data Governance Service</code> schema, and sends them via gRPC call to the service, linking them to the input data reference. It also reports standard lineage (input data -&gt; LLM step -&gt; annotations).</li>
+<li><strong>Usage:</strong> Downstream pipeline steps or external users can then query the <code>Data Governance Service</code> (via <code>API Server</code>) to retrieve these annotations for further processing, reporting, or analysis.</li>
+</ol>
+
+	
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      <footer class="td-footer row d-print-none">
+  <div class="container-fluid">
+    <div class="row mx-md-2">
+      <div class="td-footer__left col-6 col-sm-4 order-sm-1">
+        
+      </div><div class="td-footer__right col-6 col-sm-4 order-sm-3">
+        
+      </div><div class="td-footer__center col-12 col-sm-4 py-2 order-sm-2">
+        <span class="td-footer__copyright">&copy;
+    2025
+    <span class="td-footer__authors">Runink</span></span><span class="td-footer__all_rights_reserved">All Rights Reserved</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <script src="/js/main.min.d01f326082746fad8b3ab3755642c5537c31450bfbf5b01539f06b6233245185.js" integrity="sha256-0B8yYIJ0b62LOrN1VkLFU3wxRQv79bAVOfBrYjMkUYU=" crossorigin="anonymous"></script>
+<script defer src="/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
+<script src='/js/tabpane-persist.js'></script>
+
+  </body>
+</html>

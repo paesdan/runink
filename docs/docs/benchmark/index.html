@@ -1,0 +1,708 @@
+<!doctype html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
+
+<title>Runink</title>
+<meta name="description" content="📊 Runink vs. Competitors: Raft-Powered Benchmark 1. Architecture &amp; Paradigm Runink: A Go/Linux-native, vertically integrated data platform that combines execution, scheduling, governance, and observability in a single runtime. Unlike traditional stacks, Runink does not rely on Kubernetes or external orchestrators. Instead, it uses a Raft-based control plane to ensure high availability and consensus across services like scheduling, metadata, and security — forming a distributed operating model purpose-built for data.
+Competitors: Use a layered, loosely coupled stack:">
+<meta property="og:url" content="https://runink.org/docs/benchmark/">
+  <meta property="og:site_name" content="Runink">
+  <meta property="og:title" content="Runink">
+  <meta property="og:description" content="📊 Runink vs. Competitors: Raft-Powered Benchmark 1. Architecture &amp; Paradigm Runink: A Go/Linux-native, vertically integrated data platform that combines execution, scheduling, governance, and observability in a single runtime. Unlike traditional stacks, Runink does not rely on Kubernetes or external orchestrators. Instead, it uses a Raft-based control plane to ensure high availability and consensus across services like scheduling, metadata, and security — forming a distributed operating model purpose-built for data.
+Competitors: Use a layered, loosely coupled stack:">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="docs">
+
+  <meta itemprop="name" content="Runink">
+  <meta itemprop="description" content="📊 Runink vs. Competitors: Raft-Powered Benchmark 1. Architecture &amp; Paradigm Runink: A Go/Linux-native, vertically integrated data platform that combines execution, scheduling, governance, and observability in a single runtime. Unlike traditional stacks, Runink does not rely on Kubernetes or external orchestrators. Instead, it uses a Raft-based control plane to ensure high availability and consensus across services like scheduling, metadata, and security — forming a distributed operating model purpose-built for data.
+Competitors: Use a layered, loosely coupled stack:">
+  <meta itemprop="wordCount" content="1658">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Runink">
+  <meta name="twitter:description" content="📊 Runink vs. Competitors: Raft-Powered Benchmark 1. Architecture &amp; Paradigm Runink: A Go/Linux-native, vertically integrated data platform that combines execution, scheduling, governance, and observability in a single runtime. Unlike traditional stacks, Runink does not rely on Kubernetes or external orchestrators. Instead, it uses a Raft-based control plane to ensure high availability and consensus across services like scheduling, metadata, and security — forming a distributed operating model purpose-built for data.
+Competitors: Use a layered, loosely coupled stack:">
+<link rel="preload" href="/scss/main.scss" as="style" integrity="" crossorigin="anonymous">
+<link href="/scss/main.scss" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+  crossorigin="anonymous"></script>
+
+  </head>
+  <body class="td-page">
+    <header>
+      <nav class="td-navbar js-navbar-scroll" data-bs-theme="dark">
+<div class="container-fluid flex-column flex-md-row">
+  <a class="navbar-brand" href="/"><span class="navbar-brand__logo navbar-logo"><svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500" style="enable-background:new 0 0 500 500"><g><path style="fill:#fff" d="M116.8525 421.9722c-5.7041.0-10.3442-4.3127-10.3442-9.6129V88.183c0-5.3002 4.6401-9.6117 10.3442-9.6117H320.858c3.0347.0 9.3959.5498 11.7506 2.6302l.3545.3442 58.905 63.2912c2.3101 2.491 2.9202 8.4928 2.9202 11.3184v256.2039c0 5.3002-4.6407 9.6129-10.3436 9.6129H116.8525z"/><g><g><g><path style="fill:#767676" d="M384.4445 423.2066H116.852c-6.3839.0-11.5786-4.8658-11.5786-10.8474V88.1831c0-5.9804 5.1947-10.8461 11.5786-10.8461h204.0062c.377.0 9.2786.0329 12.568 2.9389l.3947.3833 58.9508 63.337c3.2135 3.4652 3.2514 11.7924 3.2514 12.1593v256.2036C396.0231 418.3408 390.8284 423.2066 384.4445 423.2066zM116.5079 411.9189c.0848.0278.1999.0531.3441.0531h267.5925c.1442.0.2581-.0253.3441-.0531V156.1556c-.0076-.9033-.3593-3.7347-.7034-5.0037l-57.6527-61.9416c-1.4651-.3176-4.4533-.6389-5.5742-.6389H116.852c-.143.0-.2594.024-.3441.0531V411.9189zm267.4533-261.149zM327.0321 89.371v.0013V89.371z"/></g></g></g><g><g><path style="fill:#5b7fc0" d="M189.0874 210.1754l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.025 2.454-11.4897 6.4116-15.4473C177.5953 212.627 183.0601 210.1742 189.0874 210.1754zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403S197.0816 234.1722 197.0804 232.033z"/><path style="opacity:.3;fill:#fff" d="M189.0898 210.176c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 212.6276 183.0612 210.176 189.0898 210.176zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 236.239 197.0839 234.2399 197.0839 232.0372z"/><g><defs><path id="SVGID_1_" d="M194.7376 237.6875c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.999 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 234.2399 196.1861 236.239 194.7376 237.6875z"/></defs><clipPath id="SVGID_2_"><use xlink:href="#SVGID_1_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_2_);fill:#fff" d="M190.0704 225.0237c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 225.7247 191.9774 225.0237 190.0704 225.0237z"/><path style="opacity:.13;clip-path:url(#SVGID_2_);fill:#020202" d="M190.0704 225.0237c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 225.7247 191.9774 225.0237 190.0704 225.0237z"/></g><g><defs><path id="SVGID_3_" d="M189.0898 210.176c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 212.6276 183.0612 210.176 189.0898 210.176zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 236.239 197.0839 234.2399 197.0839 232.0372z"/></defs><clipPath id="SVGID_4_"><use xlink:href="#SVGID_3_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_4_);fill:#5b7fc0" d="M172.6595 215.6045c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8612 12.0547.0024 21.8636-9.797 21.8613-21.8612.0024-3.8475-1.0151-7.6326-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 209.1953 176.6171 211.647 172.6595 215.6045z"/></g></g><rect x="198.8952" y="225.1043" style="fill:#5b7fc0" width="122.6266" height="13.8671"/></g><g><path style="fill:#d95140" d="M189.0874 155.7611l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.0249 2.454-11.4897 6.4116-15.4473C177.5953 158.2128 183.0601 155.7599 189.0874 155.7611zm7.993 21.8577c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403C196.2508 181.7667 197.0816 179.758 197.0804 177.6188z"/><path style="opacity:.3;fill:#fff" d="M189.0898 155.7617c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 158.2134 183.0612 155.7617 189.0898 155.7617zm7.9941 21.8613c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 181.8248 197.0839 179.8256 197.0839 177.623z"/><g><defs><path id="SVGID_5_" d="M194.7376 183.2733c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.9989 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 179.8256 196.1861 181.8248 194.7376 183.2733z"/></defs><clipPath id="SVGID_6_"><use xlink:href="#SVGID_5_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_6_);fill:#fff" d="M190.0704 170.6095c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 171.3104 191.9774 170.6095 190.0704 170.6095z"/><path style="opacity:.13;clip-path:url(#SVGID_6_);fill:#020202" d="M190.0704 170.6095c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9546.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.663-2.8588-6.116.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C193.7885 171.3104 191.9774 170.6095 190.0704 170.6095z"/></g><g><defs><path id="SVGID_7_" d="M189.0898 155.7617c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8066-21.8612-21.8613.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 158.2134 183.0612 155.7617 189.0898 155.7617zm7.9941 21.8613c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 181.8248 197.0839 179.8256 197.0839 177.623z"/></defs><clipPath id="SVGID_8_"><use xlink:href="#SVGID_7_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_8_);fill:#d95140" d="M172.6595 161.1903c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8613 12.0547.0024 21.8636-9.797 21.8613-21.8613.0024-3.8474-1.0151-7.6326-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 154.7811 176.6171 157.2327 172.6595 161.1903z"/></g><rect x="198.8952" y="170.69" style="fill:#d95140" width="122.6266" height="13.8671"/></g><g><g><path style="fill:#56a55c" d="M189.5379 264.6147l.0012-.0012c7.7751.0012 15.0294 4.1862 18.932 10.9235 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3304-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032-5.8394.0-11.3281-2.2733-15.458-6.4032-4.13-4.13-6.4032-9.6186-6.4056-15.4628.0012-6.0249 2.454-11.4897 6.4116-15.4472C178.0458 267.0663 183.5105 264.6135 189.5379 264.6147zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6538 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403C196.7013 290.6202 197.5321 288.6115 197.5309 286.4723z"/><path style="opacity:.3;fill:#fff" d="M189.5403 264.6153c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8065-21.8612-21.8613.0-6.0285 2.4516-11.492 6.4116-15.452C178.0482 267.0669 183.5117 264.6153 189.5403 264.6153zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.6366 290.6783 197.5344 288.6792 197.5344 286.4765z"/><g><defs><path id="SVGID_9_" d="M195.1881 292.1268c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.9989 7.9942-7.9941 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.5344 288.6792 196.6366 290.6783 195.1881 292.1268z"/></defs><clipPath id="SVGID_10_"><use xlink:href="#SVGID_9_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_10_);fill:#fff" d="M190.5209 279.463c-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7446-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9941 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C194.239 280.164 192.4279 279.463 190.5209 279.463z"/><path style="opacity:.13;clip-path:url(#SVGID_10_);fill:#020202" d="M190.5209 279.463c-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7446-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9941 2.3802-1e-4 4.616 1.0833 6.1218 2.8788C194.239 280.164 192.4279 279.463 190.5209 279.463z"/></g><g><defs><path id="SVGID_11_" d="M189.5403 264.6153c7.7763.0 15.0283 4.1826 18.926 10.9151 1.9201 3.3135 2.9377 7.0987 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8613-12.0547.0024-21.8636-9.8065-21.8612-21.8613.0-6.0285 2.4516-11.492 6.4116-15.452C178.0482 267.0669 183.5117 264.6153 189.5403 264.6153zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9941.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.6366 290.6783 197.5344 288.6792 197.5344 286.4765z"/></defs><clipPath id="SVGID_12_"><use xlink:href="#SVGID_11_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_12_);fill:#56a55c" d="M173.11 270.0439c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8613 12.0547.0024 21.8636-9.797 21.8613-21.8613.0024-3.8474-1.0151-7.6326-2.9353-10.9462-3.8977-6.7325-11.1497-10.9151-18.926-10.9151C182.5311 263.6346 177.0676 266.0863 173.11 270.0439z"/></g></g><rect x="199.3456" y="279.5436" style="fill:#56a55c" width="122.6266" height="13.8671"/></g><g><g><path style="fill:#f1bc42" d="M189.0874 318.7208l.0012-.0012c7.7751.0012 15.0295 4.1862 18.932 10.9234 1.9177 3.3159 2.9305 7.1011 2.9293 10.9378.0 5.8394-2.2733 11.3305-6.4032 15.4604-4.1288 4.1288-9.6186 6.4032-15.458 6.4032s-11.328-2.2733-15.458-6.4032-6.4032-9.6186-6.4056-15.4628c.0012-6.025 2.454-11.4897 6.4116-15.4472C177.5953 321.1724 183.0601 318.7196 189.0874 318.7208zm7.993 21.8576c.0012-1.4042-.3687-2.7868-1.063-3.9887-1.4293-2.4684-4.0833-3.9995-6.9299-4.0019-4.4077.0024-7.993 3.5877-7.993 7.993.0 2.1356.832 4.1431 2.3427 5.6539 1.5083 1.5083 3.5159 2.3403 5.6503 2.3415 2.1356.0 4.1443-.8308 5.6539-2.3403S197.0816 342.7176 197.0804 340.5784z"/><path style="opacity:.3;fill:#fff" d="M189.0898 318.7214c7.7763.0 15.0283 4.1826 18.926 10.915 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8612-12.0547.0024-21.8636-9.8065-21.8612-21.8612.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 321.173 183.0612 318.7214 189.0898 318.7214zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 344.7844 197.0839 342.7853 197.0839 340.5826z"/><g><defs><path id="SVGID_13_" d="M194.7376 346.2329c-1.4461 1.4461-3.4452 2.3439-5.6479 2.3439-4.4077-.0024-7.9918-3.5865-7.9942-7.9942.0024-4.4125 3.5937-7.999 7.9942-7.9942 2.8443.0 5.497 1.5323 6.924 3.9983.6991 1.2067 1.0702 2.5881 1.0702 3.9959C197.0839 342.7853 196.1861 344.7844 194.7376 346.2329z"/></defs><clipPath id="SVGID_14_"><use xlink:href="#SVGID_13_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_14_);fill:#fff" d="M190.0704 333.5691c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0834 6.1218 2.8788C193.7885 334.2701 191.9774 333.5691 190.0704 333.5691z"/><path style="opacity:.13;clip-path:url(#SVGID_14_);fill:#020202" d="M190.0704 333.5691c-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0011 1.9547.7088 3.7452 1.8782 5.1354-1.7447-1.4674-2.8575-3.6631-2.8588-6.1161.0024-4.4125 3.5936-7.999 7.9942-7.9942 2.3802-1e-4 4.616 1.0834 6.1218 2.8788C193.7885 334.2701 191.9774 333.5691 190.0704 333.5691z"/></g><g><defs><path id="SVGID_15_" d="M189.0898 318.7214c7.7763.0 15.0283 4.1826 18.926 10.915 1.9201 3.3136 2.9377 7.0988 2.9353 10.9462.0024 12.0643-9.8065 21.8636-21.8613 21.8612-12.0547.0024-21.8636-9.8065-21.8612-21.8612.0-6.0285 2.4516-11.4921 6.4116-15.452C177.5977 321.173 183.0612 318.7214 189.0898 318.7214zm7.9941 21.8612c0-1.4078-.3711-2.7892-1.0702-3.9959-1.4269-2.466-4.0797-3.9983-6.924-3.9983-4.4005-.0048-7.9918 3.5817-7.9942 7.9942.0024 4.4077 3.5865 7.9918 7.9942 7.9942 2.2027.0 4.2018-.8978 5.6479-2.3439C196.1861 344.7844 197.0839 342.7853 197.0839 340.5826z"/></defs><clipPath id="SVGID_16_"><use xlink:href="#SVGID_15_" style="overflow:visible"/></clipPath><path style="clip-path:url(#SVGID_16_);fill:#f1bc42" d="M172.6595 324.15c-3.96 3.96-6.4116 9.4235-6.4116 15.452-.0024 12.0547 9.8066 21.8636 21.8613 21.8612 12.0547.0024 21.8636-9.797 21.8613-21.8612.0024-3.8474-1.0151-7.6327-2.9353-10.9462-3.8977-6.7324-11.1497-10.9151-18.926-10.9151C182.0806 317.7407 176.6171 320.1924 172.6595 324.15z"/></g></g><rect x="198.8952" y="333.6497" style="fill:#f1bc42" width="122.6266" height="13.8671"/></g></g></svg></span><span class="navbar-brand__name">Runink</span></a>
+  <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="/docs/"><span>Docs</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/forum/"><span>Forum</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/blog/"><span>Blog</span></a>
+      </li>
+      </ul>
+  </div>
+  <div class="d-none d-lg-block">
+    
+  </div>
+</div>
+</nav>
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            <div id="td-sidebar-menu" class="td-sidebar__inner">
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ms-3 fas fa-bars" type="button" data-bs-toggle="collapse" data-bs-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  <nav class="td-sidebar-nav collapse" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pe-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-docs-li">
+  <a href="/docs/" class="align-left ps-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-docs"><span class="">Documentation</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsarchitecture-li">
+  <a href="/docs/architecture/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsarchitecture"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-docsbenchmark-li">
+  <a href="/docs/benchmark/" class="align-left ps-0 active td-sidebar-link td-sidebar-link__page" id="m-docsbenchmark"><span class="td-sidebar-nav-active-item"></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscli-li">
+  <a href="/docs/cli/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscli"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsclihelp-li">
+  <a href="/docs/clihelp/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsclihelp"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscomponents-li">
+  <a href="/docs/components/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscomponents"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docscontributing-li">
+  <a href="/docs/contributing/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docscontributing"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsdata-lineage-li">
+  <a href="/docs/data-lineage/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsdata-lineage"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsfeature-dsl-li">
+  <a href="/docs/feature-dsl/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsfeature-dsl"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsgetting_started-li">
+  <a href="/docs/getting_started/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsgetting_started"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsglossary-li">
+  <a href="/docs/glossary/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsglossary"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsroadmap-li">
+  <a href="/docs/roadmap/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsroadmap"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsrunink_quickstart-li">
+  <a href="/docs/runink_quickstart/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsrunink_quickstart"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docsschema-contracts-li">
+  <a href="/docs/schema-contracts/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docsschema-contracts"><span class=""></span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-docssecurity-li">
+  <a href="/docs/security/" class="align-left ps-0 td-sidebar-link td-sidebar-link__page" id="m-docssecurity"><span class=""></span></a>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            <div class="td-page-meta ms-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/paesdan/runink/tree/main/content/docs/benchmark.md" class="td-page-meta--view td-page-meta__view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+  <a href="https://github.com/paesdan/runink/edit/main/content/docs/benchmark.md" class="td-page-meta--edit td-page-meta__edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/paesdan/runink/new/main/content/docs?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child td-page-meta__child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+  <a href="https://github.com/paesdan/runink/issues/new?title=" class="td-page-meta--issue td-page-meta__issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create documentation issue</a>
+  
+</div>
+
+            <div class="td-toc">
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-architecture--paradigm">1. Architecture &amp; Paradigm</a></li>
+    <li><a href="#2-raft-advantages-for-distributed-coordination">2. Raft Advantages for Distributed Coordination</a></li>
+    <li><a href="#3-performance--resource-efficiency">3. Performance &amp; Resource Efficiency</a></li>
+    <li><a href="#4-scheduling--resource-management">4. Scheduling &amp; Resource Management</a></li>
+    <li><a href="#5-security-model">5. Security Model</a></li>
+    <li><a href="#6-data-governance-lineage--metadata">6. Data Governance, Lineage &amp; Metadata</a></li>
+    <li><a href="#7-multi-tenancy">7. Multi-Tenancy</a></li>
+    <li><a href="#8-llm-integration--metadata-handling">8. LLM Integration &amp; Metadata Handling</a></li>
+    <li><a href="#9-observability">9. Observability</a></li>
+    <li><a href="#10-ecosystem--maturity">10. Ecosystem &amp; Maturity</a></li>
+    <li><a href="#11-complexity--operational-effort">11. Complexity &amp; Operational Effort</a></li>
+    <li><a href="#-summary-why-raft-makes-runink-different">✅ Summary: Why Raft Makes Runink Different</a></li>
+    <li><a href="#-how-this-model-beats-the-status-quo">🚀 How This Model Beats the Status Quo</a>
+      <ul>
+        <li><a href="#-compared-to-apache-spark">✅ Compared to Apache Spark</a></li>
+        <li><a href="#-compared-to-kubernetes--airflow">✅ Compared to Kubernetes + Airflow</a></li>
+      </ul>
+    </li>
+    <li><a href="#-security-bonus-ephemeral-uids--mtls">🔐 Security Bonus: Ephemeral UIDs &amp; mTLS</a></li>
+    <li><a href="#-summary-go-pipes-namespaces-raft--data-native-compute">🧠 Summary: Go, Pipes, Namespaces, Raft = Data-Native Compute</a></li>
+    <li><a href="#-technology-benchmark-go--raft--linux-primitives-vs-jvm--containerized-stacks">📈 Technology Benchmark: Go + Raft + Linux Primitives vs. JVM + Containerized Stacks</a>
+      <ul>
+        <li><a href="#key-takeaways">Key Takeaways</a></li>
+      </ul>
+    </li>
+    <li><a href="#-use-case-amplification">📈 Use Case Amplification</a></li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+      </div>
+    
+            
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 ps-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="td-breadcrumbs">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="/docs/">Documentation</a></li>
+  <li class="breadcrumb-item active" aria-current="page">
+    </li>
+  </ol>
+</nav>
+<div class="td-content">
+	<h1></h1>
+	
+	<header class="article-meta">
+		
+</header>
+	<h1 id="-runink-vs-competitors-raft-powered-benchmark">📊 Runink vs. Competitors: Raft-Powered Benchmark</h1>
+<hr>
+<h2 id="1-architecture--paradigm">1. Architecture &amp; Paradigm</h2>
+<ul>
+<li>
+<p><strong>Runink:</strong> A Go/Linux-native, vertically integrated data platform that combines execution, scheduling, governance, and observability in a single runtime. Unlike traditional stacks, Runink does not rely on Kubernetes or external orchestrators. Instead, it uses a <strong>Raft-based control plane</strong> to ensure high availability and consensus across services like scheduling, metadata, and security — forming a distributed operating model purpose-built for data.</p>
+</li>
+<li>
+<p><strong>Competitors:</strong> Use a layered, loosely coupled stack:</p>
+<ul>
+<li><em>Execution:</em> Spark, Beam (JVM-based)</li>
+<li><em>Orchestration:</em> Airflow, Dagster (often on Kubernetes)</li>
+<li><em>Transformation:</em> DBT (runs SQL on external data platforms)</li>
+<li><em>Cluster Management:</em> Kubernetes, Slurm</li>
+<li><em>Governance:</em> Collibra, Apache Atlas (external)</li>
+</ul>
+</li>
+<li>
+<p><strong>Key Differentiator:</strong> Runink is <strong>built from the ground up</strong> as a distributed system — with <strong>Raft consensus</strong> at its core — whereas competitors compose multiple tools that communicate asynchronously or rely on external state systems.</p>
+</li>
+</ul>
+<hr>
+<h2 id="2-raft-advantages-for-distributed-coordination">2. Raft Advantages for Distributed Coordination</h2>
+<p><strong>Runink:</strong></p>
+<ul>
+<li>
+<p>Uses <strong>Raft</strong> for <strong>strong consistency</strong> and <strong>leader election</strong> across:</p>
+<ul>
+<li>Control plane state (Herds, pipelines, RBAC, quotas)</li>
+<li>Scheduler decisions</li>
+<li>Secrets and metadata governance</li>
+</ul>
+</li>
+<li>
+<p>Guarantees:</p>
+<ul>
+<li>No split-brain conditions</li>
+<li>Predictable and deterministic behavior in failure scenarios</li>
+<li>Fault-tolerant HA (N/2+1 consensus)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Competitors:</strong></p>
+<ul>
+<li>Kubernetes uses etcd (Raft-backed), but tools like Airflow/Spark have no equivalent.</li>
+<li>Scheduling decisions, lineage, and metadata handling are often <strong>eventually consistent</strong> or stored in <strong>external systems</strong> without consensus guarantees.</li>
+<li>Result: higher complexity, latency, and coordination failure risks under scale or failure.</li>
+</ul>
+<hr>
+<h2 id="3-performance--resource-efficiency">3. Performance &amp; Resource Efficiency</h2>
+<ul>
+<li>
+<p><strong>Runink:</strong></p>
+<ul>
+<li>Written in Go for low-latency cold starts and efficient concurrency.</li>
+<li>Uses direct <code>exec</code>, <code>cgroups</code>, and <code>namespaces</code>, not Docker/K8s layers.</li>
+<li>Raft ensures <strong>low-overhead coordination</strong>, avoiding polling retries and state divergence.</li>
+</ul>
+</li>
+<li>
+<p><strong>Competitors:</strong></p>
+<ul>
+<li>Spark is JVM-based; powerful but resource-heavy.</li>
+<li>K8s introduces orchestration latency, plus pod startup and scheduling delays.</li>
+<li>Airflow relies on Celery/K8s executors with less efficient scheduling granularity.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="4-scheduling--resource-management">4. Scheduling &amp; Resource Management</h2>
+<ul>
+<li>
+<p><strong>Runink:</strong></p>
+<ul>
+<li>Custom, Raft-backed <strong>Scheduler</strong> matches pipeline steps to nodes in real time.</li>
+<li>Considers Herd quotas, CPU/GPU/Memory availability.</li>
+<li>Deterministic task placement and retry logic are <strong>logged and replayable</strong> via Raft.</li>
+</ul>
+</li>
+<li>
+<p><strong>Competitors:</strong></p>
+<ul>
+<li>Kubernetes schedulers are general-purpose and not pipeline-aware.</li>
+<li>Airflow does not control actual compute — delegates to backends like K8s.</li>
+<li>Slurm excels in HPC, but lacks pipeline-native orchestration and data governance.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="5-security-model">5. Security Model</h2>
+<ul>
+<li>
+<p><strong>Runink:</strong></p>
+<ul>
+<li>Secure-by-default with OIDC + JWT, RBAC, Secrets Manager, mTLS, and field-level masking.</li>
+<li><strong>Secrets are versioned and replicated with Raft</strong>, avoiding plaintext spillage or inconsistent states.</li>
+<li>Namespace isolation per Herd.</li>
+</ul>
+</li>
+<li>
+<p><strong>Competitors:</strong></p>
+<ul>
+<li>Kubernetes offers RBAC and secrets, but complexity leads to misconfigurations.</li>
+<li>Airflow often shares sensitive configs (connections, variables) across DAGs.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="6-data-governance-lineage--metadata">6. Data Governance, Lineage &amp; Metadata</h2>
+<ul>
+<li>
+<p><strong>Runink:</strong></p>
+<ul>
+<li>Built-in <strong>Data Governance Service</strong> stores contracts, lineage, quality metrics, and annotations.</li>
+<li>Changes are <strong>committed to Raft</strong>, ensuring <strong>atomic updates</strong> and rollback support.</li>
+<li>Contracts and pipeline steps are <strong>versioned</strong> and tracked centrally.</li>
+</ul>
+</li>
+<li>
+<p><strong>Competitors:</strong></p>
+<ul>
+<li>Require integrating platforms like Atlas or Collibra.</li>
+<li>Lineage capture is manual or partial, with data loss possible on failure or drift.</li>
+<li>Metadata syncing lacks consistency guarantees.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="7-multi-tenancy">7. Multi-Tenancy</h2>
+<ul>
+<li>
+<p><strong>Runink:</strong></p>
+<ul>
+<li>Uses <strong>Herds</strong> as isolation units — enforced via RBAC, ephemeral UIDs, cgroups, and namespace boundaries.</li>
+<li>Raft ensures configuration updates (quotas, roles) are <strong>safely committed</strong> across all replicas.</li>
+</ul>
+</li>
+<li>
+<p><strong>Competitors:</strong></p>
+<ul>
+<li>Kubernetes uses namespaces and resource quotas.</li>
+<li>Airflow has no robust multi-tenancy — teams often need separate deployments.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="8-llm-integration--metadata-handling">8. LLM Integration &amp; Metadata Handling</h2>
+<ul>
+<li>
+<p><strong>Runink:</strong></p>
+<ul>
+<li>LLM inference is a <strong>first-class pipeline step</strong>.</li>
+<li>Annotations are tied to lineage and <strong>stored transactionally</strong> in the Raft-backed governance store.</li>
+</ul>
+</li>
+<li>
+<p><strong>Competitors:</strong></p>
+<ul>
+<li>LLMs are orchestrated as container steps via KubernetesPodOperator or Argo.</li>
+<li>Metadata is stored in external tools or left untracked.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="9-observability">9. Observability</h2>
+<ul>
+<li>
+<p><strong>Runink:</strong></p>
+<ul>
+<li>Built-in metrics via Prometheus, structured logs via Fluentd.</li>
+<li>Metadata and run stats are <strong>Raft-consistent</strong>, enabling reproducible audit trails.</li>
+<li>Observability spans from node → slice → Herd → run.</li>
+</ul>
+</li>
+<li>
+<p><strong>Competitors:</strong></p>
+<ul>
+<li>Spark, Airflow, and K8s use external stacks (Loki, Grafana, EFK) that need configuration and instrumentation.</li>
+<li>Logs may be disjointed or context-lacking.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="10-ecosystem--maturity">10. Ecosystem &amp; Maturity</h2>
+<ul>
+<li>
+<p><strong>Runink:</strong></p>
+<ul>
+<li>Early-stage, but intentionally narrow in scope and highly integrated.</li>
+<li>No need for external orchestrators or data governance platforms.</li>
+</ul>
+</li>
+<li>
+<p><strong>Competitors:</strong></p>
+<ul>
+<li>Vast ecosystems (Airflow, Spark, DBT, K8s) with huge community support.</li>
+<li>Tradeoff: Requires significant integration, coordination, and DevOps effort.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="11-complexity--operational-effort">11. Complexity &amp; Operational Effort</h2>
+<ul>
+<li>
+<p><strong>Runink:</strong></p>
+<ul>
+<li>High initial build complexity — but centralization of Raft and Go-based primitives allows for <strong>deterministic ops</strong>, easier debug, and stronger safety guarantees.</li>
+<li><strong>Zero external dependencies</strong> once deployed.</li>
+</ul>
+</li>
+<li>
+<p><strong>Competitors:</strong></p>
+<ul>
+<li>Operationally fragmented. DevOps teams must manage multiple platforms (e.g., K8s, Helm, Spark, Airflow).</li>
+<li>Requires cross-tool observability, secrets management, and governance.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="-summary-why-raft-makes-runink-different">✅ Summary: Why Raft Makes Runink Different</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Capability</th>
+          <th>Runink (Raft-Powered)</th>
+          <th>Spark / Airflow / K8s Stack</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>State Coordination</strong></td>
+          <td>Raft Consensus</td>
+          <td>Partial (only K8s/etcd)</td>
+      </tr>
+      <tr>
+          <td><strong>Fault Tolerance</strong></td>
+          <td>HA Replication</td>
+          <td>Tool-dependent</td>
+      </tr>
+      <tr>
+          <td><strong>Scheduler</strong></td>
+          <td>Raft-backed, deterministic</td>
+          <td>Varies per layer</td>
+      </tr>
+      <tr>
+          <td><strong>Governance</strong></td>
+          <td>Native, consistent, queryable</td>
+          <td>External</td>
+      </tr>
+      <tr>
+          <td><strong>Secrets</strong></td>
+          <td>Encrypted + Raft-consistent</td>
+          <td>K8s or env vars</td>
+      </tr>
+      <tr>
+          <td><strong>Lineage</strong></td>
+          <td>Immutable + auto-tracked</td>
+          <td>External integrations</td>
+      </tr>
+      <tr>
+          <td><strong>Multitenancy</strong></td>
+          <td>Herds + namespace isolation</td>
+          <td>Namespaces (K8s)</td>
+      </tr>
+      <tr>
+          <td><strong>Security</strong></td>
+          <td>End-to-end mTLS + RBAC + UIDs</td>
+          <td>Complex setup</td>
+      </tr>
+      <tr>
+          <td><strong>LLM-native</strong></td>
+          <td>First-class integration</td>
+          <td>Ad hoc orchestration</td>
+      </tr>
+      <tr>
+          <td><strong>Observability</strong></td>
+          <td>Built-in, unified stack</td>
+          <td>Custom integration</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="-how-this-model-beats-the-status-quo">🚀 How This Model Beats the Status Quo</h2>
+<h3 id="-compared-to-apache-spark">✅ Compared to Apache Spark</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Spark (JVM)</th>
+          <th>Runink (Go + Linux primitives)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>JVM-based, slow cold starts</td>
+          <td>Instantaneous slice spawn using <code>exec</code></td>
+      </tr>
+      <tr>
+          <td>Containerized via YARN/Mesos/K8s</td>
+          <td>No container daemon needed</td>
+      </tr>
+      <tr>
+          <td>Fault tolerance via RDD lineage/logs</td>
+          <td>Strong consistency via Raft</td>
+      </tr>
+      <tr>
+          <td>Needs external tools for lineage</td>
+          <td>Built-in governance and metadata</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="-compared-to-kubernetes--airflow">✅ Compared to Kubernetes + Airflow</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Kubernetes / Airflow</th>
+          <th>Runink</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>DAGs stored in SQL, not consistent across API servers</td>
+          <td>DAGs submitted via Raft log, replicated to all</td>
+      </tr>
+      <tr>
+          <td>Task scheduling needs K8s Scheduler or Celery</td>
+          <td>Runi agents coordinate locally via consensus</td>
+      </tr>
+      <tr>
+          <td>Containers = overhead</td>
+          <td>Direct <code>exec</code> in a namespaced PID space</td>
+      </tr>
+      <tr>
+          <td>Secrets are environment or K8s Secret dependent</td>
+          <td>Raft-backed, RBAC-scoped Secrets Manager</td>
+      </tr>
+      <tr>
+          <td>Governance/logging external</td>
+          <td>Observability and lineage native and real-time</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="-security-bonus-ephemeral-uids--mtls">🔐 Security Bonus: Ephemeral UIDs &amp; mTLS</h2>
+<p>Each slice runs as:</p>
+<ul>
+<li>A <strong>non-root ephemeral user</strong></li>
+<li>With an <strong>Herd-specific UID/GID</strong></li>
+<li>In an <strong>isolated namespace</strong></li>
+<li>Authenticated over mTLS via service tokens</li>
+</ul>
+<p>This makes it:</p>
+<ul>
+<li>Safer than Docker containers with root mounts</li>
+<li>More auditable than shared Airflow workers</li>
+<li>Easier to enforce per-tenant quotas and access policies</li>
+</ul>
+<hr>
+<h2 id="-summary-go-pipes-namespaces-raft--data-native-compute">🧠 Summary: Go, Pipes, Namespaces, Raft = Data-Native Compute</h2>
+<p>Runink:</p>
+<ul>
+<li>Uses <strong>Go slices</strong> instead of containers</li>
+<li>Wraps execution with <strong>kernel primitives</strong> (namespaces, cgroups, pipes)</li>
+<li>Orchestrates them with <strong>Raft-consistent DAGs</strong></li>
+<li>Tracks everything via native <strong>Governance/Observability layers</strong></li>
+</ul>
+<p>This makes Runink:</p>
+<ul>
+<li><strong>Faster</strong> to start</li>
+<li><strong>More resource-efficient</strong> than JVM- or container-based runners</li>
+<li><strong>Deterministic and fault-tolerant</strong> with Raft consensus</li>
+<li><strong>Governance-native</strong>, with automatic metadata and lineage capture</li>
+</ul>
+<p>Competitors piece together these guarantees from <strong>Kubernetes</strong>, <strong>Airflow</strong>, <strong>Spark</strong>, and <strong>Collibra</strong>. Runink offers them <strong>by design</strong>.</p>
+<hr>
+<h2 id="-technology-benchmark-go--raft--linux-primitives-vs-jvm--containerized-stacks">📈 Technology Benchmark: Go + Raft + Linux Primitives vs. JVM + Containerized Stacks</h2>
+<table>
+  <thead>
+      <tr>
+          <th><strong>Dimension</strong></th>
+          <th><strong>Traditional (JVM / Container / DataFrame)</strong></th>
+          <th><strong>Runink (Go / FP Pipelines / Raft)</strong></th>
+          <th><strong>Gains</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Language Runtime</strong></td>
+          <td>Java Virtual Machine</td>
+          <td>Go runtime</td>
+          <td>•<strong>Lower startup latency</strong> (milliseconds vs. seconds) • <strong>Smaller memory footprint</strong> per process (tens of MBs vs. hundreds of MBs)</td>
+      </tr>
+      <tr>
+          <td><strong>Programming Paradigm</strong></td>
+          <td>OOP (classes, inheritance, heavy type hierarchies)</td>
+          <td>Functional-ish pipelines in Go (pure functions, composable stages)</td>
+          <td>•<strong>Simpler abstractions</strong> (no deep inheritance)  • <strong>Easier reasoning</strong> about data flow  • <strong>Higher testability</strong> via pure stage functions</td>
+      </tr>
+      <tr>
+          <td><strong>Data Processing Model</strong></td>
+          <td>Row-based DataFrames</td>
+          <td>Channel-based streams of structs (Go channels → functional transforms)</td>
+          <td>•<strong>Constant memory</strong> for streaming (no full in-memory tables)  • <strong>Back-pressure</strong> and windowing naturally via channels  • <strong>Composable, step-by-step transforms</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Isolation &amp; Sandboxing</strong></td>
+          <td>Containers + VM overhead</td>
+          <td>cgroups + namespaces + Go processes</td>
+          <td>•<strong>0.5–1 ms</strong> slice startup vs. <strong>100 ms+</strong> container spin-up  • <strong>Fine-grained resource limits</strong> per slice  • <strong>No dockerd overhead</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Inter-Stage Communication</strong></td>
+          <td>Shuffle via network storage or distributed file systems</td>
+          <td>In-memory pipes, UNIX sockets, or gRPC streams within Go</td>
+          <td>•<strong>&lt;1 ms</strong> handoff latency  • <strong>Zero-copy</strong> possible with <code>io.Pipe</code>  • <strong>Strong type safety</strong> end-to-end</td>
+      </tr>
+      <tr>
+          <td><strong>Distributed Consensus</strong></td>
+          <td>External etcd or no coordination</td>
+          <td>Built-in Raft</td>
+          <td>•<strong>Linearizable consistency</strong> for control plane  • <strong>Leader election</strong> and automatic recovery  • <strong>Atomic updates</strong> across scheduler, secrets, and metadata</td>
+      </tr>
+      <tr>
+          <td><strong>Multi-Tenancy &amp; Security</strong></td>
+          <td>K8s namespaces + complex RBAC, network policies</td>
+          <td>Herd namespaces + cgroup quotas + OIDC/JWT + mTLS</td>
+          <td>•<strong>Single-layer isolation</strong>  • <strong>Per-slice ephemeral UIDs</strong> for zero-trust  • <strong>Simpler, declarative Herd-scoped policies</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Observability &amp; Lineage</strong></td>
+          <td>External stacks</td>
+          <td>Native agents + Raft-consistent metadata store</td>
+          <td>•<strong>Always-consistent</strong> lineage  • <strong>Unified telemetry</strong> (metrics, logs, traces)  • <strong>Real-time auditability</strong> without manual integration</td>
+      </tr>
+      <tr>
+          <td><strong>Deployment &amp; Ops</strong></td>
+          <td>Helm charts, CRDs, multi-tool CI/CD</td>
+          <td>Single Go binary + Raft cluster bootstrap</td>
+          <td>•<strong>One artifact</strong> for all services  • <strong>Simpler upgrades</strong> via rolling Raft restarts  • <strong>Built-in health &amp; leader dashboards</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Functional Extensibility</strong></td>
+          <td>Plugins in Java/Python with JNI or UDFs (heavy)</td>
+          <td>Go plugins or simple function registration</td>
+          <td>•<strong>No cross-language bridges</strong>  • <strong>First-class Go codegen</strong> from DSL  • <strong>Easier on-the-fly step injection</strong></td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol>
+<li><strong>Speed &amp; Efficiency</strong>Go’s minimal runtime and direct use of Linux primitives deliver sub-millisecond task launches and minimal per-slice overhead—vs. multi-second container or JVM startups.</li>
+<li><strong>Deterministic, Fault-Tolerant Control</strong>Raft gives Runink a single, consistent source of truth across all core services—eliminating split-brain and eventual-consistency pitfalls that plague layered stacks.</li>
+<li><strong>Composable, Functional Pipelines</strong>Channel-based, stage-oriented transforms allow lean, testable, streaming-first ETL—rather than bulk-loading entire tables in memory.</li>
+<li><strong>Unified, Secure Multi-Tenancy</strong>Herds + namespaces + cgroups + OIDC/JWT yield strong isolation and a simpler security model than stitching together K8s, Vault, and side-cars.</li>
+<li><strong>Built-In Governance &amp; Observability</strong>
+Raft-backed metadata ensures lineage and schema contracts are always in sync—no external governance platform required.</li>
+</ol>
+<p>By grounding Runink’s design in <strong>Go</strong>, <strong>functional pipelines</strong>, <strong>Linux primitives</strong>, and <strong>Raft consensus</strong>, you get a single, vertically integrated platform that outperforms and out-operates the conventional “JVM + containers + orchestration + governance” stack—delivering <strong>predictable</strong>, <strong>low-overhead</strong>, and <strong>secure</strong> data pipelines at scale.</p>
+<hr>
+<h2 id="-use-case-amplification">📈 Use Case Amplification</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Scenario</th>
+          <th>Runink Edge</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Contract enforcement + DLQ routing</td>
+          <td>Fault-tolerant validation with Raft-backed retries</td>
+      </tr>
+      <tr>
+          <td>LLM prompt + response execution</td>
+          <td>LLM step tracked + annotated in pipeline DAG</td>
+      </tr>
+      <tr>
+          <td>Streaming analytics across partitions</td>
+          <td>Unbounded slices backpressured with state checkpoints</td>
+      </tr>
+      <tr>
+          <td>Batch SQL + post-transform validation</td>
+          <td>Sequential Go slices piped and DAG-aware</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="conclusion">Conclusion</h2>
+<p>Runink leverages <strong>Raft consensus not just for fault tolerance, but as a foundational architectural choice</strong>. It eliminates whole categories of orchestration complexity, state drift, and configuration mismatches by building from first principles — while offering <strong>a single runtime that natively understands pipelines, contracts, lineage, and compute</strong>.</p>
+<p>If you’re designing a modern data platform — especially one focused on governance, and efficient domain isolation — Runink is a <strong>radically integrated alternative</strong> to the Kubernetes-centric model.</p>
+
+	
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      <footer class="td-footer row d-print-none">
+  <div class="container-fluid">
+    <div class="row mx-md-2">
+      <div class="td-footer__left col-6 col-sm-4 order-sm-1">
+        
+      </div><div class="td-footer__right col-6 col-sm-4 order-sm-3">
+        
+      </div><div class="td-footer__center col-12 col-sm-4 py-2 order-sm-2">
+        <span class="td-footer__copyright">&copy;
+    2025
+    <span class="td-footer__authors">Runink</span></span><span class="td-footer__all_rights_reserved">All Rights Reserved</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <script src="/js/main.min.d01f326082746fad8b3ab3755642c5537c31450bfbf5b01539f06b6233245185.js" integrity="sha256-0B8yYIJ0b62LOrN1VkLFU3wxRQv79bAVOfBrYjMkUYU=" crossorigin="anonymous"></script>
+<script defer src="/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
+<script src='/js/tabpane-persist.js'></script>
+
+  </body>
+</html>
