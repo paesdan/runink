@@ -1,0 +1,212 @@
+package contracts
+
+import (
+    "encoding/json"
+    "errors"
+    "io"
+    "time"
+)
+
+// Contract metadata (populated dynamically)
+var (
+    ContractVersion      string
+    ContractSchemaHash   string
+    ComplianceLevel      string
+    DefaultMaskingPolicy string
+)
+
+// FDC3Event represents the initial trade event (raw)
+type FDC3Event struct {
+    TradeID             string    `json:"trade_id" validate:"required" mask:"none"`
+    Symbol              string    `json:"symbol" validate:"required" mask:"none"`
+    Price               float64   `json:"price" validate:"required,gt=0" mask:"none"`
+    Timestamp           time.Time `json:"timestamp" validate:"required" mask:"none"`
+    CustomerSSN         string    `json:"customer_ssn,omitempty" mask:"dynamic"`
+    CustomerEmail       string    `json:"customer_email,omitempty" mask:"dynamic"`
+    BankAccountNumber   string    `json:"bank_account_number,omitempty" mask:"dynamic"`
+    Region              string    `json:"region,omitempty" mask:"none"`
+    ComplianceTags      []string  `json:"compliance_tags,omitempty" mask:"none"`
+    ProcessingTimestamp time.Time `json:"processing_timestamp,omitempty" mask:"none"`
+    ContractVersion     string    `json:"contract_version,omitempty" mask:"none"`
+}
+
+// Intermediate types
+type DecodedFDC3Event struct {
+    FDC3Event
+}
+
+type MaskedFDC3Event struct {
+    TradeID             string    `json:"trade_id"`
+    Symbol              string    `json:"symbol"`
+    Price               float64   `json:"price"`
+    Timestamp           time.Time `json:"timestamp"`
+    CustomerSSN         string    `json:"customer_ssn"`
+    CustomerEmail       string    `json:"customer_email"`
+    BankAccountNumber   string    `json:"bank_account_number"`
+    Region              string    `json:"region,omitempty"`
+    ComplianceTags      []string  `json:"compliance_tags,omitempty"`
+    ProcessingTimestamp time.Time `json:"processing_timestamp"`
+    ContractVersion     string    `json:"contract_version"`
+}
+
+// Step orchestration order
+var Steps = []string{
+    "DecodeCDMEvent",
+    "ValidateMandatoryFields",
+    "ApplyFieldMasking",
+    "TagComplianceMetadata",
+    "DetectSchemaDrift",
+    "RouteValidRecords",
+    "RouteInvalidRecords",
+}
+
+//
+// DEMO FUNCTIONS (pipeline steps)
+// Each function has the signature func(io.Reader, io.Writer) error
+//
+
+// DecodeCDMEvent parses raw Kafka events into FDC3Event structs
+func DecodeCDMEvent(r io.Reader, w io.Writer) error {
+    decoder := json.NewDecoder(r)
+    encoder := json.NewEncoder(w)
+
+    for decoder.More() {
+        var event FDC3Event
+        if err := decoder.Decode(&event); err != nil {
+            return err
+        }
+        encoder.Encode(event)
+    }
+    return nil
+}
+
+// ValidateMandatoryFields checks required fields on the decoded event
+func ValidateMandatoryFields(r io.Reader, w io.Writer) error {
+    decoder := json.NewDecoder(r)
+    encoder := json.NewEncoder(w)
+
+    for decoder.More() {
+        var event FDC3Event
+        if err := decoder.Decode(&event); err != nil {
+            return err
+        }
+        // Validate required fields
+        if event.TradeID == "" || event.Symbol == "" || event.Price <= 0 || event.Timestamp.IsZero() {
+            continue // Skip invalid record (could route to DLQ if wanted)
+        }
+        encoder.Encode(event)
+    }
+    return nil
+}
+
+// ApplyFieldMasking masks sensitive fields according to herd policies
+func ApplyFieldMasking(r io.Reader, w io.Writer) error {
+    decoder := json.NewDecoder(r)
+    encoder := json.NewEncoder(w)
+
+    for decoder.More() {
+        var event FDC3Event
+        if err := decoder.Decode(&event); err != nil {
+            return err
+        }
+
+        // Apply masking dynamically based on herd DefaultMaskingPolicy
+        masked := MaskedFDC3Event{
+            TradeID:             event.TradeID,
+            Symbol:              event.Symbol,
+            Price:               event.Price,
+            Timestamp:           event.Timestamp,
+            CustomerSSN:         applyMask(event.CustomerSSN),
+            CustomerEmail:       applyMask(event.CustomerEmail),
+            BankAccountNumber:   applyMask(event.BankAccountNumber),
+            Region:              event.Region,
+            ComplianceTags:      event.ComplianceTags,
+            ProcessingTimestamp: time.Now().UTC(),
+            ContractVersion:     ContractVersion,
+        }
+        encoder.Encode(masked)
+    }
+    return nil
+}
+
+// TagComplianceMetadata enriches records with compliance metadata
+func TagComplianceMetadata(r io.Reader, w io.Writer) error {
+    decoder := json.NewDecoder(r)
+    encoder := json.NewEncoder(w)
+
+    for decoder.More() {
+        var event MaskedFDC3Event
+        if err := decoder.Decode(&event); err != nil {
+            return err
+        }
+
+        if event.ComplianceTags == nil {
+            event.ComplianceTags = []string{}
+        }
+        if ComplianceLevel != "" {
+            event.ComplianceTags = append(event.ComplianceTags, ComplianceLevel)
+        }
+        encoder.Encode(event)
+    }
+    return nil
+}
+
+// DetectSchemaDrift compares event schema against expected contract schema
+func DetectSchemaDrift(r io.Reader, w io.Writer) error {
+    decoder := json.NewDecoder(r)
+    encoder := json.NewEncoder(w)
+
+    for decoder.More() {
+        var event MaskedFDC3Event
+        if err := decoder.Decode(&event); err != nil {
+            return err
+        }
+
+        if event.ContractVersion != ContractVersion {
+            // Optionally route to DLQ or flag record
+            continue // Skip if drift detected
+        }
+        encoder.Encode(event)
+    }
+    return nil
+}
+
+// RouteValidRecords writes valid records to main output
+func RouteValidRecords(r io.Reader, w io.Writer) error {
+    decoder := json.NewDecoder(r)
+    encoder := json.NewEncoder(w)
+
+    for decoder.More() {
+        var event MaskedFDC3Event
+        if err := decoder.Decode(&event); err != nil {
+            return err
+        }
+        encoder.Encode(event)
+    }
+    return nil
+}
+
+// RouteInvalidRecords writes invalid records to a DLQ (not implemented fully here)
+func RouteInvalidRecords(r io.Reader, w io.Writer) error {
+    return errors.New("RouteInvalidRecords not implemented (DLQ writing requires separate pipe or sink)")
+}
+
+//
+// Helper function for dynamic masking
+//
+func applyMask(value string) string {
+    if value == "" {
+        return value
+    }
+    // Very simple masking demo
+    switch DefaultMaskingPolicy {
+    case "redact":
+        return "[REDACTED]"
+    case "hash":
+        return "****" // Simulated
+    case "tokenize":
+        return "token-" + value[:4]
+    default:
+        return value // No masking
+    }
+}

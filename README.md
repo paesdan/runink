@@ -19,7 +19,13 @@
 
 ***Runink*** is an ambitious project aiming to define a **self-sufficient, distributed environment** specifically designed for orchestrating and executing data pipelines. Built natively in **Go** and leveraging core **Linux primitives** (cgroups, namespaces, `exec`), Runink acts as its own cluster resource manager and scheduler, providing a vertically integrated platform that replaces the need for separate systems like Slurm or complex Kubernetes setups for data workloads.
 
-Our goal is to provide a highly efficient, secure, and governance-aware platform with a **serverless execution model** for data engineers and scientists. Define your pipelines declaratively, and let Runink handle the distributed execution, isolation, resource management, security, lineage, and observability.
+Our goal is to provide a highly efficient, secure, and governance-aware platform with a **serverless execution model** for data engineers and scientists. Define your pipelines declaratively, and let Runink handle the distributed execution, isolation, resource management, security, lineage, and observability. It empowers you to:
+
+- Define and manage Herds (namespaces and quotas)
+- Write declarative DSL-based Features and Contracts
+- Compile Features into executable DAGs
+- Schedule isolated, secure slices with cgroups and namespaces
+- Maintain strong metadata lineage, governance, and compliance
 
 ## Core Principles
 
@@ -35,12 +41,11 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 <img src="./docs/images/components.png" width="580"/>
 
 
-* **Feature DSL:** Define complex pipelines using a human-readable, Gherkin-inspired `.dsl` file format.
 * **Integrated Orchestration:** A built-in Control Plane parses DSLs into DAGs and schedules distributed execution across managed nodes.
 * **Runi/Herd Execution Model:** Lightweight, isolated pipeline steps (`Runi Slices`) execute within resource-constrained cgroups and logically separated `Herd` namespaces for multi-tenancy and domain isolation.
-* **Data Governance & Lineage:** Automatic lineage tracking, integrated data catalog, quality rule management, and rich annotation support (incl. LLM outputs) via a central `Data Governance Service`.
-* **Built-in Security:** Native RBAC, OIDC integration, secrets management, mTLS for internal communication, and namespace-based isolation.
 * **Native Observability:** Components are instrumented for Prometheus metrics and structured logging out-of-the-box.
+* **Native Data Governance & Lineage:** Automatic lineage tracking, integrated data catalog, quality rule management, and rich annotation support (incl. LLM outputs) via a central `Data Governance Service`.
+* **Built-in Security:** Native RBAC, OIDC integration, secrets management, mTLS for internal communication, and namespace-based isolation.
 * **Schema Contracts:** Define and enforce data structure guarantees throughout the pipeline lifecycle.
 
 
@@ -57,6 +62,7 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
   </tr>
   <tr>
     <th>Runink</th>
+    <th>DAG compiler from DSL + Contracts</th>
   </tr>
 </table>
 <br>
@@ -67,6 +73,7 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
   </tr>
   <tr>
     <th>Runi</th>
+    <th>Agent lifecycle, slice scheduling and execution</th>
   </tr>
 </table>
 <br>
@@ -77,6 +84,7 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
   </tr>
   <tr>
     <th>Herd</th>
+    <th>Metadata governance, lineage tracking</th>
   </tr>  
 </table>
 <table>
@@ -86,6 +94,7 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
   </tr>
   <tr>
     <th>Barn</th>
+    <th>Herds, secrets, registry control plane</th>
   </tr>  
 </table>
 
@@ -96,21 +105,27 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 
 ```bash
 # Example (Conceptual)
-runi herd create my-data-herd
-runi test \
-  --scenario features/trade_cdm.dsl \
-  --golden golden/stream_and_enrich \
-  --herd finance
-runi apply \
+runi herd init my-data-herd
+runi compile \
   --scenario features/trade_cdm.dsl \
   --contract contracts/trade_cdm_multi.go \
-  --herd finance \
-  --out rendered/trade_cdm_dag.go
-runi run \
+  --out dags/trade_cdm_dag.go
+
+runi synth \ 
   --scenario features/trade_cdm.dsl \
-  --herd finance \
-  --input testdata/stream_and_enrich/input.json
+  --contract contracts/trade_cdm_multi.go \
+  --golden cdm_trade_input.json
+
+runi audit \ 
+  --scenario features/trade_cdm.dsl \
+  --contract contracts/trade_cdm_multi.go \
+  --golden cdm_trade_input.json
+
 runi status --runid RUN-20240424-XYZ --herd finance
+
+runi run --dag dags/trade_cdm_dag.go 
+
+
 ```
 
 Curious?

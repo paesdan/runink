@@ -1,0 +1,160 @@
+package dags
+
+import (
+	"context"
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+	"time"
+
+	"github.com/runink/pkg/slice"
+	"github.com/runink/pkg/raftstore"
+	"github.com/runink/pkg/badgerstore"
+	"github.com/runink/pkg/retrymanager"
+	"github.com/runink/pkg/observability"
+)
+
+// Record defines the type flowing between steps
+type Record struct {
+	Data     map[string]interface{}
+	Metadata map[string]string
+	RunID    string
+	SliceID  string
+	StepName string
+	Valid    bool
+}
+
+func TradeCDMValidationPipeline(cfg *PipelineConfig) *slice.DAG {
+	dag := slice.NewDAG(
+		cfg.Feature,
+		cfg.Scenario,
+		slice.WithLayer(cfg.ModuleLayer),
+		slice.WithWindow(cfg.Execution.Window),
+		slice.WithMetadata(map[string]string{
+			"contract_version":    cfg.Contract.Version,
+			"contract_schema_hash": cfg.Contract.SchemaHash,
+			"herd":                cfg.Herd.ID,
+			"classification":      cfg.Herd.Labels.Classification,
+			"compliance":          cfg.Herd.Labels.ComplianceCSV(),
+			"slo_target":          cfg.Execution.SLOTarget,
+			"lineage_tracking":    cfg.Herd.Labels.LineageTracking,
+		}),
+	)
+
+	ticker := time.NewTicker(cfg.Execution.ParseWindowDuration())
+
+	go func() {
+		for range ticker.C {
+			runID := observability.NewRunID()
+			ctx := observability.ContextWithRunMetadata(runID)
+
+			// Setup typed channels between steps
+			sourceChan := make(chan *Record, 1000)
+			decodeChan := make(chan *Record, 1000)
+			validateChan := make(chan *Record, 1000)
+			maskChan := make(chan *Record, 1000)
+			tagChan := make(chan *Record, 1000)
+			finalChan := make(chan *Record, 1000)
+
+			// Build DAG execution
+			go startSlice(ctx, "DecodeCDMEvent", sourceChan, decodeChan, DecodeCDMEvent)
+			go startSlice(ctx, "ValidateMandatoryFields", decodeChan, validateChan, ValidateMandatoryFields)
+			go startSlice(ctx, "ApplyFieldMasking", validateChan, maskChan, ApplyFieldMasking)
+			go startSlice(ctx, "TagComplianceMetadata", maskChan, tagChan, TagComplianceMetadata)
+			go startSlice(ctx, "DetectSchemaDrift", tagChan, finalChan, DetectSchemaDrift)
+
+			// Sink routing
+			go routeToSinks(ctx, finalChan, cfg)
+
+			// Source ingestion
+			go ingestKafkaRecords(ctx, sourceChan)
+		}
+	}()
+
+	return dag
+}
+
+//
+// --- Helpers ---
+//
+
+// Ingest simulated Kafka records
+func ingestKafkaRecords(ctx context.Context, outputChan chan<- *Record) {
+	for i := 0; i < 100; i++ {
+		rec := &Record{
+			Data: map[string]interface{}{"trade_id": fmt.Sprintf("T%04d", i)},
+			RunID: observability.GetRunID(ctx),
+		}
+		rec.SetRecordIDFromNaturalKey("trade_id")
+		outputChan <- rec
+	}
+	close(outputChan)
+}
+
+// Start a slice step with retry, audit, and checkpointing
+func startSlice(ctx context.Context, stepName string, inputChan <-chan *Record, outputChan chan<- *Record, fn func(context.Context, *Record) (*Record, error)) {
+	runID := observability.GetRunID(ctx)
+
+	for rec := range inputChan {
+		rec.StepName = stepName
+		rec.SliceID = ComputeSliceID(runID, rec.RecordID(), stepName)
+
+		var processed *Record
+		err := retrymanager.Retry(func() error {
+			var innerErr error
+			processed, innerErr = fn(ctx, rec)
+			return innerErr
+		})
+		if err != nil {
+			observability.LogSliceFailure(ctx, rec, err)
+			continue
+		}
+
+		if processed != nil {
+			outputChan <- processed
+
+			if processed.Metadata != nil && processed.Metadata["checkpoint"] == "true" {
+				raftstore.LogEvent(ctx, runID, stepName, processed.Metadata)
+				badgerstore.SaveKV(runID+"/"+processed.SliceID, processed.Metadata)
+			}
+		}
+	}
+}
+
+// Route records based on validity
+func routeToSinks(ctx context.Context, finalChan <-chan *Record, cfg *PipelineConfig) {
+	for rec := range finalChan {
+		if rec.Valid {
+			observability.EmitToSink(ctx, rec, cfg.Sinks.ValidSinkEnv)
+		} else {
+			observability.EmitToSink(ctx, rec, cfg.Sinks.InvalidSinkEnv)
+		}
+	}
+}
+
+// Compute deterministic SliceID = SHA256(RunID + RecordID + StepName)
+func ComputeSliceID(runID, recordID, stepName string) string {
+	h := sha256.New()
+	h.Write([]byte(runID))
+	h.Write([]byte(recordID))
+	h.Write([]byte(stepName))
+	return hex.EncodeToString(h.Sum(nil))
+}
+
+// Set RecordID from natural key (eg. trade_id)
+func (r *Record) SetRecordIDFromNaturalKey(key string) {
+	if val, ok := r.Data[key]; ok {
+		if r.Metadata == nil {
+			r.Metadata = make(map[string]string)
+		}
+		r.Metadata["record_id"] = fmt.Sprintf("%v", val)
+	}
+}
+
+// Get RecordID
+func (r *Record) RecordID() string {
+	if r.Metadata != nil {
+		return r.Metadata["record_id"]
+	}
+	return observability.NewRandomID()
+}

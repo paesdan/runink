@@ -10,14 +10,14 @@ This reference describes all available commands, grouped by capability.
 
 | Command | Description |
 |--------|-------------|
-| `runi init [project-name]` | Scaffold a new workspace with starter contracts, features, CI config |
+| `runi herd init [project-name]` | Scaffold a new workspace with starter contracts, features, CI config |
 | `runi compile --scenario <file>` | Generate Go pipeline code from `.dsl` files |
 | `runi run --scenario <file> --contract <contract.json>` | Run pipelines locally or remotely |
 | `runi watch --scenario <file>` | Auto-compile & re-run scenario on save |
 
 ---
 
-## 📑 Schema & Contract Management
+## 📁 Schema & Contract Management
 
 | Command | Description |
 |--------|-------------|
@@ -25,6 +25,9 @@ This reference describes all available commands, grouped by capability.
 | `runi contract diff --old v1.json --new v2.json` | Show schema drift between versions |
 | `runi contract rollback` | Revert to previous contract version |
 | `runi contract history --name <contract>` | Show all versions and changelog entries |
+| `runi contract validate --file <file>` | Validate a file against a contract |
+| `runi contract catalog` | Create an index of all contracts in the repo |
+| `runi contract hash` | Generate contract hash for versioning |
 
 ---
 
@@ -55,6 +58,7 @@ This reference describes all available commands, grouped by capability.
 |--------|-------------|
 | `runi lineage --run-id <uuid>` | Show DAG lineage for a run |
 | `runi lineage track --source A --sink B` | Manually link lineage metadata |
+| `runi lineage graph --out file.dot` | Export lineage graph in DOT format |
 | `runi metadata get --key <name>` | Retrieve stored metadata for a step |
 | `runi metadata annotate --key <name>` | Attach annotation to pipeline metadata |
 | `runi logs --run-id <uuid>` | View logs for a specific run |
@@ -72,7 +76,37 @@ This reference describes all available commands, grouped by capability.
 
 ---
 
-## 🔄 Introspection & Visualization
+## 💪 Control Plane & Agents
+
+| Command | Description |
+|--------|-------------|
+| `runi herdctl create` | Create a new Herd (namespace + quotas + policies) |
+| `runi herdctl delete` | Delete a Herd |
+| `runi herdctl update` | Update Herd quotas, RBAC, metadata |
+| `runi herdctl list` | List all Herds and resource states |
+| `runi herdctl quota set <herd>` | Update CPU/mem quotas live |
+| `runi herdctl lineage <herd>` | View lineage graphs scoped to a Herd |
+| `runi agentctl list` | List active Runi agents, resource usage, labels |
+| `runi agentctl status <agent>` | Detailed agent status (health, registered slices, metrics) |
+| `runi agentctl drain <agent>` | Mark agent as unschedulable (cordon) |
+| `runi agentctl register` | Manually register agent (optional bootstrap) |
+| `runi agentctl cordon <agent>` | Prevent slice scheduling |
+
+---
+
+## 🌐 Worker Slice Management
+
+| Command | Description |
+|--------|-------------|
+| `runi slicectl list --herd <id>` | List all active slices for a Herd |
+| `runi slicectl logs <slice-id>` | Fetch logs for a given slice |
+| `runi slicectl cancel <slice-id>` | Cancel a running slice gracefully |
+| `runi slicectl metrics <slice-id>` | Show real-time metrics for a slice |
+| `runi slicectl promote <slice-id>` | Checkpoint a slice mid-run |
+
+---
+
+## 🔀 Introspection & Visualization
 
 | Command | Description |
 |--------|-------------|
@@ -92,7 +126,7 @@ This reference describes all available commands, grouped by capability.
 
 ---
 
-## 🧰 Dev Tools & Generators
+## 🛠️ Dev Tools & Generators
 
 | Command | Description |
 |--------|-------------|
@@ -103,7 +137,7 @@ This reference describes all available commands, grouped by capability.
 
 ---
 
-## 🧩 Plugins & Extensions
+## 🧹 Plugins & Extensions
 
 | Command | Description |
 |--------|-------------|
@@ -124,7 +158,7 @@ This reference describes all available commands, grouped by capability.
 
 ---
 
-## 🔄 Runtime Lifecycle
+## 📅 Runtime Lifecycle
 
 | Command | Description |
 |--------|-------------|
@@ -154,7 +188,7 @@ This reference describes all available commands, grouped by capability.
 
 ---
 
-## 📅 Event-Based Execution
+## 🗓 Event-Based Execution
 
 | Command | Description |
 |--------|-------------|
@@ -164,7 +198,7 @@ This reference describes all available commands, grouped by capability.
 
 ---
 
-## 🔃 Pipeline & Contract Lifecycle
+## 🔄 Pipeline & Contract Lifecycle
 
 | Command | Description |
 |--------|-------------|
@@ -174,11 +208,10 @@ This reference describes all available commands, grouped by capability.
 
 ---
 
-## 🧠 Metadata Graph & Semantic Search
+## 🧬 Metadata Graph & Semantic Search
 
 | Command | Description |
 |--------|-------------|
-| `runi lineage graph --out file.dot` | Export lineage graph in DOT format |
 | `runi knowledge export --format turtle` | Export contract and DAG metadata as RDF |
 | `runi query lineage` | Run SQL-style queries across lineage metadata |
 
@@ -198,3 +231,4 @@ This reference describes all available commands, grouped by capability.
 > 💬 Use `runi <command> --help` for flags, options, and examples.
 >  
 > Runink's CLI gives you a full stack data engine in your terminal — from contracts to clusters, from `.dsl` to full observability.
+

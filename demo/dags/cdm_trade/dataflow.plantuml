@@ -1,0 +1,58 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Courier
+
+title TradeCDMValidationPipeline DAG (Runink Orchestration)
+
+package "Herd Control Plane" {
+    [CLI / UI] --> [API Server (gRPC/TLS)]
+    [API Server (gRPC/TLS)] --> [Barn (Cluster State Store)]
+    [Barn (Raft Layer + Badger WAL)]
+}
+
+[API Server (gRPC/TLS)] --> [Agent-1 (Runink Worker)]
+
+package "Agent-1 Slice Execution" {
+    [DAG Loaded] --> [Agent.RunDAG()]
+    [Agent.RunDAG()] --> [RunStep(Node)]
+
+    [RunStep(Node)] --> [Sandbox.Start()]
+    [Sandbox.Start()] --> [Execute Step Action]
+
+    [Execute Step Action] --> [Emit Lineage]
+    [Execute Step Action] --> [Update SLA Metrics]
+    [Emit Lineage] --> [Cleanup Sandbox]
+    [Update SLA Metrics] --> [Cleanup Sandbox]
+}
+
+'--- DAG Channel Flow between slices
+[KafkaSource (Source)] --> [DecodeCDMEvent (Step)]
+[DecodeCDMEvent (Step)] --> [ValidateMandatoryFields (Step)]
+[ValidateMandatoryFields (Step)] --> [ApplyFieldMasking (Step)]
+[ApplyFieldMasking (Step)] --> [TagComplianceMetadata (Step)]
+[TagComplianceMetadata (Step)] --> [DetectSchemaDrift (Step)]
+
+'--- Routing
+[DetectSchemaDrift (Step)] --> [LoadValidTrade (Sink)]: if record.valid == true
+[DetectSchemaDrift (Step)] --> [LoadInvalidTrade (Sink)]: if record.valid == false
+
+'--- Lineage and Metrics Taps
+[DecodeCDMEvent (Step)] ..> [Emit Lineage] : checkpoint
+[ValidateMandatoryFields (Step)] ..> [Emit Lineage] : checkpoint
+[ApplyFieldMasking (Step)] ..> [Emit Lineage] : checkpoint
+[TagComplianceMetadata (Step)] ..> [Emit Lineage] : checkpoint
+[DetectSchemaDrift (Step)] ..> [Emit Lineage] : checkpoint
+
+[DecodeCDMEvent (Step)] ..> [Update SLA Metrics]
+[ValidateMandatoryFields (Step)] ..> [Update SLA Metrics]
+[ApplyFieldMasking (Step)] ..> [Update SLA Metrics]
+[TagComplianceMetadata (Step)] ..> [Update SLA Metrics]
+[DetectSchemaDrift (Step)] ..> [Update SLA Metrics]
+
+'--- Data Sources and Persistence
+[Emit Lineage] --> [Barn (Cluster State Store)]
+[Update SLA Metrics] --> [Barn (Cluster State Store)]
+
+@enduml

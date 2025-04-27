@@ -1,0 +1,134 @@
+# ======================================
+# Herd Metadata
+# ======================================
+[herd]
+id = "finance"
+domain = "finance"
+description = "Finance herd for transaction pipelines, KYC validation, trade enrichment, governed under strict compliance (SOX, GDPR, PCI-DSS)."
+
+# ======================================
+# Labels
+# ======================================
+[herd.labels]
+classification = "pii"
+compliance = ["SOX", "GDPR", "PCI-DSS"]
+department = "FinanceOps"
+cost_center = "FIN-ETL-001"
+security_tier = "high"
+data_sensitivity = "restricted"
+slo = "99.95%"
+governance_tier = "platinum"
+lineage_tracking = "full"
+drift_detection = "strict"
+tls_enforced = true
+
+# ======================================
+# Resource Quotas
+# ======================================
+[herd.resource_quotas]
+slices_max = 500
+cpu_limit = "20000m"
+memory_limit = "64Gi"
+ephemeral_storage = "100Gi"
+gpu_limit = 4
+slice_cpu_min = "500m"
+slice_memory_min = "1Gi"
+
+# ======================================
+# RBAC Policies
+# ======================================
+[[herd.rbac_policies]]
+role = "finance-analyst"
+actions = ["read:contracts", "read:pipelines", "read:lineage"]
+
+[[herd.rbac_policies]]
+role = "finance-admin"
+actions = ["write:contracts", "write:pipelines", "execute:pipelines", "manage:herd", "access:secrets"]
+
+# ======================================
+# Secrets Scope
+# ======================================
+[herd.secrets_scope]
+allow_cross_herd = false
+rotation_policy = "90d"
+encryption = "AES256"
+minimum_tls_version = "TLS1.2"
+approved_key_signers = ["finance-signer@trust.corp", "root-ca@corp.com"]
+token_lifetime_seconds = 3600
+
+# ======================================
+# Compliance Requirements
+# ======================================
+[herd.compliance_requirements]
+encryption_at_rest = true
+encryption_in_transit = true
+audit_logging_enabled = true
+external_auditor_ready = true
+automatic_snapshot_on_contract_change = true
+approved_storage_backends = ["s3://compliance-archive", "snowflake://audit_finance_db"]
+
+# ======================================
+# Observability Hooks
+# ======================================
+[herd.observability_hooks]
+metrics_namespace = "runi_finance"
+logs_tag = "finance"
+tracing_sample_rate = 1.0
+
+# ======================================
+# Default Contract Policy
+# ======================================
+[herd.default_contract_policy]
+enforce_strict_mode = true
+allowed_drift_types = []
+block_on_drift = true
+auto_snapshot_on_deploy = true
+golden_baseline_required = true
+schema_approval_flow_required = true
+
+# ======================================
+# Masking Policies
+# ======================================
+[herd.masking_policies]
+default_masking = "hash"
+
+[[herd.masking_policies.field_level_overrides]]
+field = "customer_ssn"
+mask_type = "redact"
+
+[[herd.masking_policies.field_level_overrides]]
+field = "customer_email"
+mask_type = "tokenize"
+
+[[herd.masking_policies.field_level_overrides]]
+field = "bank_account_number"
+mask_type = "hash"
+
+[[herd.masking_policies.field_level_overrides]]
+field = "credit_card_number"
+mask_type = "hash"
+
+# ======================================
+# Runtime Isolation Settings
+# ======================================
+[herd.runtime_isolation]
+ephemeral_user_namespace = true
+pid_namespace_per_slice = true
+net_namespace_per_slice = true
+mount_namespace_per_slice = true
+
+# ======================================
+# Retention Policy
+# ======================================
+[herd.retention_policy]
+lineage_retention_days = 365
+log_retention_days = 180
+snapshot_retention_days = 730
+
+# ======================================
+# Audit Policy
+# ======================================
+[herd.audit_policy]
+critical_event_alerting = true
+signed_audit_trails = true
+audit_trail_storage = "s3://compliance-audits"

@@ -1,119 +1,95 @@
 # 🤝 Contributing to Runink
 
-Welcome, and thank you for your interest in contributing to **Runink** — the data platform that makes pipelines safe, expressive, and composable. Whether you're fixing bugs, improving documentation, writing tests, or building new features, your help makes Runink better for everyone.
+Welcome! First off, thank you for considering contributing to **Runink**. We deeply appreciate your support and effort to improve our project.
 
-We’re excited to have you here! 🚀
+This document will guide you through the process of contributing code, filing issues, suggesting features, and participating in the Runink community.
 
 ---
 
-## 🧭 Quick Start
+## 📜 Code of Conduct
 
-1. **Fork the repository**
-2. **Clone your fork**
+We expect everyone participating to adhere to our [Code of Conduct](CODE_OF_CONDUCT.md) (to be created). Respect and kindness are the foundation.
+
+---
+
+## 🛠️ How to Contribute
+
+### 1. Fork the Repo
+
+Use GitHub's "Fork" button to create a personal copy of the repository.
+
+### 2. Clone Your Fork
 
 ```bash
 git clone https://github.com/your-username/runink.git
 cd runink
 ```
 
-3. **Install Go (1.21+)** and required tools
-4. **Set up your environment**
+### 3. Create a New Branch
+
+Use a clear branch naming convention:
 
 ```bash
-make install-tools
-make setup
+git checkout -b feature/short-description
+# or
+git checkout -b fix/bug-description
 ```
 
-5. **Start hacking** 🚧  
-Use the CLI or REPL to run tests and iterate locally:
+### 4. Make Your Changes
+
+Follow our coding guidelines:
+- Write idiomatic Go (gofmt, golint).
+- Keep PRs small and focused.
+- Update or add tests for your changes.
+- Update documentation (`docs/`) if applicable.
+
+### 5. Test Before You Push
+
+Run all tests:
 
 ```bash
-runink init test-pipeline
-runink compile
-runink test
-```
-
----
-
-## 📂 Project Structure
-
-Here's where to plug in:
-
-| Folder | Purpose |
-|--------|---------|
-| `internal/` | Core Go logic — CLI, pipeline engine, agents |
-| `features/` | DSL scenarios (`.dsl` files) |
-| `contracts/` | Data contracts & golden files |
-| `docs/` | Documentation and guides |
-| `deploy/` | Generated orchestration artifacts |
-| `.github/` | CI configs, issue templates, actions |
-
----
-
-## 🛠️ How to Contribute
-
-### 🐞 Report Bugs
-
-- Use [GitHub Issues](https://github.com/runink/runink/issues)
-- Please include:
-  - Steps to reproduce
-  - Expected vs. actual behavior
-  - Runink version (`runink version`)
-  - OS / system info
-
-### 🌟 Suggest Features
-
-We love ideas! Start a discussion or open a feature request issue. Try to include:
-- A clear problem statement
-- Example DSL or contract (if relevant)
-- Why this helps the community
-
-### 🧑‍💻 Submit Code
-
-#### 1. Create a new branch
-
-```bash
-git checkout -b feat/my-awesome-change
-```
-
-#### 2. Make your changes  
-Follow existing conventions. Run tests (`make test`) before committing.
-
-#### 3. Format and lint
-
-```bash
-make fmt
 make lint
+make test
 ```
 
-#### 4. Commit and push
+### 6. Push and Open a Pull Request
+
+Push to your fork and open a Pull Request against the `main` branch.
 
 ```bash
-git commit -m "feat(dsl): add support for new step type"
-git push origin feat/my-awesome-change
+git push origin feature/short-description
 ```
 
-#### 5. Open a Pull Request
-
-- Keep PRs focused and well-scoped
-- Include tests and docs if relevant
-- Use conventional commit messages (`feat:`, `fix:`, `chore:`, etc.)
+On GitHub, create a new Pull Request and fill in the template (title, description, related issues).
 
 ---
 
-## 🧪 Testing & Validation
+## 📋 Development Guidelines
 
-- Use golden files (`contracts/testdata/`) for regression testing
-- Run `runink test` to validate scenarios
-- Use the REPL for quick exploration and debugging
-- Ensure your PR passes CI
+- **CLI Commands:** Place new commands inside their respective domain folder (`barnctl`, `buildctl`, `herdctl`, `runictl`).
+- **Testing:** Add unit tests for CLI commands, helpers, validators.
+- **Logging:** Use structured logging where needed.
+- **Security:** Always consider security (no plaintext secrets, minimal privilege).
+- **Performance:** Avoid premature optimization, but don't introduce obvious inefficiencies.
 
 ---
 
-## 🔐 Security
+## 🔍 Reporting Bugs
 
-If you discover a security vulnerability, **please do not open a public issue.**  
+- Search existing issues first.
+- File a [new issue](https://github.com/your-username/runink/issues/new) with clear reproduction steps.
+- Provide logs, stack traces, and your environment (OS, Go version).
+
+> If you discover a security vulnerability, **please do not open a public issue.**  
 Instead, email us at [paes@dashie.ink](mailto:paes@dashie.ink).
+
+
+---
+
+## 🚀 Suggesting Features
+
+- Open an Issue labeled `enhancement`.
+- Explain your use case and how it aligns with Runink's vision.
 
 ---
 
@@ -132,7 +108,14 @@ Please read our [Code of Conduct](./CODE_OF_CONDUCT.md) before contributing.
 - Follow our roadmap in [`docs/roadmap.md`](./docs/roadmap.md)
 
 ---
+## 📅 Regular Updates
 
-Thanks for helping us build the future of safe, expressive, and reliable data pipelines. We can’t wait to see what you contribute! 🙌
+We sync main with active development regularly. Expect fast iteration and reviews.
+
+If you have any questions, feel free to open an issue or discussion!
+
+Thanks for being part of the **Runink** Herd and for helping us build the future of safe, expressive, and reliable data pipelines.🐑  
+
+We can’t wait to see what you contribute! 🙌
 
 — The Runink Team
