@@ -1,0 +1,25 @@
+#!/bin/sh
+
+set -e
+
+mkdir -p /var/log/runink/herd
+
+# Wait for barn to be ready
+while ! ss -ltn sport = :8080 | grep -q LISTEN; do
+  echo "$(date +%s) [WAIT] barn not ready, waiting..." >> /var/log/runink/herd/startup.log
+  sleep 2
+done
+
+# Launch herd orchestrator with Go Ticker for DAG optimization/scheduling
+exec /usr/local/bin/isolated_run.sh /srv/runink /bin/herd \
+    --config=/etc/herd.conf \
+    --barn-endpoint=127.0.0.1:8080 \
+    --resource-limits="/etc/runink/herd_boundaries.toml" \
+    --log-dir=/var/log/runink/herd \
+    --ticker-enabled \
+    --ticker-interval=5s \
+    --ticker-queue-size=1000 \
+    --ticker-queue-threshold=0.8 \
+    --raft-log-compaction-interval=5s \
+    --raft-log-compaction-threshold=0.8 \
+    --raft-log-compaction-queue-size=1000 \

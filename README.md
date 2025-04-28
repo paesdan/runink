@@ -17,7 +17,7 @@
 <br>
 <table>
 
-***Runink*** is an ambitious project aiming to define a **self-sufficient, distributed environment** specifically designed for orchestrating and executing data pipelines. Built natively in **Go** and leveraging core **Linux primitives** (cgroups, namespaces, `exec`), Runink acts as its own cluster resource manager and scheduler, providing a vertically integrated platform that replaces the need for separate systems like Slurm or complex Kubernetes setups for data workloads.
+***Runink*** is an ambitious project aiming to define a **self-sufficient, distributed environment** specifically designed for orchestrating and executing data pipelines. Built natively in **Go** and leveraging core **Linux primitives** (cgroups, namespaces, `exec`), Runink acts as its own cluster resource manager and scheduler, providing a vertically integrated platform that replaces the need for separate systems like Slurm or complex Kubernetes setups for data workloads. 
 
 Our goal is to provide a highly efficient, secure, and governance-aware platform with a **serverless execution model** for data engineers and scientists. Define your pipelines declaratively, and let Runink handle the distributed execution, isolation, resource management, security, lineage, and observability. It empowers you to:
 
@@ -26,6 +26,8 @@ Our goal is to provide a highly efficient, secure, and governance-aware platform
 - Compile Features into executable DAGs
 - Schedule isolated, secure slices with cgroups and namespaces
 - Maintain strong metadata lineage, governance, and compliance
+
+**Runink slices run like fast, secure micro-VMs — written in Go, isolated with Linux, coordinated by Raft.** This gives you the **speed of compiled code**, the **safety of contracts**, and the **audibility of Git.**
 
 ## Core Principles
 

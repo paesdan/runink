@@ -1,0 +1,66 @@
+@startuml
+
+!define RECTANGLE class
+skinparam rectangleBorderThickness 1
+skinparam defaultTextAlignment center
+skinparam linetype ortho
+
+actor Developer
+
+package "Runink Global Control Plane (HA Setup)" {
+
+  rectangle "API Server x3\n- AuthN/AuthZ\n- Herd Routing\n- TLS gRPC" as GlobalAPI
+  rectangle "Herd Directory\n- Maps Herds to Raft Groups\n- Metadata Routing" as HerdDirectory
+
+}
+
+package "Per-Herd Logical Partition (Finance Herd)" {
+  rectangle "Finance Raft Group (5 Nodes)\n(etcd-io/raft)" as FinanceRaft
+  rectangle "Finance Barn (KV Store)\n- BadgerDB (Local)" as FinanceBarn
+  rectangle "Finance Scheduler (Leader)\n- DAG Planning\n- Placement Decisions" as FinanceScheduler
+  rectangle "Finance Governance Service\n- Lineage\n- Quality\n- Contracts" as FinanceGovernance
+  rectangle "Finance Secrets Manager\n- Raft-backed Secret Storage" as FinanceSecrets
+}
+
+package "Per-Herd Logical Partition (Analytics Herd)" {
+  rectangle "Analytics Raft Group (5 Nodes)\n(etcd-io/raft)" as AnalyticsRaft
+  rectangle "Analytics Barn (KV Store)\n- BadgerDB (Local)" as AnalyticsBarn
+  rectangle "Analytics Scheduler (Leader)\n- DAG Planning\n- Placement Decisions" as AnalyticsScheduler
+  rectangle "Analytics Governance Service\n- Lineage\n- Quality\n- Contracts" as AnalyticsGovernance
+  rectangle "Analytics Secrets Manager\n- Raft-backed Secret Storage" as AnalyticsSecrets
+}
+
+package "Worker Nodes Cluster" {
+  rectangle "Runi Agent x100\n- Node Registration\n- Slice Management\n- Metrics Collection" as RuniAgent
+  rectangle "Runi Slice (Ephemeral Container)\n- Herd Namespaced\n- Config Loaded\n- Secrets Injected" as RuniSlice
+}
+
+Developer --> GlobalAPI : CLI/API Requests (TLS)
+GlobalAPI --> HerdDirectory : Resolve Herd Assignment
+GlobalAPI --> FinanceScheduler : Finance Pipelines
+GlobalAPI --> AnalyticsScheduler : Analytics Pipelines
+
+FinanceScheduler --> FinanceBarn : DAG and Placement Reads
+FinanceGovernance --> FinanceBarn : Metadata/Lineage Writes
+FinanceSecrets --> FinanceBarn : Secrets CRUD
+FinanceBarn --> FinanceRaft : Log Replication (5 Nodes)
+
+AnalyticsScheduler --> AnalyticsBarn : DAG and Placement Reads
+AnalyticsGovernance --> AnalyticsBarn : Metadata/Lineage Writes
+AnalyticsSecrets --> AnalyticsBarn : Secrets CRUD
+AnalyticsBarn --> AnalyticsRaft : Log Replication (5 Nodes)
+
+FinanceScheduler --> RuniAgent : Dispatch Finance Slices
+AnalyticsScheduler --> RuniAgent : Dispatch Analytics Slices
+
+RuniAgent --> RuniSlice : Launch with Herd Isolation (Namespaces, cgroups)
+RuniAgent --> FinanceSecrets : Fetch ConfigMap-Like Secrets for Slices
+RuniAgent --> AnalyticsSecrets : Fetch ConfigMap-Like Secrets for Slices
+
+RuniSlice --> FinanceGovernance : Emit Lineage Events
+RuniSlice --> AnalyticsGovernance : Emit Lineage Events
+
+RuniSlice --> RuniAgent : Expose Service Port
+RuniAgent --> Developer : Handle Port-Forwarding for Slice Access (like K8s svc)
+
+@enduml

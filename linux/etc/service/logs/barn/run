@@ -1,0 +1,38 @@
+#!/bin/sh
+
+set -e
+
+# Load external herd boundaries
+. /etc/runink/herd_boundaries.sh
+
+mkdir -p /var/log/runink/barn
+mkdir -p /var/barn/active
+mountpoint -q /var/barn/active || mount -t tmpfs -o size=512M tmpfs /var/barn/active
+mkdir -p /var/barn/backups
+
+# Healthcheck for barn
+(
+  while true; do
+    if ! ss -ltn sport = :8080 | grep -q LISTEN; then
+      echo "$(date +%s) [HEALTH] barn not healthy" >> /var/log/runink/barn/health.log
+      sv restart barn
+    fi
+    sleep 10
+  done
+) &
+
+# Launch barn with internal Ticker for snapshot compaction
+exec /usr/local/bin/isolated_run.sh /srv/runink /bin/barn \
+    --store=/var/barn/active \
+    --snapshot-dir=/var/barn/backups \
+    --node-id=$(hostname) \
+    --log-dir=/logs/runi \
+    --raft-peers=/etc/barn/raft-peers.txt \
+    --log-dir=/var/log/runink/barn \
+    --ticker-enabled \
+    --ticker-interval=5s \
+    --ticker-queue-size=1000 \
+    --ticker-queue-threshold=0.8 \
+    --raft-log-compaction-interval=5s \
+    --raft-log-compaction-threshold=0.8 \
+    --raft-log-compaction-queue-size=1000 

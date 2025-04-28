@@ -1,0 +1,8 @@
+#!/bin/sh
+# On shutdown, snapshot the live db to backups
+
+mkdir -p /var/herd/backups
+chroot /srv/runink /bin/herd snapshot --out /var/herd/backups/herd-final-$(date +%s).bak
+
+# Exit cleanly
+exit 0

@@ -8,7 +8,7 @@ Scenario: Validate and Enrich Incoming Trade Events
     slo: "99.95%"
     classification: "restricted"
     compliance: ["SOX", "GDPR", "PCI-DSS"]
-    contract: "contracts/cdm_trade/fdc3events.json"
+    contract: "cdm_trade/fdc3events.contract"
     contract_version: "1.0.0"
 
   Given source stream "Trade Events Stream" from "kafka://topics.trade_events"
@@ -29,8 +29,8 @@ Scenario: Validate and Enrich Incoming Trade Events
     - All masked fields must pass redaction/tokenization checks
 
   GoldenTest:
-    input: "golden/cdm_trade/fdc3events.input"
-    output: "golden/cdm_trade/data/fdc3events.validated.golden"
+    input: "cdm_trade/fdc3events.input"
+    output: "cdm_trade/data/fdc3events.validated.golden"
     validation: strict
 
   Notifications:

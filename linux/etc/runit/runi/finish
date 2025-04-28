@@ -1,0 +1,8 @@
+#!/bin/sh
+# On shutdown, snapshot the live db to backups
+
+mkdir -p /var/runi/backups
+chroot /srv/runink /bin/runi snapshot --out /var/runi/backups/runi-final-$(date +%s).bak
+
+# Exit cleanly
+exit 0

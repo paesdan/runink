@@ -1,0 +1,8 @@
+#!/bin/sh
+# On shutdown, snapshot the live db to backups
+
+mkdir -p /var/barn/backups
+chroot /srv/runink /bin/barn snapshot --out /var/barn/backups/barn-final-$(date +%s).bak
+
+# Exit cleanly
+exit 0

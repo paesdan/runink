@@ -17,6 +17,73 @@
 
 ---
 
+## 1. MapReduce vs. RDD vs. Raft for Data Pipelines
+
+---
+
+### 1.1 Architecture & Paradigm
+
+| Aspect | MapReduce | RDD | Raft (Runink model) |
+|:---|:---|:---|:---|
+| **Origin** | Google (2004) | Spark (2010) | Raft (2013) adapted for distributed control |
+| **Execution Model** | Batch, two-stage (Map → Reduce) | In-memory DAGs of transformations | Real-time coordination of distributed nodes |
+| **Consistency Model** | Eventual (job outputs persisted) | Best effort (job outputs in memory, lineage for recovery) | Strong consistency (N/2+1 consensus) |
+| **Primary Use** | Large batch analytics | Interactive, iterative analytics | Distributed metadata/state management for pipelines |
+| **Fault Tolerance** | Output checkpointing | Lineage-based recomputation | Log replication and state machine replication |
+
+---
+
+### 1.2. Performance & Efficiency
+
+| Aspect | MapReduce | RDD | Raft (Runink) |
+|:---|:---|:---|:---|
+| **Cold Start Time** | High (JVM startup, slot allocation) | Medium (Spark cluster overhead) | Low (Go processes, native scheduling) |
+| **Memory Use** | Disk-heavy | Memory-heavy (RDD caching) | Lightweight (control metadata, not bulk data) |
+| **I/O Overhead** | Heavy disk I/O (HDFS reads/writes) | Network/memory optimized, but needs enough RAM | Minimal (only metadata replication) |
+| **Pipeline Complexity** | Requires multiple jobs for DAGs | Natural DAG execution | Direct DAG compilation from DSLs (Runink) |
+
+---
+
+### 1.3. Data Governance and Lineage
+
+| Aspect | MapReduce | RDD | Raft (Runink) |
+|:---|:---|:---|:---|
+| **Built-in Lineage** | No (external) | Yes (RDD lineage graph) | Yes (atomic commit of contracts, steps, runs) |
+| **Governance APIs** | Manual (logs, job output) | Partial (Spark listeners) | Native (contracts, lineage logs, per-slice metadata) |
+| **Auditability** | Hard to reconstruct | Possible with effort | Native per-run audit logs, Raft-signed events |
+
+---
+
+### 1.4. Fault Tolerance and Recovery
+
+| Aspect | MapReduce | RDD | Raft (Runink) |
+|:---|:---|:---|:---|
+| **Recovery Mechanism** | Re-run failed jobs | Recompute from lineage | Replay committed log entries |
+| **Failure Impact** | Full-stage re-execution | Depends on lost partitions | Minimal if quorum is maintained |
+| **Availability Guarantee** | None | Partial (driver failure = job loss) | Strong (as long as majority nodes are alive) |
+
+---
+
+### 1.5. Security and Isolation
+
+| Aspect | MapReduce | RDD | Raft (Runink) |
+|:---|:---|:---|:---|
+| **Authentication** | Optional | Optional | Mandatory (OIDC, RBAC) |
+| **Secrets Management** | Ad hoc | Ad hoc | Native, Raft-backed, scoped by Herds |
+| **Multi-Tenancy** | None | None | Herd isolation (namespace + cgroup enforcement) |
+
+---
+
+### 1.6 Real case scenario example
+
+**Imagine a critical pipeline for trade settlement**:
+
+- **MapReduce** would force every job to write to disk between stages — slow and painful for debugging.
+- **RDD** would speed things up but require heavy RAM and still risk full job loss if the driver fails.
+- **Raft (Runink)** keeps every contract, every transformation, every secret **atomically committed** and recoverable — **even if a node crashes mid-run**, the system can **resume from the last committed stage** safely.
+
+---
+
 ## 2. Raft Advantages for Distributed Coordination
 
 **Runink:**  
@@ -294,7 +361,14 @@ This makes it:
 
 ---
 
-## 🧠 Summary: Go, Pipes, Namespaces, Raft = Data-Native Compute
+## 🧠 Conclusion: Go + Linux internals + Raft = Data-Native Compute
+
+Runink leverages **Raft consensus not just for fault tolerance, but as a foundational architectural choice**. It eliminates whole categories of orchestration complexity, state drift, and configuration mismatches by building from first principles — while offering **a single runtime that natively understands pipelines, contracts, lineage, and compute**.
+
+If you’re designing a modern data platform — especially one focused on governance, and efficient domain isolation — Runink is a **radically integrated alternative** to the Kubernetes-centric model.
+
+### Process flow:
+![](./images/rddmrraft.png)
 
 Runink:
 - Uses **Go slices** instead of containers
@@ -309,12 +383,3 @@ This makes Runink:
 - **Governance-native**, with automatic metadata and lineage capture
 
 Competitors piece together these guarantees from **Kubernetes**, **Airflow**, **Spark**, and **Collibra**. Runink offers them **by design**.
-
----
-
-
-## Conclusion
-
-Runink leverages **Raft consensus not just for fault tolerance, but as a foundational architectural choice**. It eliminates whole categories of orchestration complexity, state drift, and configuration mismatches by building from first principles — while offering **a single runtime that natively understands pipelines, contracts, lineage, and compute**.
-
-If you’re designing a modern data platform — especially one focused on governance, and efficient domain isolation — Runink is a **radically integrated alternative** to the Kubernetes-centric model.

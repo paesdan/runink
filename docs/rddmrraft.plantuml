@@ -1,0 +1,145 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam defaultTextAlignment center
+skinparam backgroundColor #FFFFFF
+
+' Define custom colors
+skinparam rectangle {
+    BackgroundColor<<ExecutionGroup>> #E6FFE6
+    BackgroundColor<<RecoveryGroup>> #FFE6E6
+    BorderColor<<ExecutionGroup>> #228B22
+    BorderColor<<RecoveryGroup>> #CC0000
+}
+
+skinparam node {
+    BackgroundColor<<Execution>> LightGreen
+    BackgroundColor<<Recovery>> LightCoral
+}
+skinparam ArrowColor Black
+skinparam ArrowThickness 1
+
+header 📊 MapReduce vs RDD vs Raft (Runink)  
+title 🚀 Normal Execution and Crash Recovery Comparison
+
+' ========== Execution Flow (Normal) ==========
+
+rectangle "✅ Normal Operation (Execution Flow)" <<ExecutionGroup>> {
+  package "MapReduce" <<Execution>> {
+    [Input Data 📂] --> [Map Phase 🛠️]
+    note right of [Input Data 📂]
+      Data stored in HDFS or similar.
+    end note
+    note right of [Map Phase 🛠️]
+      Map workers process chunks independently.
+    end note
+    [Map Phase 🛠️] --> [Shuffle & Sort Phase 🔀]
+    note right of [Shuffle & Sort Phase 🔀]
+      Intermediate data is grouped by key.
+    end note
+    [Shuffle & Sort Phase 🔀] --> [Reduce Phase 🛠️]
+    note right of [Reduce Phase 🛠️]
+      Final output written to distributed storage with reducers aggregate and finalize the results.
+    end note
+  }
+
+  package "RDD (Spark)" <<Execution>> {
+    [Input Data 📂] --> [RDD Transformations 🔄]
+    note right of [RDD Transformations 🔄]
+      Lazy transformations build a logical DAG.
+    end note
+    [RDD Transformations 🔄] --> [Action Trigger ▶️]
+    note right of [Action Trigger ▶️]
+      Action like `collect` or `save` triggers computation.
+    end note
+    [Action Trigger ▶️] --> [Job Scheduler 📋]
+    note right of [Job Scheduler 📋]
+      Scheduler splits tasks across executors.
+    end note
+    [Job Scheduler 📋] --> [Cluster Execution (Executors) ⚙️]
+    note right of [Cluster Execution (Executors) ⚙️]
+      Tasks are executed on worker nodes.
+    end note
+    [Cluster Execution (Executors) ⚙️] --> [Output Data 📦]
+    note right of [Output Data 📦]
+      Results are persisted or returned to client.
+    end note
+  }
+
+  package "Raft (Runink)" <<Execution>> {
+    [Input Data 📂] --> [Raft Commit (Contracts + Metadata) 🗄️]
+    note right of [Raft Commit (Contracts + Metadata) 🗄️]
+      Declarative scenario contracts and metadata are committed atomically via Raft.
+    end note
+    [Raft Commit (Contracts + Metadata) 🗄️] --> [Runi Scheduler (Raft-backed) 🧠]
+    note right of [Runi Scheduler (Raft-backed) 🧠]
+      Scheduler matches tasks to available nodes deterministically.
+    end note
+    [Runi Scheduler (Raft-backed) 🧠] --> [Launch Slices (Isolated Workers) 🚀]
+    note right of [Launch Slices (Isolated Workers) 🚀]
+      Ephemeral Go processes run pipeline steps securely.
+    end note
+    [Launch Slices (Isolated Workers) 🚀] --> [Output Data 📦]
+    note right of [Output Data 📦]
+      Outputs include lineage, metrics, and validated results.
+    end note
+  }
+}
+
+' ========== Failure Recovery Flow (Crash) ==========
+
+rectangle "⚡ Failure Recovery Flow (Crash Handling)" <<RecoveryGroup>> {
+  skinparam RectangleBorderThickness 2
+  skinparam RectangleBorderStyle dashed
+
+  package "MapReduce Failure" <<Recovery>> {
+    [Input Data 📂] --> [Map Phase Running 🛠️]
+    [Map Phase Running 🛠️] --> [Map Node Crash 🛑]
+    note right of [Map Node Crash 🛑]
+      Loss of a mapper requires full job restart.
+    end note
+    [Map Node Crash 🛑] --> [Job Fails Entirely ❌]
+    [Job Fails Entirely ❌] --> [Manual Restart Needed 🔄]
+    note right of [Manual Restart Needed 🔄]
+      Human intervention needed to resubmit the job.
+    end note
+  }
+
+  package "RDD Failure (Spark)" <<Recovery>> {
+    [Input Data 📂] --> [RDD Execution Running 🔄]
+    [RDD Execution Running 🔄] --> [RDD Node Crash 🛑]
+    note right of [RDD Node Crash 🛑]
+      Executor crash triggers partial recomputation.
+    end note
+    [RDD Node Crash 🛑] --> [Driver Attempts Lineage Recompute 🔁]
+    note right of [Driver Attempts Lineage Recompute 🔁]
+      Driver uses DAG lineage to rebuild lost partitions.
+    end note
+    [Driver Attempts Lineage Recompute 🔁] --> [Partial or Full Job Restart 🔄]
+    note right of [Partial or Full Job Restart 🔄]
+      Recovery success depends on cached data and stage failures.
+    end note
+  }
+
+  package "Raft (Runink) Failure" <<Recovery>> {
+    [Input Data 📂] --> [Slice Running 🚀]
+    [Slice Running 🚀] --> [Raft Node Crash 🛑]
+    note right of [Raft Node Crash 🛑]
+      Node crash detected by Raft heartbeat timeouts.
+    end note
+    [Raft Node Crash 🛑] --> [Raft Detects Loss + Elects New Leader 🧠]
+    note right of [Raft Detects Loss + Elects New Leader 🧠]
+      Leader election ensures continued consistency.
+    end note
+    [Raft Detects Loss + Elects New Leader 🧠] --> [Reschedule Slice Elsewhere ♻️]
+    note right of [Reschedule Slice Elsewhere ♻️]
+      Slices are re-assigned to healthy nodes automatically.
+    end note
+    [Reschedule Slice Elsewhere ♻️] --> [Continue Execution Seamlessly ✅]
+    note right of [Continue Execution Seamlessly ✅]
+      Pipeline continues with no manual intervention.
+    end note
+  }
+}
+
+@enduml

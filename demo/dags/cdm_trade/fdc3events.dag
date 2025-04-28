@@ -5,6 +5,8 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/runink/pkg/slice"
@@ -12,6 +14,7 @@ import (
 	"github.com/runink/pkg/badgerstore"
 	"github.com/runink/pkg/retrymanager"
 	"github.com/runink/pkg/observability"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 // Record defines the type flowing between steps
@@ -22,6 +25,37 @@ type Record struct {
 	SliceID  string
 	StepName string
 	Valid    bool
+}
+
+var (
+	activeRuns = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "runink_active_runs",
+			Help: "Currently active pipeline runs.",
+		},
+		[]string{"feature", "scenario"},
+	)
+
+	successfulSlices = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "runink_successful_slices_total",
+			Help: "Total number of successfully processed slices.",
+		},
+		[]string{"feature", "step"},
+	)
+
+	failedSlices = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "runink_failed_slices_total",
+			Help: "Total number of failed slices.",
+		},
+		[]string{"feature", "step"},
+	)
+)
+
+func init() {
+	// Register metrics with Prometheus
+	prometheus.MustRegister(activeRuns, successfulSlices, failedSlices)
 }
 
 func TradeCDMValidationPipeline(cfg *PipelineConfig) *slice.DAG {
@@ -41,33 +75,40 @@ func TradeCDMValidationPipeline(cfg *PipelineConfig) *slice.DAG {
 		}),
 	)
 
+	// Start ticker to trigger DAG window
 	ticker := time.NewTicker(cfg.Execution.ParseWindowDuration())
 
+	// Start ticker to prune old snapshots periodically
+	prunerTicker := time.NewTicker(10 * time.Minute)
+
 	go func() {
-		for range ticker.C {
-			runID := observability.NewRunID()
-			ctx := observability.ContextWithRunMetadata(runID)
+		for {
+			select {
+			case <-ticker.C:
+				runID := observability.NewRunID()
+				ctx := observability.ContextWithRunMetadata(runID)
+				activeRuns.WithLabelValues(cfg.Feature, cfg.Scenario).Inc()
 
-			// Setup typed channels between steps
-			sourceChan := make(chan *Record, 1000)
-			decodeChan := make(chan *Record, 1000)
-			validateChan := make(chan *Record, 1000)
-			maskChan := make(chan *Record, 1000)
-			tagChan := make(chan *Record, 1000)
-			finalChan := make(chan *Record, 1000)
+				sourceChan := make(chan *Record, 1000)
+				decodeChan := make(chan *Record, 1000)
+				validateChan := make(chan *Record, 1000)
+				maskChan := make(chan *Record, 1000)
+				tagChan := make(chan *Record, 1000)
+				finalChan := make(chan *Record, 1000)
 
-			// Build DAG execution
-			go startSlice(ctx, "DecodeCDMEvent", sourceChan, decodeChan, DecodeCDMEvent)
-			go startSlice(ctx, "ValidateMandatoryFields", decodeChan, validateChan, ValidateMandatoryFields)
-			go startSlice(ctx, "ApplyFieldMasking", validateChan, maskChan, ApplyFieldMasking)
-			go startSlice(ctx, "TagComplianceMetadata", maskChan, tagChan, TagComplianceMetadata)
-			go startSlice(ctx, "DetectSchemaDrift", tagChan, finalChan, DetectSchemaDrift)
+				go startSlice(ctx, cfg, "DecodeCDMEvent", sourceChan, decodeChan, DecodeCDMEvent)
+				go startSlice(ctx, cfg, "ValidateMandatoryFields", decodeChan, validateChan, ValidateMandatoryFields)
+				go startSlice(ctx, cfg, "ApplyFieldMasking", validateChan, maskChan, ApplyFieldMasking)
+				go startSlice(ctx, cfg, "TagComplianceMetadata", maskChan, tagChan, TagComplianceMetadata)
+				go startSlice(ctx, cfg, "DetectSchemaDrift", tagChan, finalChan, DetectSchemaDrift)
 
-			// Sink routing
-			go routeToSinks(ctx, finalChan, cfg)
+				go routeToSinks(ctx, finalChan, cfg)
 
-			// Source ingestion
-			go ingestKafkaRecords(ctx, sourceChan)
+				go ingestKafkaRecords(ctx, sourceChan)
+
+			case <-prunerTicker.C:
+				pruneOldSnapshots("/var/barn/backups", 7) // Keep last 7 snapshots
+			}
 		}
 	}()
 
@@ -91,8 +132,8 @@ func ingestKafkaRecords(ctx context.Context, outputChan chan<- *Record) {
 	close(outputChan)
 }
 
-// Start a slice step with retry, audit, and checkpointing
-func startSlice(ctx context.Context, stepName string, inputChan <-chan *Record, outputChan chan<- *Record, fn func(context.Context, *Record) (*Record, error)) {
+// Start a slice step with retry, audit, checkpointing, and Prometheus instrumentation
+func startSlice(ctx context.Context, cfg *PipelineConfig, stepName string, inputChan <-chan *Record, outputChan chan<- *Record, fn func(context.Context, *Record) (*Record, error)) {
 	runID := observability.GetRunID(ctx)
 
 	for rec := range inputChan {
@@ -105,23 +146,27 @@ func startSlice(ctx context.Context, stepName string, inputChan <-chan *Record, 
 			processed, innerErr = fn(ctx, rec)
 			return innerErr
 		})
+
 		if err != nil {
 			observability.LogSliceFailure(ctx, rec, err)
+			failedSlices.WithLabelValues(cfg.Feature, stepName).Inc()
 			continue
 		}
 
 		if processed != nil {
 			outputChan <- processed
+			successfulSlices.WithLabelValues(cfg.Feature, stepName).Inc()
 
 			if processed.Metadata != nil && processed.Metadata["checkpoint"] == "true" {
-				raftstore.LogEvent(ctx, runID, stepName, processed.Metadata)
-				badgerstore.SaveKV(runID+"/"+processed.SliceID, processed.Metadata)
+				hashedMeta := hashMetadata(processed.Metadata)
+				raftstore.LogEvent(ctx, runID, stepName, hashedMeta)
+				badgerstore.SaveKV(runID+"/"+processed.SliceID, hashedMeta)
 			}
 		}
 	}
 }
 
-// Route records based on validity
+// Route records to sinks based on validity
 func routeToSinks(ctx context.Context, finalChan <-chan *Record, cfg *PipelineConfig) {
 	for rec := range finalChan {
 		if rec.Valid {
@@ -141,7 +186,7 @@ func ComputeSliceID(runID, recordID, stepName string) string {
 	return hex.EncodeToString(h.Sum(nil))
 }
 
-// Set RecordID from natural key (eg. trade_id)
+// Set RecordID from natural key (e.g., trade_id)
 func (r *Record) SetRecordIDFromNaturalKey(key string) {
 	if val, ok := r.Data[key]; ok {
 		if r.Metadata == nil {
@@ -157,4 +202,35 @@ func (r *Record) RecordID() string {
 		return r.Metadata["record_id"]
 	}
 	return observability.NewRandomID()
+}
+
+// Hash Metadata Map for secure logging/storage
+func hashMetadata(meta map[string]string) map[string]string {
+	hasher := sha256.New()
+	for k, v := range meta {
+		hasher.Write([]byte(k))
+		hasher.Write([]byte(v))
+	}
+	return map[string]string{
+		"metadata_hash": hex.EncodeToString(hasher.Sum(nil)),
+	}
+}
+
+// Prune Old Snapshots from Btrfs backup directory (keep `retain` latest)
+func pruneOldSnapshots(path string, retain int) {
+	files, err := filepath.Glob(filepath.Join(path, "barn-final-*.bak"))
+	if err != nil {
+		return
+	}
+	if len(files) <= retain {
+		return
+	}
+
+	// Sort files by oldest first
+	sort.Strings(files)
+
+	// Delete oldest
+	for _, f := range files[:len(files)-retain] {
+		_ = os.Remove(f)
+	}
 }
