@@ -1,49 +1,71 @@
-## Contributor Covenant Code of Conduct
+# 🧭 Code of Conduct
 
-Our Pledge
+Welcome to the Runink community! We’re building a secure, auditable, and open orchestration platform — and we’re doing it together.
 
-We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, color, religion, or sexual identity and orientation.
-
-We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
+We are committed to providing a welcoming and inclusive environment for everyone, regardless of background, experience level, identity, or role.
 
 ---
 
-## Our Standards
+## 📜 Our Pledge
 
-Examples of behavior that contributes to a positive environment include:
+In the interest of fostering an open and inclusive community, we as contributors and maintainers pledge to make participation in our project and our community a harassment-free experience for everyone.
 
-- Demonstrating empathy and kindness
-- Respectful communication and differing viewpoints
-- Accepting constructive feedback graciously
-- Focusing on what is best for the community
+We commit to:
+
+- Using welcoming and inclusive language  
+- Being respectful of differing viewpoints and experiences  
+- Accepting constructive feedback gracefully  
+- Demonstrating empathy toward others  
+- Prioritizing collaboration over correctness  
+
+---
+
+## 🚫 Unacceptable Behavior
 
 Examples of unacceptable behavior include:
 
-- Harassment, discrimination, or exclusionary comments
-- Trolling, insulting, or derogatory remarks
-- Publishing others' private information without consent
-- Sustained disruption of community activities
+- Insults, derogatory comments, or personal attacks  
+- Trolling, baiting, or deliberate disruption of conversation  
+- Unwelcome sexual attention or advances  
+- Publishing private information without consent  
+- Discriminatory jokes or language (even if “just a joke”)  
+- Dismissing someone’s work or identity based on background
 
 ---
 
-## Enforcement Responsibilities
+## 📣 Reporting
 
-Project maintainers are responsible for clarifying and enforcing standards of acceptable behavior and will take appropriate action in response to any unacceptable behavior. Maintainers have the right to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that violate this Code of Conduct.
+If you experience or witness unacceptable behavior, please report it by contacting:
 
----
+📧 **conduct@runink.dev**
 
-## Scope
-
-This Code of Conduct applies within all project spaces — including GitHub issues, PRs, discussions, Discord/Slack channels, and public events.
+All reports will be handled confidentially. We are committed to protecting your privacy and ensuring fair review.
 
 ---
 
-## Enforcement
+## ⚖️ Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported by contacting the project team at conduct@yourdomain.org. All complaints will be reviewed and investigated promptly and fairly. Maintainers are obligated to respect the privacy and safety of the reporter.
+Project maintainers are responsible for upholding this Code of Conduct. They will take appropriate and fair corrective action in response to any behavior they deem inappropriate, threatening, offensive, or harmful.
+
+Maintainers have the right to remove comments, commits, issues, pull requests, or contributors that violate this code — temporarily or permanently.
 
 ---
 
-## Attribution
+## 🤝 Scope
 
-This Code of Conduct is adapted from the Contributor Covenant, version 2.1.
+This Code of Conduct applies to all:
+
+- GitHub repositories, issues, pull requests, and discussions  
+- Community forums and Discord/Slack channels  
+- Conferences, meetups, and virtual events  
+- Official documentation and external communications  
+
+---
+
+## 📘 Attribution
+
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/), version 2.1.
+
+---
+
+Thank you for helping us create a respectful, professional, and inclusive environment. Let’s build Runink together — openly and responsibly.
