@@ -37,7 +37,7 @@ Examples of unacceptable behavior include:
 
 If you experience or witness unacceptable behavior, please report it by contacting:
 
-📧 **conduct@runink.dev**
+📧 **paes@runink.org**
 
 All reports will be handled confidentially. We are committed to protecting your privacy and ensuring fair review.
 
