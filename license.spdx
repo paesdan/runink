@@ -1,0 +1,21 @@
+SPDX-License-Identifier: Apache-2.0
+
+PackageName: Runink
+PackageVersion: 1.0.0
+PackageDescription: A Go-native, distributed data pipeline orchestration platform
+LicenseConcluded: Apache-2.0
+LicenseDeclared: Apache-2.0
+
+FilesAnalyzed: 
+  - LICENSE
+  - README.md
+  - all source code files
+  - all other documentation files
+
+LicenseInfoFromFiles:
+  - Apache-2.0
+  - all source code files
+  - all other documentation files
+
+PackageCopyrightText: 
+  Copyright 2025 The Runink Authors. All Rights Reserved.
