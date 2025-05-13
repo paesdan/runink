@@ -1,0 +1,12 @@
+
+id,name,age,email,country,signup_date,active
+1,John Doe,34,john.doe@example.com,USA,2023-01-15,true
+2,Jane Smith,28,jane.smith@example.com,Canada,2023-02-20,true
+3,Robert Johnson,45,robert.j@example.com,UK,2023-01-30,false
+4,Maria Garcia,31,maria.g@example.com,Spain,2023-03-05,true
+5,Hiroshi Tanaka,39,h.tanaka@example.com,Japan,2023-02-10,true
+6,Sophie Dubois,26,sophie.d@example.com,France,2023-03-18,false
+7,Ahmed Hassan,42,ahmed.h@example.com,Egypt,2023-01-25,true
+8,Li Wei,33,li.wei@example.com,China,2023-02-28,true
+9,Anna Kowalski,29,anna.k@example.com,Poland,2023-03-12,false
+10,Carlos Rodriguez,37,carlos.r@example.com,Mexico,2023-01-20,true

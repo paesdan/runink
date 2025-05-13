@@ -1,0 +1,33 @@
+
+# RunInk DAG Execution Configuration
+# Defines execution settings for the CSV to PARQUET conversion
+
+version: "1.0"
+name: "csv_to_parquet_config"
+
+execution:
+  mode: "sequential"  # Can be "sequential" or "parallel"
+  max_retries: 3
+  retry_delay_seconds: 5
+  timeout_seconds: 300
+
+logging:
+  level: "INFO"  # Can be DEBUG, INFO, WARNING, ERROR
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  output: "console"  # Can be "console", "file", or "both"
+  file_path: "./logs/csv_to_parquet.log"
+
+monitoring:
+  enabled: true
+  metrics:
+    - "execution_time"
+    - "memory_usage"
+    - "cpu_usage"
+  report_format: "json"
+  report_path: "./metrics/csv_to_parquet_metrics.json"
+
+error_handling:
+  strategy: "stop_on_error"  # Can be "stop_on_error", "continue", or "retry"
+  alert_on_failure: true
+  alert_channels:
+    - "console"

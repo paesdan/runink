@@ -1,0 +1,31 @@
+
+# Resource Allocation Configuration
+# Defines the resources allocated for the DAG execution
+
+version: "1.0"
+name: "csv_to_parquet_resources"
+
+resources:
+  cpu:
+    min_cores: 1
+    max_cores: 2
+    priority: "medium"
+  
+  memory:
+    min_mb: 512
+    max_mb: 1024
+    priority: "medium"
+  
+  disk:
+    min_mb: 100
+    max_mb: 500
+    priority: "low"
+
+scaling:
+  auto_scale: true
+  scale_up_threshold: 0.8  # Scale up when resource usage exceeds 80%
+  scale_down_threshold: 0.3  # Scale down when resource usage falls below 30%
+  
+timeouts:
+  allocation_timeout_seconds: 30
+  release_timeout_seconds: 15

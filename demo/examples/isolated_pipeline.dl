@@ -1,0 +1,17 @@
+# Example RunInk DSL with isolation and resource control
+source: "file:///tmp/input.txt"
+
+# Simple echo command with default isolation
+transform echo_step (command: "echo 'Hello from isolated environment'", memory_max: "50M")
+
+# CPU-intensive task with CPU limits
+transform cpu_task (command: "for i in {1..1000}; do echo $i; done | sort -n", cpu_quota: "100000 30000", after: echo_step)
+
+# Memory-intensive task with memory limits
+transform memory_task (command: "cat /dev/urandom | head -c 10M > /tmp/random_data.bin", memory_max: "20M", after: echo_step)
+
+# I/O-intensive task with I/O weight
+transform io_task (command: "dd if=/dev/zero of=/tmp/test.bin bs=1M count=5", io_weight: "50", after: memory_task)
+
+# Final step with custom chroot
+transform final_step (command: "echo 'Pipeline completed successfully'", chroot: "/tmp/runink_chroot", after: cpu_task, after: io_task)

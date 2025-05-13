@@ -1,0 +1,44 @@
+
+# CSV Contract Definition
+# Defines the schema for the CSV data
+
+version: "1.0"
+name: "user_data_schema"
+description: "Schema for user data CSV file"
+
+fields:
+  - name: id
+    type: integer
+    nullable: false
+    description: "Unique identifier for the user"
+    
+  - name: name
+    type: string
+    nullable: false
+    description: "Full name of the user"
+    
+  - name: age
+    type: integer
+    nullable: true
+    description: "Age of the user in years"
+    
+  - name: email
+    type: string
+    nullable: false
+    description: "Email address of the user"
+    
+  - name: country
+    type: string
+    nullable: true
+    description: "Country of residence"
+    
+  - name: signup_date
+    type: date
+    nullable: false
+    description: "Date when the user signed up"
+    format: "yyyy-MM-dd"
+    
+  - name: active
+    type: boolean
+    nullable: false
+    description: "Whether the user account is active"

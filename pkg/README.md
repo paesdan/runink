@@ -58,11 +58,11 @@ This document provides a detailed reference for every folder and file within the
 
 ---
 
-## `buildctl/` — 🛠️ Compiler
+## `runink/` — 🛠️ Compiler
 
 | File | Purpose |
 |:---|:---|
-| `cli.go` | Cobra command root for `buildctl` subcommands |
+| `cli.go` | Cobra command root for `runink` subcommands |
 | `builder.go` | Build DAGs from DSL and Contract inputs |
 | `compliance.go` | Inject SLA/compliance metadata into DAGs |
 | `contract.go` | Contract loader and parser |

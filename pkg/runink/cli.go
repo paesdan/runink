@@ -1,13 +1,13 @@
-package buildctl
+package runink
 
 import (
 	"github.com/spf13/cobra"
 )
 
-// NewBuildctlCommand returns the buildctl root command.
-func NewBuildctlCommand() *cobra.Command {
+// NewruninkCommand returns the runink root command.
+func NewruninkCommand() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "buildctl",
+		Use:   "runink",
 		Short: "Compile DSL Scenarios into DAGs, Contracts, and Metadata",
 	}
 
